@@ -11,20 +11,46 @@ class Json(object):
         self.file_name = file_name
 
     def wrtie(self, datas):
-        '''向json文件里写数据
+        '''json文件里写数据
+        :param datas: 可以是列表，也可以是字典，不可以是类对象
+        :return: 写入成功返回true，否则false
         '''
-demo = {
-    'name':'maifeng',
-    'age':'1'
-}
-demo1 = {
-    'name': 'test',
-    'age':'2'
-}
-demo_list = [demo, demo1]
-# with open('demo_json.json', 'w', encoding='utf-8') as f:
-#     json.dump(demo_list, f, ensure_ascii=False)
-with open('demo_json.json', 'r') as f:
-    datas = json.load(f)
+        res = False
+        try:
+            with open(self.file_name + '.json', 'w', encoding='utf-8') as f:
+                json.dump(datas, f, ensure_ascii=False)
+            return res
+        except Exception as e:
+            print('write->error:', e)
+            return res
+
+    def read(self):
+        '''从json文件中读取数据
+        :return: 返回列表或者字典，看文件内容。。。
+                 异常返回空None
+        '''
+        res = None
+        try:
+            with open(self.file_name + '.json', 'r', encoding='utf-8') as f:
+                res = json.load(f)
+            return res
+        except Exception as e:
+            print('read->error:', e)
+            return None
+        
+
+if __name__ == "__main__":
+    demo_list = [
+        {
+            'name':'test1',
+            'age':'1',
+        },
+        {
+            'name':'test2',
+            'age':'2'
+        }
+    ]
+    _json = Json('demo')
+    _json.wrtie(demo_list)
+    datas = _json.read()
     print(datas)
-    print(type(datas))
