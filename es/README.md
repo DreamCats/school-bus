@@ -1,9 +1,9 @@
 # EsDemo
 ## Info
 
-**Author**: *DreamCats* </br>
-**Date**: *2019.1.14.22.00*
-**Describe**:*对Elasticsearch的python操作，简单写个api*
+**Author**: *DreamCats* <br>
+**Date**: *2019.1.14.22.00* <br>
+**Describe**:*对Elasticsearch的python操作，简单写个api* <br>
 
 
 -------
