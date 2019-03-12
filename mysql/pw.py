@@ -59,5 +59,11 @@ p = Person()
 # ).execute()
 
 # 查询单条数据
-p = Person.get(Person.name == 'Mai')
-print(p.id, p.name, p.birthday, p.is_relative)
+# p = Person.get(Person.name == 'Mai')
+# print(p.id, p.name, p.birthday, p.is_relative)
+
+# 查询多条数据
+
+# persons = Person.select().where(Person.is_relative == True)
+# for p in persons:
+#     print(p.id, p.name, p.birthday, p.is_relative)
