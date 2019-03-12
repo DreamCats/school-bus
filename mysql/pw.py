@@ -23,6 +23,7 @@ class Person(Model):
 
     class Meta:
         database = database
+        table_name = 'person'
 
 # 创建Person
 # Person.create_table()
@@ -42,5 +43,21 @@ p = Person()
 # p.save()
 
 # 删除
+# Person.delete().where(Person.name == 'feng').execute()
 # p = Person.get(Person.name == 'feng')
 # p.delete_instance()
+
+# 改
+# q = Person.update({Person.birthday: date(1983, 12, 21)}).where(Person.name == 'mai')
+# q.execute()
+
+# q = Person.get(Person.name == 'Mai')
+# q = q.update(
+#     {
+#         Person.birthday:date(2019, 1, 1),
+#     }
+# ).execute()
+
+# 查询单条数据
+p = Person.get(Person.name == 'Mai')
+print(p.id, p.name, p.birthday, p.is_relative)
