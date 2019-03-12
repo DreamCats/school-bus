@@ -34,3 +34,13 @@ class Person(Model):
 #     is_relative=True
 # )
 # p.save()
+
+p = Person()
+# p.name = 'feng'
+# p.birthday = date(2000, 12, 1)
+# p.is_relative = False
+# p.save()
+
+# 删除
+# p = Person.get(Person.name == 'feng')
+# p.delete_instance()
