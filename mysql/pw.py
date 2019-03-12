@@ -20,7 +20,7 @@ class BaseModel(Model):
         database = database
 
 # 定义Person模型
-class Person(BaseModel):
+class Person(BaseModel): # 其实和django的model差不多
     name = CharField()
     birthday = DateField()
     is_relative = BooleanField()
