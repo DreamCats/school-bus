@@ -5,6 +5,7 @@
 # 利用peewee操作mysql
 from peewee import *
 
+from datetime import date
 
 database = MySQLDatabase(
     'pw',
@@ -27,4 +28,9 @@ class Person(Model):
 # Person.create_table()
 
 # 添加一条数据
-
+# p = Person(
+#     name='Mai',
+#     birthday=date(1994, 8, 22),
+#     is_relative=True
+# )
+# p.save()
