@@ -14,15 +14,19 @@ database = MySQLDatabase(
     host='localhost',
     port=3306
 )
+# BaseModel
+class BaseModel(Model):
+    class Meta:
+        database = database
 
 # 定义Person模型
-class Person(Model):
+class Person(BaseModel):
     name = CharField()
     birthday = DateField()
     is_relative = BooleanField()
 
     class Meta:
-        database = database
+        # database = database
         table_name = 'person'
 
 # 创建Person
