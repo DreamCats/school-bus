@@ -4,11 +4,19 @@
 
 
 ## Instructions
-- bell.py: ...
+### 铃声
+- [bell.py](./bell.py): ...
+
+### 视频
+- [s80.py](./s80.py): ...
+
+### 二次元壁纸
+- [anime.py](./anime.py): ...
+### 音乐
 
 
 ## Info
-__author__: **Mai feng** <br>
-__blog__: http://dreamcat.ink/
+__Author__: **Mai feng** <br>
+__Blog__: http://dreamcat.ink/
 
 
