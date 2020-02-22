@@ -35,3 +35,12 @@
   - [全网最全frp内网穿透(ssh及web)]([https://github.com/DreamCats/JavaBooks/blob/master/Tools/frp/%E5%85%A8%E7%BD%91%E6%9C%80%E5%85%A8frp%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F(ssh%E5%8F%8Aweb).md](https://github.com/DreamCats/JavaBooks/blob/master/Tools/frp/全网最全frp内网穿透(ssh及web).md))
   - [centos7安装dubbo环境]([https://github.com/DreamCats/JavaBooks/blob/master/Tools/dubbo/centos7%E5%AE%89%E8%A3%85dubbo%E7%8E%AF%E5%A2%83.md](https://github.com/DreamCats/JavaBooks/blob/master/Tools/dubbo/centos7安装dubbo环境.md))
   - [centos7安装rocketmq环境及配置]([https://github.com/DreamCats/JavaBooks/blob/master/Tools/rocketmq/centos7%E5%AE%89%E8%A3%85rocketmq%E5%8F%8A%E9%85%8D%E7%BD%AE.md](https://github.com/DreamCats/JavaBooks/blob/master/Tools/rocketmq/centos7安装rocketmq及配置.md))
+
+## 参考项目
+
+- [springboot-seckill](https://github.com/zaiyunduan123/springboot-seckill) 基于SpringBoot + MySQL + Redis + RabbitMQ + Guava开发的高并发商品限时秒杀系统
+- [MeetingFilm](https://github.com/daydreamdev/MeetingFilm) 基于微服务架构的在线电影购票平台 
+- [dbblog](https://github.com/llldddbbb/dbblog) 基于SpringBoot2.x+Vue2.x+ElementUI+Iview+Elasticsearch+RabbitMQ+Redis+Shiro的多模块前后端分离的博客项目
+- [mall](<https://github.com/macrozheng/mall>) mall项目是一套电商系统，包括前台商城系统及后台管理系统，基于SpringBoot+MyBatis实现
+- [mall-swarm](https://github.com/macrozheng/mall-swarm)mall-swarm是一套微服务商城系统，采用了 Spring Cloud Greenwich、Spring Boot 2、MyBatis、Docker、Elasticsearch等核心技术，同时提供了基于Vue的管理后台方便快速搭建系统
+
