@@ -25,6 +25,8 @@
 
 ### 架构思考
 
+- [团队开会文档记录](./doc/meeting.md)**记录一些开会讨论的事情以及接下来要做的计划**
+
 - **我也是第一次做这样的项目，没有什么经验，希望大家提供一些建议和经验，我也在这条坎坷的路上不断的去尝试和总结。希望大家多多支持，🙏**
 - **注意**:由于学生，没有能力买好一点的服务器，因此采用内网穿透技术将本地服务映射个人的阿里云。
 - 根据本校小程序的页面：[pages](https://www.processon.com/view/link/5e4eb17ae4b0e415c2756fd5)，由于疫情期间，下单模块的页面暂时无法分析。日后会补充...
@@ -37,6 +39,9 @@
   - [centos7安装rocketmq环境及配置]([https://github.com/DreamCats/JavaBooks/blob/master/Tools/rocketmq/centos7%E5%AE%89%E8%A3%85rocketmq%E5%8F%8A%E9%85%8D%E7%BD%AE.md](https://github.com/DreamCats/JavaBooks/blob/master/Tools/rocketmq/centos7安装rocketmq及配置.md))
 
 - 为了快速搭建项目考虑采用[guns](https://gitee.com/stylefeng/guns.git)框架进行二次开发。从而将一些中间件集成进去。
+- 2.24根据讨论，绝对项目中采用哪些服务.[架构图](https://www.processon.com/view/link/5e52a6e3e4b0c037b5fb1f2f)
+
+
 
 ## 参考项目
 
