@@ -36,6 +36,8 @@
   - [centos7安装dubbo环境]([https://github.com/DreamCats/JavaBooks/blob/master/Tools/dubbo/centos7%E5%AE%89%E8%A3%85dubbo%E7%8E%AF%E5%A2%83.md](https://github.com/DreamCats/JavaBooks/blob/master/Tools/dubbo/centos7安装dubbo环境.md))
   - [centos7安装rocketmq环境及配置]([https://github.com/DreamCats/JavaBooks/blob/master/Tools/rocketmq/centos7%E5%AE%89%E8%A3%85rocketmq%E5%8F%8A%E9%85%8D%E7%BD%AE.md](https://github.com/DreamCats/JavaBooks/blob/master/Tools/rocketmq/centos7安装rocketmq及配置.md))
 
+- 为了快速搭建项目考虑采用[guns](https://gitee.com/stylefeng/guns.git)框架进行二次开发。从而将一些中间件集成进去。
+
 ## 参考项目
 
 - [springboot-seckill](https://github.com/zaiyunduan123/springboot-seckill) 基于SpringBoot + MySQL + Redis + RabbitMQ + Guava开发的高并发商品限时秒杀系统
