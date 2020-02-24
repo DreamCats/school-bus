@@ -46,6 +46,8 @@
         <!-- <hutool    .version>4.1.1</hutool.version> -->
         <!--my        -->
         <dubbo-spring.version>0.2.0</dubbo-spring.version>
+        <lombok.version>1.18.8</lombok.version>
+
     </properties>
 
     <dependencyManagement>
@@ -174,6 +176,13 @@
                 <groupId>com.alibaba.boot</groupId>
                 <artifactId>dubbo-spring-boot-starter</artifactId>
                 <version>${dubbo-spring.version}</version>
+            </dependency>
+
+            <!--lombok-->
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

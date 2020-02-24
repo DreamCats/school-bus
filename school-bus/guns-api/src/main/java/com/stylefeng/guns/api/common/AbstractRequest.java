@@ -7,5 +7,10 @@
 
 package com.stylefeng.guns.api.common;
 
-public class AbstractRequest {
+import java.io.Serializable;
+
+public abstract class AbstractRequest implements Serializable {
+
+    private static final long serialVersionUID = 171717171717171L;
+
 }
