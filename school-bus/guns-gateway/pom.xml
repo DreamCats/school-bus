@@ -4,12 +4,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.stylefeng.guns</groupId>
-    <artifactId>guns-rest</artifactId>
+    <artifactId>guns-gateway</artifactId>
     <version>0.0.1</version>
     <packaging>jar</packaging>
 
-    <name>guns-rest</name>
-    <description>guns REST服务器</description>
+    <name>guns-gateway</name>
+    <description>guns gateway API网关</description>
 
     <parent>
         <groupId>com.stylefeng</groupId>
@@ -40,6 +40,10 @@
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
             <version>1.2.17</version>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba.boot</groupId>
+            <artifactId>dubbo-spring-boot-starter</artifactId>
         </dependency>
     </dependencies>
 

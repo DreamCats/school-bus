@@ -53,7 +53,10 @@
 - 直接复制其项目中的rest和core就可以了，修改rest中的数据源，启动即可。
 - 访问`http://localhost:8080/auth?userName=admin&password=admin`，即可看到jwt的信息了
 
+### 调试工具
 
+- [postwoman](https://postwoman.io/) 采用这个，没必要下载多余的插件
+- [postman](谷歌插件有) 谷歌插件有，翻墙即可
 
 
 
