@@ -11,4 +11,8 @@ public class UserRequest {
 
     private Integer id; // 通过id找
 
+    private String userName;
+
+    private String passPwd;
+
 }
