@@ -42,6 +42,19 @@
 - 为了快速搭建项目考虑采用[guns](https://gitee.com/stylefeng/guns.git)框架进行二次开发。从而将一些中间件集成进去。
 - 2.24根据讨论，绝对项目中采用哪些服务.[架构图](https://www.processon.com/view/link/5e52a6e3e4b0c037b5fb1f2f)
 
+## 环境搭建
+
+### guns
+
+**注意：在guns基础进行快速开发，使用guns的版本是：[4.2](https://gitee.com/stylefeng/guns/tree/v4.2/)**
+
+- 我们使用的rest风格，因此上述项目中的admin和generator没有用上。
+- 创建数据库，sql在你rest的db文件中
+- 直接复制其项目中的rest和core就可以了，修改rest中的数据源，启动即可。
+- 访问`http://localhost:8080/auth?userName=admin&password=admin`，即可看到jwt的信息了
+
+
+
 
 
 ## 参考项目
