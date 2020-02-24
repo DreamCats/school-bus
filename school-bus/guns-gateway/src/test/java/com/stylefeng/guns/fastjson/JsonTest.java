@@ -2,8 +2,8 @@ package com.stylefeng.guns.fastjson;
 
 import com.alibaba.fastjson.JSON;
 import com.stylefeng.guns.core.util.MD5Util;
-import com.stylefeng.guns.rest.common.SimpleObject;
-import com.stylefeng.guns.rest.modular.auth.converter.BaseTransferEntity;
+import com.stylefeng.guns.api.common.SimpleObject;
+import com.stylefeng.guns.api.modular.auth.converter.BaseTransferEntity;
 
 /**
  * json测试
