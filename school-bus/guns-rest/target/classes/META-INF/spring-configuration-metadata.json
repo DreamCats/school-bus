@@ -1,0 +1,59 @@
+{
+  "hints": [],
+  "groups": [
+    {
+      "sourceType": "com.stylefeng.guns.rest.config.properties.JwtProperties",
+      "name": "jwt",
+      "type": "com.stylefeng.guns.rest.config.properties.JwtProperties"
+    },
+    {
+      "sourceType": "com.stylefeng.guns.rest.config.properties.RestProperties",
+      "name": "rest",
+      "type": "com.stylefeng.guns.rest.config.properties.RestProperties"
+    }
+  ],
+  "properties": [
+    {
+      "sourceType": "com.stylefeng.guns.rest.config.properties.JwtProperties",
+      "defaultValue": "auth",
+      "name": "jwt.auth-path",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.stylefeng.guns.rest.config.properties.JwtProperties",
+      "defaultValue": 604800,
+      "name": "jwt.expiration",
+      "type": "java.lang.Long"
+    },
+    {
+      "sourceType": "com.stylefeng.guns.rest.config.properties.JwtProperties",
+      "defaultValue": "Authorization",
+      "name": "jwt.header",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.stylefeng.guns.rest.config.properties.JwtProperties",
+      "defaultValue": "randomKey",
+      "name": "jwt.md5-key",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.stylefeng.guns.rest.config.properties.JwtProperties",
+      "defaultValue": "defaultSecret",
+      "name": "jwt.secret",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.stylefeng.guns.rest.config.properties.RestProperties",
+      "defaultValue": true,
+      "name": "rest.auth-open",
+      "type": "java.lang.Boolean"
+    },
+    {
+      "sourceType": "com.stylefeng.guns.rest.config.properties.RestProperties",
+      "defaultValue": true,
+      "name": "rest.sign-open",
+      "type": "java.lang.Boolean"
+    }
+  ]
+}
