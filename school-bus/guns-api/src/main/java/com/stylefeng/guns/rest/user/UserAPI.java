@@ -16,7 +16,7 @@ public interface UserAPI {
 
     /**
      * 检查用户名是否存在
-     * @param request
+     * @param request：username
      * @return
      */
     UserResponse checkUsername(UserRequest request);

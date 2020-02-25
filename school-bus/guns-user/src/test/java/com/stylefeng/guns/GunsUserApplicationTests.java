@@ -1,11 +1,4 @@
-/**
- * @program school-bus
- * @description: UserTest
- * @author: mf
- * @create: 2020/02/25 15:36
- */
-
-package com.stylefeng.guns.user;
+package com.stylefeng.guns;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,11 +7,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class UserTest {
+public class GunsUserApplicationTests {
 
+	@Test
+	public void contextLoads() {
+	}
 
-    @Test
-    public void checkUsernameTest() {
-
-    }
 }

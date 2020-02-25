@@ -23,7 +23,7 @@ public class UserServiceImpl implements UserAPI {
 
     /**
      * 检查用户名是否已经存在
-     * @param request：username
+     * @param request ：username
      * @return
      */
     @Override

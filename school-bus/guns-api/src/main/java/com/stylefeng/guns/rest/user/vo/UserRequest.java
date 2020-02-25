@@ -7,6 +7,9 @@
 
 package com.stylefeng.guns.rest.user.vo;
 
+import lombok.Data;
+
+@Data
 public class UserRequest {
 
     private Integer id; // 通过id找
