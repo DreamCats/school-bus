@@ -7,6 +7,7 @@
 
 package com.stylefeng.guns.rest;
 
+import com.alibaba.dubbo.config.annotation.Reference;
 import com.stylefeng.guns.rest.common.ResponseUtil;
 import com.stylefeng.guns.rest.user.UserAPI;
 import com.stylefeng.guns.rest.user.vo.UserRequest;
@@ -21,7 +22,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest(classes = {GunsUserApplication.class})
 public class UserAPITest {
 
-    @Autowired
+    @Reference
     private UserAPI userAPI;
 
     @Test
