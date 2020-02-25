@@ -57,6 +57,11 @@
             <artifactId>lombok</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.stylefeng.guns</groupId>
+            <artifactId>guns-rest</artifactId>
+            <version>0.0.1</version>
+        </dependency>
 
     </dependencies>
 

@@ -23,7 +23,7 @@
 
 ```sql
 DROP TABLE IF EXISTS sb_user_t;
-CREATE TABLE mooc_user_t(
+CREATE TABLE sb_user_t(
    uuid INT PRIMARY KEY AUTO_INCREMENT COMMENT '主键编号',
    user_name VARCHAR(50) NOT NULL DEFAULT '' COMMENT '用户账号',
    user_pwd VARCHAR(50) NOT NULL DEFAULT '' COMMENT '用户密码',
@@ -35,8 +35,7 @@ CREATE TABLE mooc_user_t(
    update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间'
 ) COMMENT '用户表' ENGINE = INNODB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
-insert into sb_user_t(user_name,user_pwd,nick_name,user_sex,email,user_phone) values('admin','0192023a7bbd73250516f069df18b500','隔壁泰山',0,,'admin@qq.com','13888888888');
+insert into sb_user_t(user_name,user_pwd,nick_name,user_sex,email,user_phone) values('admin','0192023a7bbd73250516f069df18b500','隔壁泰山',0,'admin@qq.com','13888888888');
 insert into sb_user_t(user_name,user_pwd,nick_name,user_sex,email,user_phone) values('jiangzh','5e2de6bd1c9b50f6e27d4e55da43b917','阿里郎',0,'jiangzh@qq.com','13866666666');
-
 ```
 
