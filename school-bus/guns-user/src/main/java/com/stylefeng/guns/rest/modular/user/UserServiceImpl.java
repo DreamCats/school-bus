@@ -8,12 +8,13 @@
 package com.stylefeng.guns.rest.modular.user;
 
 import com.alibaba.dubbo.config.annotation.Service;
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.stylefeng.guns.rest.common.persistence.dao.SbUserTMapper;
+import com.stylefeng.guns.rest.common.persistence.model.SbUserT;
 import com.stylefeng.guns.rest.user.UserAPI;
-import com.stylefeng.guns.rest.user.vo.UserListResponse;
-import com.stylefeng.guns.rest.user.vo.UserRegisterRequest;
-import com.stylefeng.guns.rest.user.vo.UserRequest;
-import com.stylefeng.guns.rest.user.vo.UserResponse;
+import com.stylefeng.guns.rest.user.vo.*;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -21,18 +22,25 @@ import org.springframework.stereotype.Component;
 @Service
 public class UserServiceImpl implements UserAPI {
 
+    @Autowired
+    private SbUserTMapper sbUserTMapper;
     /**
      * 检查用户名是否已经存在
      * @param request ：username
      * @return
      */
     @Override
-    public UserResponse checkUsername(UserRequest request) {
-        UserResponse res = new UserResponse();
+    public UserCheckResponse checkUsername(UserCheckRequest request) {
+        UserCheckResponse res = new UserCheckResponse();
         try {
-            // 先测试一下
-            res.setCode("200");
-            res.setMsg("demo");
+            EntityWrapper<SbUserT> entityWrapper = new EntityWrapper<>();
+            entityWrapper.eq("user_name", request.getUsername());
+            Integer count = sbUserTMapper.selectCount(entityWrapper);
+            if (count != null && count > 0) {
+                res.setCheckUsername(0);
+            } else {
+                res.setCheckUsername(1);
+            }
         } catch (Exception e) {
             e.printStackTrace();
             log.error("checkUsername " + e.toString());

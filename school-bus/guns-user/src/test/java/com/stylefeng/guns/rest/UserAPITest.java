@@ -10,6 +10,8 @@ package com.stylefeng.guns.rest;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.stylefeng.guns.rest.common.ResponseUtil;
 import com.stylefeng.guns.rest.user.UserAPI;
+import com.stylefeng.guns.rest.user.vo.UserCheckRequest;
+import com.stylefeng.guns.rest.user.vo.UserCheckResponse;
 import com.stylefeng.guns.rest.user.vo.UserRequest;
 import com.stylefeng.guns.rest.user.vo.UserResponse;
 import org.junit.Test;
@@ -27,10 +29,10 @@ public class UserAPITest {
 
     @Test
     public void checkUsernameTest() {
-        UserRequest req = new UserRequest();
-        UserResponse res = userAPI.checkUsername(req);
+        UserCheckRequest req = new UserCheckRequest();
+        req.setUsername("admin");
+        UserCheckResponse res = userAPI.checkUsername(req);
         System.out.println(res);
-        System.out.println(res.getCode());
     }
 
 }

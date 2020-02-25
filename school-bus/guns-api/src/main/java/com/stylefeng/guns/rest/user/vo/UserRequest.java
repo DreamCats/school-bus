@@ -7,10 +7,13 @@
 
 package com.stylefeng.guns.rest.user.vo;
 
+import com.stylefeng.guns.rest.common.AbstractRequest;
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Data
-public class UserRequest {
+public class UserRequest extends AbstractRequest {
 
     private Integer id; // 通过id找
 

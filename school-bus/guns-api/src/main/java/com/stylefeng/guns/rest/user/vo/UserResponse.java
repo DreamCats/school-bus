@@ -15,5 +15,4 @@ import lombok.Data;
 public class UserResponse extends AbstractResponse {
 
     private UserVo userVo; // 封装可返回展示的页面数据
-
 }

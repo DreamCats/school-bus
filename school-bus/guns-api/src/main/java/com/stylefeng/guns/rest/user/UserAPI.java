@@ -7,10 +7,7 @@
 
 package com.stylefeng.guns.rest.user;
 
-import com.stylefeng.guns.rest.user.vo.UserListResponse;
-import com.stylefeng.guns.rest.user.vo.UserRegisterRequest;
-import com.stylefeng.guns.rest.user.vo.UserRequest;
-import com.stylefeng.guns.rest.user.vo.UserResponse;
+import com.stylefeng.guns.rest.user.vo.*;
 
 public interface UserAPI {
 
@@ -19,7 +16,7 @@ public interface UserAPI {
      * @param request：username
      * @return
      */
-    UserResponse checkUsername(UserRequest request);
+    UserCheckResponse checkUsername(UserCheckRequest request);
 
     /**
      * 注册
