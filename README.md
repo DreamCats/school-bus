@@ -58,7 +58,10 @@
 - [postwoman](https://postwoman.io/) 采用这个，没必要下载多余的插件
 - [postman](谷歌插件有) 谷歌插件有，翻墙即可
 
+### 生成db模型
 
+- guns-rest的test目录下有生成数据库模型代码，注意输出目录的包名即可
+- 安装idea的easycode插件
 
 ## 参考项目
 
