@@ -30,7 +30,7 @@ public interface UserAPI {
      * @param request
      * @return
      */
-    UserResponse login(UserRequest request);
+    UserLoginResponse login(UserLoginRequst request);
 
     /**
      * 通过id找用户

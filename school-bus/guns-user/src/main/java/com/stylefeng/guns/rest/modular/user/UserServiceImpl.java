@@ -54,7 +54,7 @@ public class UserServiceImpl implements UserAPI {
     }
 
     @Override
-    public UserResponse login(UserRequest request) {
+    public UserLoginResponse login(UserLoginRequst request) {
         return null;
     }
 
