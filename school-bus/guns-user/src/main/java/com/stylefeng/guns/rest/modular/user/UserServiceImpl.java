@@ -10,6 +10,7 @@ package com.stylefeng.guns.rest.modular.user;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.stylefeng.guns.core.util.MD5Util;
+import com.stylefeng.guns.rest.common.constants.RetCodeConstants;
 import com.stylefeng.guns.rest.common.persistence.dao.SbUserTMapper;
 import com.stylefeng.guns.rest.common.persistence.model.SbUserT;
 import com.stylefeng.guns.rest.user.UserAPI;
@@ -40,8 +41,12 @@ public class UserServiceImpl implements UserAPI {
             Integer count = sbUserTMapper.selectCount(entityWrapper);
             if (count != null && count > 0) {
                 res.setCheckUsername(0);
+                res.setCode(RetCodeConstants.SUCCESS.getCode());
+                res.setMsg(RetCodeConstants.SUCCESS.getMessage());
             } else {
                 res.setCheckUsername(1);
+                res.setCode(RetCodeConstants.USERNAME_ALREADY_EXISTS.getCode());
+                res.setMsg(RetCodeConstants.USERNAME_ALREADY_EXISTS.getMessage());
             }
         } catch (Exception e) {
             e.printStackTrace();

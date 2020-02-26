@@ -10,6 +10,7 @@ package com.stylefeng.guns.rest.modular.user;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.stylefeng.guns.rest.common.ResponseData;
 import com.stylefeng.guns.rest.common.ResponseUtil;
+import com.stylefeng.guns.rest.common.constants.RetCodeConstants;
 import com.stylefeng.guns.rest.user.UserAPI;
 import com.stylefeng.guns.rest.user.vo.UserCheckRequest;
 import com.stylefeng.guns.rest.user.vo.UserCheckResponse;
@@ -29,6 +30,9 @@ public class UserController {
         UserCheckRequest req = new UserCheckRequest();
         req.setUsername(username);
         UserCheckResponse res = userAPI.checkUsername(req);
+        if (!res.getCode().equals(RetCodeConstants.SUCCESS.getCode())) {
+            return new ResponseUtil<>().setErrorMsg(res.getMsg());
+        }
         return new ResponseUtil().setData(res);
     }
 }

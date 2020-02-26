@@ -39,15 +39,17 @@ public class AuthController {
     private UserAPI userAPI;
 
     @RequestMapping(value = "${jwt.auth-path}")
-    public ResponseData createAuthenticationToken(UserLoginRequst authRequest) {
-        if (StringUtils.isBlank(authRequest.getUsername())) {
+    public ResponseData createAuthenticationToken(AuthRequest authRequest) {
+        if (StringUtils.isBlank(authRequest.getUserName())) {
             return new ResponseUtil<>().setErrorMsg("用户名不能为空");
         }
         if (StringUtils.isBlank(authRequest.getPassword())) {
             return new ResponseUtil<>().setErrorMsg("密码不能为空");
         }
-
-        UserLoginResponse res = userAPI.login(authRequest);
+        UserLoginRequst req = new UserLoginRequst();
+        req.setUsername(authRequest.getUserName());
+        req.setPassword(authRequest.getPassword());
+        UserLoginResponse res = userAPI.login(req);
         if (res.getUserId() != 0) {
             res.setRandomKey(jwtTokenUtil.getRandomKey());
             res.setToken(jwtTokenUtil.generateToken(""+res.getUserId(), res.getRandomKey()));
