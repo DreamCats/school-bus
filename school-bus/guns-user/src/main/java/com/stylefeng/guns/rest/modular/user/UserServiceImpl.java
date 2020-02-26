@@ -116,7 +116,14 @@ public class UserServiceImpl implements UserAPI {
 
     @Override
     public UserResponse userById(UserRequest request) {
-        return null;
+        UserResponse response = new UserResponse();
+        // 获取当前用户
+        SbUserT sbUserT = sbUserTMapper.selectById(request.getId());
+        UserVo userVo = userConverter.sbUserT2Res(sbUserT);
+        response.setUserVo(userVo);
+        response.setCode(RetCodeConstants.SUCCESS.getCode());
+        response.setMsg(RetCodeConstants.SUCCESS.getMessage());
+        return response;
     }
 
     @Override

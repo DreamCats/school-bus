@@ -8,6 +8,7 @@
 package com.stylefeng.guns.rest.modular.user;
 
 import com.alibaba.dubbo.config.annotation.Reference;
+import com.stylefeng.guns.rest.common.CurrentUser;
 import com.stylefeng.guns.rest.common.ResponseData;
 import com.stylefeng.guns.rest.common.ResponseUtil;
 import com.stylefeng.guns.rest.common.constants.RetCodeConstants;
@@ -20,15 +21,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@Api(tags = "UserController(用户模块)")
 @RequestMapping("/user/")
 public class UserController {
 
     @Reference
     private UserAPI userAPI;
 
-    @ApiOperation("通过username检查用户是否存在")
-    @ApiImplicitParam(name = "username", value = "用户", paramType = "path", required = true)
     @GetMapping("check")
     public ResponseData checkUsername(String username) {
         UserCheckRequest req = new UserCheckRequest();
@@ -54,5 +52,21 @@ public class UserController {
             return new ResponseUtil<>().setErrorMsg("服务器内部错误..");
         }
         return new ResponseUtil<>().setData(res);
+    }
+
+    @GetMapping("getUserInfo")
+    public ResponseData getUserById() {
+        // 从本地缓存中取
+        String userId = CurrentUser.getCurrentUser();
+        if (userId == null) {
+            return new ResponseUtil<>().setErrorMsg("请重新登陆..");
+        }
+        UserRequest request = new UserRequest();
+        request.setId(Integer.parseInt(userId));
+        UserResponse response = userAPI.userById(request);
+        if (!response.getCode().equals(RetCodeConstants.SUCCESS.getCode())) {
+            return new ResponseUtil<>().setErrorMsg("服务器内部错误..");
+        }
+        return new ResponseUtil<>().setData(response);
     }
 }

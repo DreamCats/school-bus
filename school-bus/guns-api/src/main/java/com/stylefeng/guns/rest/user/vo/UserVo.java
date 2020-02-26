@@ -9,8 +9,10 @@ package com.stylefeng.guns.rest.user.vo;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Data
-public class UserVo{
+public class UserVo implements Serializable {
 
     private Integer uuid; // 根据用户id
 
