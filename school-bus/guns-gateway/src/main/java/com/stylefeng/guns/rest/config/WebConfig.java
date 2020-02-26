@@ -7,6 +7,7 @@ import com.stylefeng.guns.rest.modular.auth.security.impl.Base64SecurityAction;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
  * web配置
@@ -15,7 +16,7 @@ import org.springframework.context.annotation.Configuration;
  * @date 2017-08-23 15:48
  */
 @Configuration
-public class WebConfig {
+public class WebConfig implements WebMvcConfigurer {
 
     @Bean
     @ConditionalOnProperty(prefix = RestProperties.REST_PREFIX, name = "auth-open", havingValue = "true", matchIfMissing = true)
