@@ -13,6 +13,7 @@ import com.stylefeng.guns.core.util.MD5Util;
 import com.stylefeng.guns.rest.common.constants.RetCodeConstants;
 import com.stylefeng.guns.rest.common.persistence.dao.SbUserTMapper;
 import com.stylefeng.guns.rest.common.persistence.model.SbUserT;
+import com.stylefeng.guns.rest.modular.user.converter.UserConverter;
 import com.stylefeng.guns.rest.user.UserAPI;
 import com.stylefeng.guns.rest.user.vo.*;
 import jdk.nashorn.internal.runtime.regexp.joni.constants.EncloseType;
@@ -27,6 +28,10 @@ public class UserServiceImpl implements UserAPI {
 
     @Autowired
     private SbUserTMapper sbUserTMapper;
+
+    @Autowired
+    private UserConverter userConverter;
+
     /**
      * 检查用户名是否已经存在
      * @param request ：username
@@ -57,7 +62,21 @@ public class UserServiceImpl implements UserAPI {
 
     @Override
     public UserResponse regsiter(UserRegisterRequest request) {
-        return null;
+        UserResponse res = new UserResponse();
+        SbUserT sbUserT = userConverter.res2SbUserT(request);
+        // 加密
+        String md5Password = MD5Util.encrypt(sbUserT.getUserPwd());
+        sbUserT.setUserPwd(md5Password);
+        Integer insert = sbUserTMapper.insert(sbUserT);
+        if (insert > 0) {
+//            res.setUserVo(userConverter.sbUserT2Res());
+            res.setCode(RetCodeConstants.SUCCESS.getCode());
+            res.setMsg(RetCodeConstants.SUCCESS.getMessage());
+        } else {
+            res.setCode(RetCodeConstants.USER_REGISTER_VERIFY_FAILED.getCode());
+            res.setMsg(RetCodeConstants.USER_REGISTER_VERIFY_FAILED.getMessage());
+        }
+        return res;
     }
 
     @Override

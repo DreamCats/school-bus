@@ -26,7 +26,7 @@ public class UserVo{
 
     private String userPhone;
 
-    private long beginTime;
+    private Long beginTime;
 
-    private long updateTime;
+    private Long updateTime;
 }

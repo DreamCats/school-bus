@@ -7,8 +7,11 @@
 
 package com.stylefeng.guns.rest;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.stylefeng.guns.rest.common.persistence.dao.SbUserTMapper;
 import com.stylefeng.guns.rest.common.persistence.model.SbUserT;
+import com.stylefeng.guns.rest.modular.user.converter.UserConverter;
+import com.stylefeng.guns.rest.user.vo.UserVo;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +25,20 @@ public class UserMapperTest {
     @Autowired
     private SbUserTMapper sbUserTMapper;
 
+    @Autowired
+    private UserConverter userConverter;
+
     @Test
     public void test() {
         SbUserT sbUserT = sbUserTMapper.selectById(2);
         System.out.println(sbUserT);
+    }
+
+
+    @Test
+    public void registerTest() {
+        SbUserT sbUserT = sbUserTMapper.selectById(2);
+        UserVo userVo = userConverter.sbUserT2Res(sbUserT);
+        System.out.println(userVo);
     }
 }
