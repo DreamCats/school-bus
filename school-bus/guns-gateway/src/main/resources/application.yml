@@ -47,3 +47,6 @@ dubbo:
   registry:
     protocol: zookeeper
     address: 39.108.93.119:2181
+
+swagger:
+  enable: true
