@@ -85,14 +85,18 @@ public class UserServiceImpl implements UserAPI {
     public UserLoginResponse login(UserLoginRequst request) {
         UserLoginResponse res = new UserLoginResponse();
         res.setUserId(0);
+        res.setCode(RetCodeConstants.USERORPASSWORD_ERRROR.getCode());
+        res.setMsg(RetCodeConstants.USERORPASSWORD_ERRROR.getMessage());
         try {
             SbUserT sbUserT = new SbUserT();
             sbUserT.setUserName(request.getUsername());
             SbUserT sbUserT1 = sbUserTMapper.selectOne(sbUserT);
-            if (sbUserT1 != null && sbUserT.getUuid() > 0) {
+            if (sbUserT1 != null && sbUserT1.getUuid() > 0) {
                 String md5Password = MD5Util.encrypt(request.getPassword());
                 if (sbUserT1.getUserPwd().equals(md5Password)) {
                     res.setUserId(sbUserT1.getUuid());
+                    res.setCode(RetCodeConstants.SUCCESS.getCode());
+                    res.setMsg(RetCodeConstants.SUCCESS.getMessage());
                 }
             }
         } catch (Exception e) {
