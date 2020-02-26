@@ -16,7 +16,6 @@ import com.stylefeng.guns.rest.common.persistence.model.SbUserT;
 import com.stylefeng.guns.rest.modular.user.converter.UserConverter;
 import com.stylefeng.guns.rest.user.UserAPI;
 import com.stylefeng.guns.rest.user.vo.*;
-import jdk.nashorn.internal.runtime.regexp.joni.constants.EncloseType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -60,6 +59,11 @@ public class UserServiceImpl implements UserAPI {
         return res;
     }
 
+    /**
+     * 注册业务逻辑
+     * @param request
+     * @return
+     */
     @Override
     public UserRegisterResponse regsiter(UserRegisterRequest request) {
         UserRegisterResponse res = new UserRegisterResponse();
@@ -81,6 +85,11 @@ public class UserServiceImpl implements UserAPI {
         return res;
     }
 
+    /**
+     * 登陆业务逻辑
+     * @param request
+     * @return
+     */
     @Override
     public UserLoginResponse login(UserLoginRequst request) {
         UserLoginResponse res = new UserLoginResponse();
