@@ -23,7 +23,7 @@ public interface UserAPI {
      * @param request
      * @return
      */
-    UserResponse regsiter(UserRegisterRequest request);
+    UserRegisterResponse regsiter(UserRegisterRequest request);
 
     /**
      * 用户登陆

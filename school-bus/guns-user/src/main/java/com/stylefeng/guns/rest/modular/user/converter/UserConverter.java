@@ -14,10 +14,15 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
+
 @Mapper(componentModel = "spring",uses = DateMapper.class)
 public interface UserConverter {
 
-    @Mappings({})
+    @Mappings({
+            @Mapping(source = "request.username", target = "userName"),
+            @Mapping(source = "request.password", target = "userPwd"),
+            @Mapping(source = "request.phone", target = "userPhone")
+    })
     SbUserT res2SbUserT(UserRegisterRequest request);
 
     @Mappings({

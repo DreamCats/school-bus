@@ -61,18 +61,20 @@ public class UserServiceImpl implements UserAPI {
     }
 
     @Override
-    public UserResponse regsiter(UserRegisterRequest request) {
-        UserResponse res = new UserResponse();
+    public UserRegisterResponse regsiter(UserRegisterRequest request) {
+        UserRegisterResponse res = new UserRegisterResponse();
         SbUserT sbUserT = userConverter.res2SbUserT(request);
+        System.out.println(sbUserT);
         // 加密
         String md5Password = MD5Util.encrypt(sbUserT.getUserPwd());
         sbUserT.setUserPwd(md5Password);
         Integer insert = sbUserTMapper.insert(sbUserT);
         if (insert > 0) {
-//            res.setUserVo(userConverter.sbUserT2Res());
+            res.setRegister(true);
             res.setCode(RetCodeConstants.SUCCESS.getCode());
             res.setMsg(RetCodeConstants.SUCCESS.getMessage());
         } else {
+            res.setRegister(false);
             res.setCode(RetCodeConstants.USER_REGISTER_VERIFY_FAILED.getCode());
             res.setMsg(RetCodeConstants.USER_REGISTER_VERIFY_FAILED.getMessage());
         }
