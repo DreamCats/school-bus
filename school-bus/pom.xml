@@ -48,7 +48,7 @@
         <!--my        -->
         <dubbo-spring.version>0.2.0</dubbo-spring.version>
         <lombok.version>1.18.8</lombok.version>
-
+        <mapstruct.version>1.3.0.Final</mapstruct.version>
     </properties>
 
     <dependencyManagement>
@@ -184,6 +184,18 @@
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
                 <version>${lombok.version}</version>
+            </dependency>
+
+            <!--mapstruct-->
+            <dependency>
+                <groupId>org.mapstruct</groupId>
+                <artifactId>mapstruct-jdk8</artifactId>
+                <version>${mapstruct.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mapstruct</groupId>
+                <artifactId>mapstruct-processor</artifactId>
+                <version>${mapstruct.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

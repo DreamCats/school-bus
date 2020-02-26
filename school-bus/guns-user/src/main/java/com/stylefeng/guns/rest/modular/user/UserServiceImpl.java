@@ -9,10 +9,12 @@ package com.stylefeng.guns.rest.modular.user;
 
 import com.alibaba.dubbo.config.annotation.Service;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.stylefeng.guns.core.util.MD5Util;
 import com.stylefeng.guns.rest.common.persistence.dao.SbUserTMapper;
 import com.stylefeng.guns.rest.common.persistence.model.SbUserT;
 import com.stylefeng.guns.rest.user.UserAPI;
 import com.stylefeng.guns.rest.user.vo.*;
+import jdk.nashorn.internal.runtime.regexp.joni.constants.EncloseType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -55,7 +57,22 @@ public class UserServiceImpl implements UserAPI {
 
     @Override
     public UserLoginResponse login(UserLoginRequst request) {
-        return null;
+        UserLoginResponse res = new UserLoginResponse();
+        res.setUserId(0);
+        try {
+            SbUserT sbUserT = new SbUserT();
+            sbUserT.setUserName(request.getUsername());
+            SbUserT sbUserT1 = sbUserTMapper.selectOne(sbUserT);
+            if (sbUserT1 != null && sbUserT.getUuid() > 0) {
+                String md5Password = MD5Util.encrypt(request.getPassword());
+                if (sbUserT1.getUserPwd().equals(md5Password)) {
+                    res.setUserId(sbUserT1.getUuid());
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return res;
     }
 
     @Override
