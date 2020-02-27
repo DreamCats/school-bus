@@ -9,6 +9,7 @@ package com.stylefeng.guns.rest.modular.user.converter;
 import com.stylefeng.guns.rest.common.convert.DateMapper;
 import com.stylefeng.guns.rest.common.persistence.model.SbUserT;
 import com.stylefeng.guns.rest.user.vo.UserRegisterRequest;
+import com.stylefeng.guns.rest.user.vo.UserUpdateInfoRequest;
 import com.stylefeng.guns.rest.user.vo.UserVo;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -28,5 +29,10 @@ public interface UserConverter {
     @Mappings({
     })
     UserVo sbUserT2Res(SbUserT sbUserT);
+
+    @Mappings({
+            @Mapping(source = "request.id", target = "uuid"),
+    })
+    SbUserT res2SbUserT(UserUpdateInfoRequest request);
 
 }

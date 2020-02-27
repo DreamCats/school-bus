@@ -37,11 +37,12 @@ public interface UserAPI {
      * @param request
      * @return
      */
-    UserResponse userById(UserRequest request);
+    UserResponse getUserById(UserRequest request);
 
     /**
-     * 返回用户列表
+     * 更新用户信息
+     * @param request
      * @return
      */
-    UserListResponse users();
+    UserResponse updateUserInfo(UserUpdateInfoRequest request);
 }

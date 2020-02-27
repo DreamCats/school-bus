@@ -14,9 +14,6 @@ import com.stylefeng.guns.rest.common.ResponseUtil;
 import com.stylefeng.guns.rest.common.constants.RetCodeConstants;
 import com.stylefeng.guns.rest.user.UserAPI;
 import com.stylefeng.guns.rest.user.vo.*;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -63,7 +60,7 @@ public class UserController {
         }
         UserRequest request = new UserRequest();
         request.setId(Integer.parseInt(userId));
-        UserResponse response = userAPI.userById(request);
+        UserResponse response = userAPI.getUserById(request);
         if (!response.getCode().equals(RetCodeConstants.SUCCESS.getCode())) {
             return new ResponseUtil<>().setErrorMsg("服务器内部错误..");
         }

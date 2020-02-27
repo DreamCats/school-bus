@@ -9,10 +9,7 @@ package com.stylefeng.guns.rest;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.stylefeng.guns.rest.user.UserAPI;
-import com.stylefeng.guns.rest.user.vo.UserCheckRequest;
-import com.stylefeng.guns.rest.user.vo.UserCheckResponse;
-import com.stylefeng.guns.rest.user.vo.UserRegisterRequest;
-import com.stylefeng.guns.rest.user.vo.UserRegisterResponse;
+import com.stylefeng.guns.rest.user.vo.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -42,6 +39,16 @@ public class UserAPITest {
         request.setPhone("123");
         UserRegisterResponse response = userAPI.regsiter(request);
         System.out.println(response);
+    }
+
+    @Test
+    public void updateUserInfo() {
+        UserUpdateInfoRequest request = new UserUpdateInfoRequest();
+        request.setNickName("峰");
+        request.setId(4);
+        request.setUserSex(0);
+        UserResponse userResponse = userAPI.updateUserInfo(request);
+        System.out.println(userResponse);
     }
 
 }

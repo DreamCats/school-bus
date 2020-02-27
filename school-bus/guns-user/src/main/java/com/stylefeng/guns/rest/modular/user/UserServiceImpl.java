@@ -115,9 +115,8 @@ public class UserServiceImpl implements UserAPI {
     }
 
     @Override
-    public UserResponse userById(UserRequest request) {
+    public UserResponse getUserById(UserRequest request) {
         UserResponse response = new UserResponse();
-        // 获取当前用户
         SbUserT sbUserT = sbUserTMapper.selectById(request.getId());
         UserVo userVo = userConverter.sbUserT2Res(sbUserT);
         response.setUserVo(userVo);
@@ -127,7 +126,19 @@ public class UserServiceImpl implements UserAPI {
     }
 
     @Override
-    public UserListResponse users() {
-        return null;
+    public UserResponse updateUserInfo(UserUpdateInfoRequest request) {
+        UserResponse response = new UserResponse();
+        SbUserT sbUserT = userConverter.res2SbUserT(request);
+        // 不改变密码
+        Integer integer = sbUserTMapper.updateById(sbUserT);
+        if (integer == 0) {
+            response.setCode(RetCodeConstants.USER_INFOR_INVALID.getCode());
+            response.setMsg(RetCodeConstants.USER_INFOR_INVALID.getMessage());
+        }
+        SbUserT sbUserT1 = sbUserTMapper.selectById(sbUserT.getUuid());
+        response.setUserVo(userConverter.sbUserT2Res(sbUserT1));
+        response.setCode(RetCodeConstants.SUCCESS.getCode());
+        response.setMsg(RetCodeConstants.SUCCESS.getMessage());
+        return response;
     }
 }
