@@ -8,7 +8,7 @@
 package com.stylefeng.guns.rest;
 
 import com.alibaba.dubbo.config.annotation.Reference;
-import com.stylefeng.guns.rest.user.UserAPI;
+import com.stylefeng.guns.rest.user.IUserService;
 import com.stylefeng.guns.rest.user.vo.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,10 +17,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {GunsUserApplication.class})
-public class UserAPITest {
+public class UserServiceTest {
 
     @Reference
-    private UserAPI userAPI;
+    private IUserService userAPI;
 
     @Test
     public void checkUsernameTest() {

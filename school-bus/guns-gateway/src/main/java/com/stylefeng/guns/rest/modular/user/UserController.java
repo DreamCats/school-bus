@@ -12,7 +12,7 @@ import com.stylefeng.guns.rest.common.CurrentUser;
 import com.stylefeng.guns.rest.common.ResponseData;
 import com.stylefeng.guns.rest.common.ResponseUtil;
 import com.stylefeng.guns.rest.common.constants.RetCodeConstants;
-import com.stylefeng.guns.rest.user.UserAPI;
+import com.stylefeng.guns.rest.user.IUserService;
 import com.stylefeng.guns.rest.user.vo.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     @Reference
-    private UserAPI userAPI;
+    private IUserService userAPI;
 
     @GetMapping("check")
     public ResponseData checkUsername(String username) {

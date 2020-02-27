@@ -14,7 +14,7 @@ import com.stylefeng.guns.rest.common.constants.RetCodeConstants;
 import com.stylefeng.guns.rest.common.persistence.dao.SbUserTMapper;
 import com.stylefeng.guns.rest.common.persistence.model.SbUserT;
 import com.stylefeng.guns.rest.modular.user.converter.UserConverter;
-import com.stylefeng.guns.rest.user.UserAPI;
+import com.stylefeng.guns.rest.user.IUserService;
 import com.stylefeng.guns.rest.user.vo.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @Service
-public class UserServiceImpl implements UserAPI {
+public class UserServiceImpl implements IUserService {
 
     @Autowired
     private SbUserTMapper sbUserTMapper;

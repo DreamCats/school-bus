@@ -9,7 +9,7 @@ package com.stylefeng.guns.rest.user;
 
 import com.stylefeng.guns.rest.user.vo.*;
 
-public interface UserAPI {
+public interface IUserService {
 
     /**
      * 检查用户名是否存在
