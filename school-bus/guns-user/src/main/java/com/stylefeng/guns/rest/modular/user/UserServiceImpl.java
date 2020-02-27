@@ -114,6 +114,11 @@ public class UserServiceImpl implements UserAPI {
         return res;
     }
 
+    /**
+     * 通过id获取用户信息
+     * @param request
+     * @return
+     */
     @Override
     public UserResponse getUserById(UserRequest request) {
         UserResponse response = new UserResponse();
@@ -125,6 +130,11 @@ public class UserServiceImpl implements UserAPI {
         return response;
     }
 
+    /**
+     * 更新用户
+     * @param request
+     * @return
+     */
     @Override
     public UserResponse updateUserInfo(UserUpdateInfoRequest request) {
         UserResponse response = new UserResponse();

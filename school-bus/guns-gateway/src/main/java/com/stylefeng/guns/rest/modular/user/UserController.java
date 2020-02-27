@@ -66,4 +66,19 @@ public class UserController {
         }
         return new ResponseUtil<>().setData(response);
     }
+
+    @PostMapping("updateInfo")
+    public ResponseData updateUserInfo(UserUpdateInfoRequest request) {
+        // id 从本队缓存中取
+        String userId = CurrentUser.getCurrentUser();
+        if (userId == null) {
+            return new ResponseUtil<>().setErrorMsg("请重新登陆...");
+        }
+        request.setId(Integer.parseInt(userId));
+        UserResponse response = userAPI.updateUserInfo(request);
+        if (!response.getCode().equals(RetCodeConstants.SUCCESS.getCode())) {
+            return new ResponseUtil<>().setErrorMsg("服务器内部错误..");
+        }
+        return new ResponseUtil<>().setData(response);
+    }
 }
