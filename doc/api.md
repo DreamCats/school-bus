@@ -4,7 +4,7 @@
 
 **注意：除了/user/check，/user/register以外，都需要携带token**
 
-####检查用户名
+#### 检查用户名
 
 - URL：/user/check?username=mai
 - 请求方式：get
