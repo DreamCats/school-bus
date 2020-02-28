@@ -7,6 +7,7 @@
 
 package com.stylefeng.guns.rest.config;
 
+import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,11 +27,11 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 import java.util.ArrayList;
 import java.util.List;
 
-//
-//@Configuration
-//@EnableSwagger2
-//@ConfigurationProperties(prefix = "swagger")
-public class Swagger2Config implements WebMvcConfigurer{
+@Setter
+@Configuration
+@EnableSwagger2
+@ConfigurationProperties(prefix = "swagger")
+public class Swagger2Config{
 
     private boolean enable;
     // 不配置取默认值
@@ -72,7 +73,7 @@ public class Swagger2Config implements WebMvcConfigurer{
                 .apiInfo(apiInfo())
                 .host(host)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.stylefeng.guns.rest.modular.user"))
+                .apis(RequestHandlerSelectors.basePackage("com.stylefeng.guns.rest.modular"))
                 .paths(PathSelectors.any())
                 .build()
                 .enable(enable)

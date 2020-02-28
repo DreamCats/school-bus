@@ -17,7 +17,6 @@ import com.stylefeng.guns.rest.user.vo.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/user/")
