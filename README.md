@@ -6,8 +6,8 @@
 >
 > - 后端：
 >   - Springboot
->   - MyBatis
->   - Dubbo
+>   - MyBatisPlus（可自定义sql语句）
+>   - Dubbo（负载均衡，异步调用）
 >   - Mysql
 >   - Redis
 >   - RocketMQ
@@ -17,7 +17,7 @@
 >   - vuex
 >   - vue-router
 >   - axios
->   - element-ui
+>   - vant-ui
 >   - 持续补充...
 
 
@@ -62,6 +62,19 @@
 
 - guns-rest的test目录下有生成数据库模型代码，注意输出目录的包名即可
 - 安装idea的easycode插件
+
+## 一些文档
+
+- [sql文档](./doc/sql.md)
+- [api文档](./doc/api.md)
+- [会议文档](./doc/meeting.md)
+
+## 模块
+
+- 用户模块
+- 班车模块
+- 订单模块
+- 支付模块
 
 ## 参考项目
 
