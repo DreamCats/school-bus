@@ -29,3 +29,4 @@ out
 # iml
 *.iml
 target
+/school_bus/*.gz

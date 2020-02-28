@@ -17,6 +17,8 @@ import com.stylefeng.guns.rest.user.vo.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 @RestController
 @RequestMapping("/user/")
 public class UserController {
@@ -36,13 +38,14 @@ public class UserController {
     }
 
     @PostMapping("register")
-    public ResponseData register(@RequestBody UserRegisterRequest request) {
+    public ResponseData register(UserRegisterRequest request) {
         if (StringUtils.isBlank(request.getUsername())) {
             return new ResponseUtil<>().setErrorMsg("没有用户名");
         }
         if (StringUtils.isBlank(request.getPassword())) {
             return new ResponseUtil<>().setErrorMsg("没有密码");
         }
+
         // 不想写那么多了
         UserRegisterResponse res = userAPI.regsiter(request);
         if (!res.getCode().equals(RetCodeConstants.SUCCESS.getCode())) {

@@ -15,7 +15,7 @@ public class UserUpdateInfoRequest extends AbstractRequest {
 
     private Integer id; // 通过id找
 
-    private String userName;
+//    private String userName;
 
     private String nickName;
 

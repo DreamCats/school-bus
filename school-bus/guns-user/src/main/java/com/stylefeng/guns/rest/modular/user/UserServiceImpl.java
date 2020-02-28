@@ -72,12 +72,12 @@ public class UserServiceImpl implements IUserService {
         // 加密
         String md5Password = MD5Util.encrypt(sbUserT.getUserPwd());
         sbUserT.setUserPwd(md5Password);
-        Integer insert = sbUserTMapper.insert(sbUserT);
-        if (insert > 0) {
+        try {
+            sbUserTMapper.insert(sbUserT);
             res.setRegister(true);
             res.setCode(RetCodeConstants.SUCCESS.getCode());
             res.setMsg(RetCodeConstants.SUCCESS.getMessage());
-        } else {
+        } catch (Exception e) {
             res.setRegister(false);
             res.setCode(RetCodeConstants.USER_REGISTER_VERIFY_FAILED.getCode());
             res.setMsg(RetCodeConstants.USER_REGISTER_VERIFY_FAILED.getMessage());
