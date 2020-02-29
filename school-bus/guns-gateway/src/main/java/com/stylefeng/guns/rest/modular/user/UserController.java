@@ -14,10 +14,13 @@ import com.stylefeng.guns.rest.common.ResponseUtil;
 import com.stylefeng.guns.rest.common.constants.RetCodeConstants;
 import com.stylefeng.guns.rest.user.IUserService;
 import com.stylefeng.guns.rest.user.vo.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
-
+@Api(value = "用户服务", description = "用户服务相关接口")
 @RestController
 @RequestMapping("/user/")
 public class UserController {
@@ -25,6 +28,8 @@ public class UserController {
     @Reference
     private IUserService userAPI;
 
+    @ApiOperation(value = "检查用户名接口", notes = "给定用户名，查询是否存在", response = ResponseData.class)
+    @ApiImplicitParam(name = "username", required = true, dataType = "String", paramType = "query")
     @GetMapping("check")
     public ResponseData checkUsername(String username) {
         UserCheckRequest req = new UserCheckRequest();
@@ -36,6 +41,7 @@ public class UserController {
         return new ResponseUtil().setData(res);
     }
 
+    @ApiOperation(value = "注册接口", notes = "用户注册相关信息", response = ResponseData.class)
     @PostMapping("register")
     public ResponseData register(UserRegisterRequest request) {
         if (StringUtils.isBlank(request.getUsername())) {
@@ -53,6 +59,7 @@ public class UserController {
         return new ResponseUtil<>().setData(res);
     }
 
+    @ApiOperation(value = "获取用户信息接口", notes = "获取用户相关信息，前提请获取用户token放在headers中", response = ResponseData.class)
     @GetMapping("getUserInfo")
     public ResponseData getUserById() {
         // 从本地缓存中取
@@ -69,6 +76,7 @@ public class UserController {
         return new ResponseUtil<>().setData(response);
     }
 
+    @ApiOperation(value = "更新接口", notes = "更新用户相关信息", response = ResponseData.class)
     @PostMapping("updateInfo")
     public ResponseData updateUserInfo(UserUpdateInfoRequest request) {
         // id 从本队缓存中取
@@ -84,6 +92,7 @@ public class UserController {
         return new ResponseUtil<>().setData(response);
     }
 
+    @ApiOperation(value = "登出接口", notes = "用户登出，暂时是前端删除token", response = ResponseData.class)
     @GetMapping("logout")
     public ResponseData logout() {
         /*
