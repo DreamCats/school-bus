@@ -9,6 +9,8 @@ import com.stylefeng.guns.rest.modular.auth.validator.IReqValidator;
 import com.stylefeng.guns.rest.user.IUserService;
 import com.stylefeng.guns.rest.user.vo.UserLoginRequst;
 import com.stylefeng.guns.rest.user.vo.UserLoginResponse;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,6 +24,7 @@ import javax.annotation.Resource;
  * @author fengshuonan
  * @Date 2017/8/24 14:22
  */
+@Api(value = "Auth服务",description = "获取Token相关权限接口")
 @RestController
 public class AuthController {
 
@@ -34,6 +37,7 @@ public class AuthController {
     @Reference
     private IUserService userAPI;
 
+    @ApiOperation(value = "获取token接口", notes = "每调用一次，就会随机生成一串token", response = ResponseData.class)
     @RequestMapping(value = "${jwt.auth-path}")
     public ResponseData createAuthenticationToken(AuthRequest authRequest) {
         if (StringUtils.isBlank(authRequest.getUserName())) {
