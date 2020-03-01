@@ -1,10 +1,9 @@
 package com.stylefeng.guns.rest.common.persistence.model;
 
-
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
-
+import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
 
 /**
@@ -15,7 +14,8 @@ import java.io.Serializable;
  * @author Maifeng
  * @since 2020-03-01
  */
-public class SbCountT extends Model<SbCountT> {
+@TableName("sb_count")
+public class Count extends Model<Count> {
 
     private static final long serialVersionUID=1L;
 
@@ -132,7 +132,7 @@ public class SbCountT extends Model<SbCountT> {
 
     @Override
     public String toString() {
-        return "SbCountT{" +
+        return "Count{" +
               "uuid=" + uuid +
                   ", busId=" + busId +
                   ", beginTime=" + beginTime +

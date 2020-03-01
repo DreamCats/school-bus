@@ -46,6 +46,7 @@ public class EntityGenerator {
             // 自定义数据库表字段类型转换【可选】
 //            @Override
 //            public DbColumnType processTypeConvert(String fieldType) {
+//                System.out.println("转换类型：" + fieldType);
 //                return super.processTypeConvert(fieldType);
 //            }
         });
@@ -57,9 +58,9 @@ public class EntityGenerator {
 
         // 策略配置
         StrategyConfig strategy = new StrategyConfig();
-        //strategy.setTablePrefix(new String[]{"_"});// 此处可以修改为您的表前缀
+        strategy.setTablePrefix(new String[]{"sb_"});// 此处可以修改为您的表前缀
         strategy.setNaming(NamingStrategy.underline_to_camel);// 表名生成策略
-        strategy.setInclude(new String[]{"sb_bus_t", "sb_count_t"});
+        strategy.setInclude(new String[]{"sb_bus", "sb_count"});
         mpg.setStrategy(strategy);
 
         // 包配置

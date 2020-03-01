@@ -1,6 +1,6 @@
 package com.stylefeng.guns.rest.common.persistence.dao;
 
-import com.stylefeng.guns.rest.common.persistence.model.SbBusT;
+import com.stylefeng.guns.rest.common.persistence.model.Bus;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
@@ -11,6 +11,6 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @author Maifeng
  * @since 2020-03-01
  */
-public interface SbBusTMapper extends BaseMapper<SbBusT> {
+public interface BusMapper extends BaseMapper<Bus> {
 
 }
