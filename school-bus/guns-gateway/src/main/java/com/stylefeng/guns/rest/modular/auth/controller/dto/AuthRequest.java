@@ -4,6 +4,8 @@ import com.stylefeng.guns.rest.modular.auth.validator.dto.Credence;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * 认证的请求dto
  *
@@ -13,8 +15,11 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(value = "Auth请求实体", description = "Auth请求参数")
 public class AuthRequest implements Credence {
 
+    @NotNull(message = "用户名不能为空")
     @ApiModelProperty(value = "用户名", example = "mai", required = true)
     private String userName;
+
+    @NotNull(message = "密码不能为空")
     @ApiModelProperty(value = "密码", example = "123", required = true)
     private String password;
 

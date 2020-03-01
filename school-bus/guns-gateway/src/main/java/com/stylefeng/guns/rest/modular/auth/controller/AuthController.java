@@ -11,8 +11,12 @@ import com.stylefeng.guns.rest.user.vo.UserLoginRequst;
 import com.stylefeng.guns.rest.user.vo.UserLoginResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,6 +28,7 @@ import javax.annotation.Resource;
  * @author fengshuonan
  * @Date 2017/8/24 14:22
  */
+@Slf4j
 @Api(value = "Auth服务",description = "获取Token相关权限接口")
 @RestController
 public class AuthController {
@@ -39,12 +44,12 @@ public class AuthController {
 
     @ApiOperation(value = "获取token接口", notes = "每调用一次，就会随机生成一串token", response = ResponseData.class)
     @RequestMapping(value = "${jwt.auth-path}")
-    public ResponseData createAuthenticationToken(AuthRequest authRequest) {
-        if (StringUtils.isBlank(authRequest.getUserName())) {
-            return new ResponseUtil<>().setErrorMsg("用户名不能为空");
-        }
-        if (StringUtils.isBlank(authRequest.getPassword())) {
-            return new ResponseUtil<>().setErrorMsg("密码不能为空");
+    public ResponseData createAuthenticationToken(@Validated AuthRequest authRequest, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            for (FieldError fieldError : bindingResult.getFieldErrors()) {
+                log.error("参数：{}校验失败，原因：{}", fieldError.getField(), fieldError.getDefaultMessage());
+            }
+            return new ResponseUtil<>().setErrorMsg("用户参数设置错误:" + bindingResult.getFieldErrors().toString());
         }
         UserLoginRequst req = new UserLoginRequst();
         req.setUsername(authRequest.getUserName());
