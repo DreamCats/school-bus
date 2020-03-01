@@ -48,7 +48,7 @@ public class DefaultFastjsonConfig {
                 SerializerFeature.WriteMapNullValue,
                 SerializerFeature.WriteEnumUsingToString
         );
-        fastJsonConfig.setDateFormat("yyyy-MM-dd HH:mm:ss");
+//        fastJsonConfig.setDateFormat("yyyy-MM-dd HH:mm:ss");
         ValueFilter valueFilter = new ValueFilter() {
             public Object process(Object o, String s, Object o1) {
                 if (null == o1) {

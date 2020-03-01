@@ -11,12 +11,13 @@ import com.stylefeng.guns.rest.common.persistence.model.User;
 import com.stylefeng.guns.rest.user.vo.UserRegisterRequest;
 import com.stylefeng.guns.rest.user.vo.UserUpdateInfoRequest;
 import com.stylefeng.guns.rest.user.vo.UserVo;
+import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
 
-@Mapper(componentModel = "spring",uses = DateMapper.class)
+@Mapper(componentModel = "spring")
 public interface UserConverter {
 
     @Mappings({

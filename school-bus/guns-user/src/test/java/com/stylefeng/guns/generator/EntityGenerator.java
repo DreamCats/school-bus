@@ -45,11 +45,11 @@ public class EntityGenerator {
         dsc.setDbType(DbType.MYSQL);
 //        dsc.setTypeConvert(new MySqlTypeConvert() {
 //            // 自定义数据库表字段类型转换【可选】
-////            @Override
-////            public DbColumnType processTypeConvert(String fieldType) {
-////                return super.processTypeConvert(fieldType);
-////            }
-////        });
+//            @Override
+//            public DbColumnType processTypeConvert(GlobalConfig globalConfig, String fieldType) {
+//                return (DbColumnType) super.processTypeConvert(globalConfig, fieldType);
+//            }
+//        });
         dsc.setDriverName("com.mysql.cj.jdbc.Driver");
         dsc.setUsername("root");
         dsc.setPassword("mai");

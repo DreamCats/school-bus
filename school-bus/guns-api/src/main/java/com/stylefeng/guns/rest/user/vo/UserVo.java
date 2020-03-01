@@ -28,7 +28,7 @@ public class UserVo implements Serializable {
 
     private String userPhone;
 
-    private Long beginTime;
+    private String beginTime;
 
-    private Long updateTime;
+    private String updateTime;
 }

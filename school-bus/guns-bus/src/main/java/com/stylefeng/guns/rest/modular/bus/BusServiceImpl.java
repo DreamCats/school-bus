@@ -51,6 +51,7 @@ public class BusServiceImpl implements IBusService {
             response.setCode(RetCodeConstants.DB_EXCEPTION.getCode());
             response.setMsg(RetCodeConstants.DB_EXCEPTION.getMessage());
             log.error("getBus:" , e);
+            return response;
         }
         return response;
     }
