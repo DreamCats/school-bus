@@ -1,5 +1,7 @@
 package com.stylefeng.guns.generator;
 
+
+import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.generator.AutoGenerator;
 import com.baomidou.mybatisplus.generator.InjectionConfig;
 import com.baomidou.mybatisplus.generator.config.DataSourceConfig;
@@ -8,7 +10,6 @@ import com.baomidou.mybatisplus.generator.config.PackageConfig;
 import com.baomidou.mybatisplus.generator.config.StrategyConfig;
 import com.baomidou.mybatisplus.generator.config.converts.MySqlTypeConvert;
 import com.baomidou.mybatisplus.generator.config.rules.DbColumnType;
-import com.baomidou.mybatisplus.generator.config.rules.DbType;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 import org.junit.Test;
 
@@ -43,10 +44,10 @@ public class EntityGenerator {
         dsc.setDbType(DbType.MYSQL);
         dsc.setTypeConvert(new MySqlTypeConvert() {
             // 自定义数据库表字段类型转换【可选】
-            @Override
-            public DbColumnType processTypeConvert(String fieldType) {
-                return super.processTypeConvert(fieldType);
-            }
+//            @Override
+//            public DbColumnType processTypeConvert(String fieldType) {
+//                return super.processTypeConvert(fieldType);
+//            }
         });
         dsc.setDriverName("com.mysql.jdbc.Driver");
         dsc.setUsername("root");

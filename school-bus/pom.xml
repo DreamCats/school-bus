@@ -30,9 +30,10 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
         <guns.version>1.0.0</guns.version>
-        <mybatisplus-spring-boot-starter.version>1.0.5</mybatisplus-spring-boot-starter.version>
+<!--        <mybatisplus-spring-boot-starter.version>1.0.5</mybatisplus-spring-boot-starter.version>-->
         <!-- <shiro.version>1.4.0</shiro.version> -->
-         <mybatis-plus.version>2.3</mybatis-plus.version>
+<!--         <mybatis-plus.version>2.3</mybatis-plus.version>-->
+        <mybatis-plus.version>3.3.0</mybatis-plus.version>
         <fastjson.version>1.2.47</fastjson.version>
         <velocity.version>1.7</velocity.version>
         <kaptcha.version>2.3.2</kaptcha.version>
@@ -73,11 +74,11 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-            <dependency>
-                <groupId>com.baomidou</groupId>
-                <artifactId>mybatisplus-spring-boot-starter</artifactId>
-                <version>${mybatisplus-spring-boot-starter.version}</version>
-            </dependency>
+<!--            <dependency>-->
+<!--                <groupId>com.baomidou</groupId>-->
+<!--                <artifactId>mybatisplus-spring-boot-starter</artifactId>-->
+<!--                <version>${mybatisplus-spring-boot-starter.version}</version>-->
+<!--            </dependency>-->
             <!--shiro依赖-->
             <!-- <dependency>
                 <groupId>org.apache.shiro</groupId>
@@ -99,11 +100,11 @@
                 <artifactId>mysql-connector-java</artifactId>
                 <version>${mysql-connector-java.version}</version>
             </dependency>
-            <dependency>
-                <groupId>com.baomidou</groupId>
-                <artifactId>mybatis-plus</artifactId>
-                <version>${mybatis-plus.version}</version>
-            </dependency>
+<!--            <dependency>-->
+<!--                <groupId>com.baomidou</groupId>-->
+<!--                <artifactId>mybatis-plus</artifactId>-->
+<!--                <version>${mybatis-plus.version}</version>-->
+<!--            </dependency>-->
             <!-- <dependency>
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-generate</artifactId>
@@ -204,6 +205,17 @@
                 <groupId>com.spring4all</groupId>
                 <artifactId>swagger-spring-boot-starter</artifactId>
                 <version>${swagger-starter.version}</version>
+            </dependency>
+            <!--mybatis-plus-->
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>${mybatis-plus.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-generator</artifactId>
+                <version>${mybatis-plus.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

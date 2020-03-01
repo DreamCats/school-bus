@@ -1,8 +1,7 @@
 package com.stylefeng.guns.rest.common.persistence.dao;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.stylefeng.guns.rest.common.persistence.model.SbUserT;
-import com.baomidou.mybatisplus.mapper.BaseMapper;
-import org.springframework.stereotype.Component;
 
 /**
  * <p>

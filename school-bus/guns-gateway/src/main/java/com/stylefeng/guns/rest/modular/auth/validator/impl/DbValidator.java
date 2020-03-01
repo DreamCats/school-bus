@@ -1,6 +1,6 @@
 package com.stylefeng.guns.rest.modular.auth.validator.impl;
 
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.stylefeng.guns.rest.modular.auth.validator.IReqValidator;
 import com.stylefeng.guns.rest.common.persistence.dao.UserMapper;
 import com.stylefeng.guns.rest.common.persistence.model.User;
@@ -24,7 +24,7 @@ public class DbValidator implements IReqValidator {
 
     @Override
     public boolean validate(Credence credence) {
-        List<User> users = userMapper.selectList(new EntityWrapper<User>().eq("userName", credence.getCredenceName()));
+        List<User> users = userMapper.selectList(new QueryWrapper<User>().eq("userName", credence.getCredenceName()));
         if (users != null && users.size() > 0) {
             return true;
         } else {

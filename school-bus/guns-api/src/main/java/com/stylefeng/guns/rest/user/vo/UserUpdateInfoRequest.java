@@ -23,7 +23,7 @@ public class UserUpdateInfoRequest extends AbstractRequest {
     @ApiModelProperty(value = "昵称", required = false)
     private String nickName;
 
-    @ApiModelProperty(value = "性别", dataType = "int", required = false)
+    @ApiModelProperty(value = "性别", dataType = "integer", required = false)
     private Integer userSex;
 
     @ApiModelProperty(value = "邮箱", required = false)

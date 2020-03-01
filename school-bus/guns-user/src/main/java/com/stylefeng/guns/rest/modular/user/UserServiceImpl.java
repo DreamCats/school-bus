@@ -8,7 +8,7 @@
 package com.stylefeng.guns.rest.modular.user;
 
 import com.alibaba.dubbo.config.annotation.Service;
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.stylefeng.guns.core.util.MD5Util;
 import com.stylefeng.guns.rest.common.constants.RetCodeConstants;
 import com.stylefeng.guns.rest.common.persistence.dao.SbUserTMapper;
@@ -40,10 +40,10 @@ public class UserServiceImpl implements IUserService {
     public UserCheckResponse checkUsername(UserCheckRequest request) {
         UserCheckResponse res = new UserCheckResponse();
         try {
-            EntityWrapper<SbUserT> entityWrapper = new EntityWrapper<>();
-            entityWrapper.eq("user_name", request.getUsername());
-            Integer count = sbUserTMapper.selectCount(entityWrapper);
-            if (count != null && count > 0) {
+            QueryWrapper<SbUserT> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("user_name", request.getUsername());
+            SbUserT sbUserT = sbUserTMapper.selectOne(queryWrapper);
+            if (sbUserT != null) {
                 res.setCheckUsername(0);
                 res.setCode(RetCodeConstants.SUCCESS.getCode());
                 res.setMsg(RetCodeConstants.SUCCESS.getMessage());
@@ -97,13 +97,13 @@ public class UserServiceImpl implements IUserService {
         res.setCode(RetCodeConstants.USERORPASSWORD_ERRROR.getCode());
         res.setMsg(RetCodeConstants.USERORPASSWORD_ERRROR.getMessage());
         try {
-            SbUserT sbUserT = new SbUserT();
-            sbUserT.setUserName(request.getUsername());
-            SbUserT sbUserT1 = sbUserTMapper.selectOne(sbUserT);
-            if (sbUserT1 != null && sbUserT1.getUuid() > 0) {
+            QueryWrapper<SbUserT> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("user_name", request.getUsername());
+            SbUserT sbUserT = sbUserTMapper.selectOne(queryWrapper);
+            if (sbUserT != null && sbUserT.getUuid() > 0) {
                 String md5Password = MD5Util.encrypt(request.getPassword());
-                if (sbUserT1.getUserPwd().equals(md5Password)) {
-                    res.setUserId(sbUserT1.getUuid());
+                if (sbUserT.getUserPwd().equals(md5Password)) {
+                    res.setUserId(sbUserT.getUuid());
                     res.setCode(RetCodeConstants.SUCCESS.getCode());
                     res.setMsg(RetCodeConstants.SUCCESS.getMessage());
                 }

@@ -1,6 +1,7 @@
 package com.stylefeng.guns.core.util;
 
-import com.baomidou.mybatisplus.toolkit.IdWorker;
+
+import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 
 /**
  * 唯一id生成器

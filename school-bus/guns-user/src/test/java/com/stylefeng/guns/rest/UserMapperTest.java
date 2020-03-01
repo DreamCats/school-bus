@@ -7,7 +7,6 @@
 
 package com.stylefeng.guns.rest;
 
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.stylefeng.guns.rest.common.persistence.dao.SbUserTMapper;
 import com.stylefeng.guns.rest.common.persistence.model.SbUserT;
 import com.stylefeng.guns.rest.modular.user.converter.UserConverter;
