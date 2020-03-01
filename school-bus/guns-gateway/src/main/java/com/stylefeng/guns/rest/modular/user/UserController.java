@@ -8,6 +8,7 @@
 package com.stylefeng.guns.rest.modular.user;
 
 import com.alibaba.dubbo.config.annotation.Reference;
+import com.stylefeng.guns.rest.common.CommonBindingResult;
 import com.stylefeng.guns.rest.common.CurrentUser;
 import com.stylefeng.guns.rest.common.ResponseData;
 import com.stylefeng.guns.rest.common.ResponseUtil;
@@ -17,7 +18,8 @@ import com.stylefeng.guns.rest.user.vo.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
-import org.apache.commons.lang3.StringUtils;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @Api(value = "用户服务", description = "用户服务相关接口")
@@ -43,12 +45,9 @@ public class UserController {
 
     @ApiOperation(value = "注册接口", notes = "用户注册相关信息", response = ResponseData.class)
     @PostMapping("register")
-    public ResponseData register(UserRegisterRequest request) {
-        if (StringUtils.isBlank(request.getUsername())) {
-            return new ResponseUtil<>().setErrorMsg("没有用户名");
-        }
-        if (StringUtils.isBlank(request.getPassword())) {
-            return new ResponseUtil<>().setErrorMsg("没有密码");
+    public ResponseData register(@Validated UserRegisterRequest request, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return new ResponseUtil<>().setErrorMsg("参数错误" + CommonBindingResult.getErrors(bindingResult));
         }
 
         // 不想写那么多了
