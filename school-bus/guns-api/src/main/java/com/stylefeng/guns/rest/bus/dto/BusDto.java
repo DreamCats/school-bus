@@ -5,14 +5,14 @@
  * @create: 2020/03/01 16:42
  */
 
-package com.stylefeng.guns.rest.bus.vo;
+package com.stylefeng.guns.rest.bus.dto;
 
 import lombok.Data;
 
 import java.io.Serializable;
 
 @Data
-public class BusVo implements Serializable {
+public class BusDto implements Serializable {
 
     private Integer uuid;
     private String limitNumber;
