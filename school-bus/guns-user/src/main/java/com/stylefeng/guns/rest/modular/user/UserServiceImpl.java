@@ -15,7 +15,7 @@ import com.stylefeng.guns.rest.common.persistence.dao.UserMapper;
 import com.stylefeng.guns.rest.common.persistence.model.User;
 import com.stylefeng.guns.rest.modular.user.converter.UserConverter;
 import com.stylefeng.guns.rest.user.IUserService;
-import com.stylefeng.guns.rest.user.vo.*;
+import com.stylefeng.guns.rest.user.dto.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -67,7 +67,7 @@ public class UserServiceImpl implements IUserService {
     @Override
     public UserRegisterResponse regsiter(UserRegisterRequest request) {
         UserRegisterResponse res = new UserRegisterResponse();
-        User user = userConverter.res2SbUserT(request);
+        User user = userConverter.res2User(request);
         System.out.println(user);
         // 加密
         String md5Password = MD5Util.encrypt(user.getUserPwd());
@@ -123,8 +123,8 @@ public class UserServiceImpl implements IUserService {
     public UserResponse getUserById(UserRequest request) {
         UserResponse response = new UserResponse();
         User user = userMapper.selectById(request.getId());
-        UserVo userVo = userConverter.sbUserT2Res(user);
-        response.setUserVo(userVo);
+        UserDto userDto = userConverter.User2Res(user);
+        response.setUserDto(userDto);
         response.setCode(RetCodeConstants.SUCCESS.getCode());
         response.setMsg(RetCodeConstants.SUCCESS.getMessage());
         return response;
@@ -138,7 +138,7 @@ public class UserServiceImpl implements IUserService {
     @Override
     public UserResponse updateUserInfo(UserUpdateInfoRequest request) {
         UserResponse response = new UserResponse();
-        User user = userConverter.res2SbUserT(request);
+        User user = userConverter.res2User(request);
         // 不改变密码
         Integer integer = userMapper.updateById(user);
         if (integer == 0) {
@@ -146,7 +146,7 @@ public class UserServiceImpl implements IUserService {
             response.setMsg(RetCodeConstants.USER_INFOR_INVALID.getMessage());
         }
         User user1 = userMapper.selectById(user.getUuid());
-        response.setUserVo(userConverter.sbUserT2Res(user1));
+        response.setUserDto(userConverter.User2Res(user1));
         response.setCode(RetCodeConstants.SUCCESS.getCode());
         response.setMsg(RetCodeConstants.SUCCESS.getMessage());
         return response;

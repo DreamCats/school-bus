@@ -43,7 +43,7 @@ public class BusServiceImpl implements IBusService {
             response.setPageSize(sbBusTPage.getSize());
             response.setPages(sbBusTPage.getPages());
             response.setTotal(sbBusTPage.getTotal());
-            response.setBusDtos(busConverter.sbBusT2List(sbBusTPage.getRecords()));
+            response.setBusDtos(busConverter.busT2List(sbBusTPage.getRecords()));
             response.setCode(RetCodeConstants.SUCCESS.getCode());
             response.setMsg(RetCodeConstants.SUCCESS.getMessage());
         } catch (Exception e) {

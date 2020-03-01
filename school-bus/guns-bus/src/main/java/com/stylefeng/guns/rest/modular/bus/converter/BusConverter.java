@@ -18,5 +18,5 @@ import java.util.List;
 public interface BusConverter {
 
     @Mappings({})
-    List<BusDto> sbBusT2List(List<Bus> buses);
+    List<BusDto> busT2List(List<Bus> buses);
 }

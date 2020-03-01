@@ -7,7 +7,7 @@
 
 package com.stylefeng.guns.rest.user;
 
-import com.stylefeng.guns.rest.user.vo.*;
+import com.stylefeng.guns.rest.user.dto.*;
 
 public interface IUserService {
 

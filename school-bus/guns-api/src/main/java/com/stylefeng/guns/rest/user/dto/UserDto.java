@@ -5,14 +5,14 @@
  * @create: 2020/02/24 16:27
  */
 
-package com.stylefeng.guns.rest.user.vo;
+package com.stylefeng.guns.rest.user.dto;
 
 import lombok.Data;
 
 import java.io.Serializable;
 
 @Data
-public class UserVo implements Serializable {
+public class UserDto implements Serializable {
 
     private Integer uuid; // 根据用户id
 

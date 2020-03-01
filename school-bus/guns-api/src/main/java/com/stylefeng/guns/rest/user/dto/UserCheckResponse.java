@@ -5,7 +5,7 @@
  * @create: 2020/02/26 00:31
  */
 
-package com.stylefeng.guns.rest.user.vo;
+package com.stylefeng.guns.rest.user.dto;
 
 import com.stylefeng.guns.rest.common.AbstractResponse;
 import lombok.Data;

@@ -10,7 +10,7 @@ package com.stylefeng.guns.rest;
 import com.stylefeng.guns.rest.common.persistence.dao.UserMapper;
 import com.stylefeng.guns.rest.common.persistence.model.User;
 import com.stylefeng.guns.rest.modular.user.converter.UserConverter;
-import com.stylefeng.guns.rest.user.vo.UserVo;
+import com.stylefeng.guns.rest.user.dto.UserDto;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +37,7 @@ public class UserMapperTest {
     @Test
     public void registerTest() {
         User user = userMapper.selectById(2);
-        UserVo userVo = userConverter.sbUserT2Res(user);
-        System.out.println(userVo);
+        UserDto userDto = userConverter.User2Res(user);
+        System.out.println(userDto);
     }
 }

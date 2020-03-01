@@ -1,25 +1,23 @@
 /**
  * @program school-bus
- * @description: UserUpdateInfoRequest
+ * @description: UserUpdateForm
  * @author: mf
- * @create: 2020/02/26 21:39
+ * @create: 2020/03/02 00:55
  */
 
-package com.stylefeng.guns.rest.user.vo;
+package com.stylefeng.guns.rest.modular.form;
 
-import com.stylefeng.guns.rest.common.AbstractRequest;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 @ApiModel(value = "更新实体", description = "更新请求信息")
 @Data
-public class UserUpdateInfoRequest extends AbstractRequest {
-
+public class UserUpdateForm {
     @ApiModelProperty(hidden = true)
     private Integer id; // 通过id找
 
-//    private String userName;
+    //    private String userName;
     @ApiModelProperty(value = "昵称", required = false)
     private String nickName;
 

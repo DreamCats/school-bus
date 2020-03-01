@@ -12,7 +12,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 @Data
-@ApiModel
+@ApiModel(value = "分页实体", description = "分页请求信息")
 public class PageInfo {
 
     @ApiModelProperty(name = "currentPage", value = "当前页", example = "1", dataType = "int", required = true)

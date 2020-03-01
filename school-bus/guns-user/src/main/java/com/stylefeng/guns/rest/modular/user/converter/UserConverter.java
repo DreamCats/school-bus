@@ -8,16 +8,15 @@ package com.stylefeng.guns.rest.modular.user.converter;
 
 import com.stylefeng.guns.rest.common.convert.DateMapper;
 import com.stylefeng.guns.rest.common.persistence.model.User;
-import com.stylefeng.guns.rest.user.vo.UserRegisterRequest;
-import com.stylefeng.guns.rest.user.vo.UserUpdateInfoRequest;
-import com.stylefeng.guns.rest.user.vo.UserVo;
-import org.mapstruct.IterableMapping;
+import com.stylefeng.guns.rest.user.dto.UserDto;
+import com.stylefeng.guns.rest.user.dto.UserRegisterRequest;
+import com.stylefeng.guns.rest.user.dto.UserUpdateInfoRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = DateMapper.class)
 public interface UserConverter {
 
     @Mappings({
@@ -25,15 +24,15 @@ public interface UserConverter {
             @Mapping(source = "request.password", target = "userPwd"),
             @Mapping(source = "request.phone", target = "userPhone")
     })
-    User res2SbUserT(UserRegisterRequest request);
+    User res2User(UserRegisterRequest request);
 
     @Mappings({
     })
-    UserVo sbUserT2Res(User user);
+    UserDto User2Res(User user);
 
     @Mappings({
             @Mapping(source = "request.id", target = "uuid"),
     })
-    User res2SbUserT(UserUpdateInfoRequest request);
+    User res2User(UserUpdateInfoRequest request);
 
 }

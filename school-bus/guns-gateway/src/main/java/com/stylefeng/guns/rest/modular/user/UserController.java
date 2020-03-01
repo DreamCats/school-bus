@@ -13,8 +13,10 @@ import com.stylefeng.guns.rest.common.CurrentUser;
 import com.stylefeng.guns.rest.common.ResponseData;
 import com.stylefeng.guns.rest.common.ResponseUtil;
 import com.stylefeng.guns.rest.common.constants.RetCodeConstants;
+import com.stylefeng.guns.rest.modular.form.UserRegstierForm;
+import com.stylefeng.guns.rest.modular.form.UserUpdateForm;
 import com.stylefeng.guns.rest.user.IUserService;
-import com.stylefeng.guns.rest.user.vo.*;
+import com.stylefeng.guns.rest.user.dto.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -45,11 +47,15 @@ public class UserController {
 
     @ApiOperation(value = "注册接口", notes = "用户注册相关信息", response = ResponseData.class)
     @PostMapping("register")
-    public ResponseData register(@Validated UserRegisterRequest request, BindingResult bindingResult) {
+    public ResponseData register(@Validated UserRegstierForm form, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return new ResponseUtil<>().setErrorMsg("参数错误" + CommonBindingResult.getErrors(bindingResult));
         }
-
+        UserRegisterRequest request = new UserRegisterRequest();
+        request.setUsername(form.getUsername());
+        request.setPassword(form.getPassword());
+        request.setPhone(form.getPhone());
+        request.setEmail(form.getEmail());
         // 不想写那么多了
         UserRegisterResponse res = userAPI.regsiter(request);
         if (!res.getCode().equals(RetCodeConstants.SUCCESS.getCode())) {
@@ -77,12 +83,17 @@ public class UserController {
 
     @ApiOperation(value = "更新接口", notes = "更新用户相关信息", response = ResponseData.class)
     @PostMapping("updateInfo")
-    public ResponseData updateUserInfo(UserUpdateInfoRequest request) {
+    public ResponseData updateUserInfo(UserUpdateForm form) {
         // id 从本队缓存中取
         String userId = CurrentUser.getCurrentUser();
         if (userId == null) {
             return new ResponseUtil<>().setErrorMsg("请重新登陆...");
         }
+        UserUpdateInfoRequest request = new UserUpdateInfoRequest();
+        request.setUserSex(form.getUserSex());
+        request.setNickName(form.getNickName());
+        request.setEmail(form.getEmail());
+        request.setUserPhone(form.getUserPhone());
         request.setId(Integer.parseInt(userId));
         UserResponse response = userAPI.updateUserInfo(request);
         if (!response.getCode().equals(RetCodeConstants.SUCCESS.getCode())) {

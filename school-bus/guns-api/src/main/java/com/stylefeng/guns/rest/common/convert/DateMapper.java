@@ -11,10 +11,8 @@ import java.util.Date;
 @Component
 public class DateMapper{
 
-
-//
     public String asString(LocalDateTime dateTime) {
-        return dateTime != null ? DateTimeFormatter.ofPattern( "yyyy-MM-dd")
+        return dateTime != null ? DateTimeFormatter.ofPattern( "yyyy-MM-dd HH:mm:ss")
                 .format(dateTime) : null;
     }
 

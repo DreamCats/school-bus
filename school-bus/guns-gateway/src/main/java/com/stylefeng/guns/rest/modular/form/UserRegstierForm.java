@@ -1,21 +1,19 @@
 /**
  * @program school-bus
- * @description: UserRegisterRequest
+ * @description: UserRegstierForm
  * @author: mf
- * @create: 2020/02/24 16:52
+ * @create: 2020/03/02 00:51
  */
 
-package com.stylefeng.guns.rest.user.vo;
+package com.stylefeng.guns.rest.modular.form;
 
-import com.stylefeng.guns.rest.common.AbstractRequest;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 @ApiModel(value = "注册实体", description = "注册请求信息")
 @Data
-public class UserRegisterRequest extends AbstractRequest {
-
+public class UserRegstierForm {
     @ApiModelProperty(value = "用户名", example = "mai", required = true)
     private String username;
 
