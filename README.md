@@ -11,6 +11,8 @@
 >   - Mysql
 >   - Redis
 >   - RocketMQ
+>   - Swagger2
+>   - Validated
 >   - 持续补充...
 > - 前端：
 >   - vue
