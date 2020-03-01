@@ -4,12 +4,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.stylefeng.guns</groupId>
-    <artifactId>guns-user</artifactId>
+    <artifactId>guns-bus</artifactId>
     <version>0.0.1</version>
     <packaging>jar</packaging>
 
-    <name>guns-user</name>
-    <description>guns 用户服务</description>
+    <name>guns-bus</name>
+    <description>guns 班车服务</description>
 
     <parent>
         <groupId>com.stylefeng</groupId>

@@ -32,7 +32,7 @@ logging:
 
 dubbo:
   application:
-    name: guns-gateway
+    name: guns-user
   registry:
     protocol: zookeeper
     address: 39.108.93.119:2181
