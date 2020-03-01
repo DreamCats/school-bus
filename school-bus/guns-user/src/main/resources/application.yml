@@ -7,7 +7,7 @@ mybatis-plus:
   typeAliasesPackage: com.stylefeng.guns.rest.common.persistence.model
 
   configuration:
-    map-underscore-to-camel-case: false
+    map-underscore-to-camel-case: true
     cache-enabled: true #配置的缓存的全局开关
     lazyLoadingEnabled: true #延时加载的开关
     multipleResultSetsEnabled: true #开启的话，延时加载一个属性时会加载该对象全部属性，否则按需加载属性

@@ -1,52 +1,161 @@
 package com.stylefeng.guns.rest.common.persistence.model;
 
-
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
-
+import com.baomidou.mybatisplus.annotation.TableId;
+import java.time.LocalDateTime;
 import java.io.Serializable;
 
 /**
  * <p>
- * 
+ * 用户表
  * </p>
  *
- * @author stylefeng
- * @since 2017-08-23
+ * @author Maifeng
+ * @since 2020-03-01
  */
+@TableName("sb_user")
 public class User extends Model<User> {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID=1L;
 
-	private Long id;
-	private String userName;
+      /**
+     * 主键编号
+     */
+        @TableId(value = "uuid", type = IdType.AUTO)
+      private Integer uuid;
 
+      /**
+     * 用户账号
+     */
+      private String userName;
 
-	public Long getId() {
-		return id;
-	}
+      /**
+     * 用户密码
+     */
+      private String userPwd;
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+      /**
+     * 用户昵称
+     */
+      private String nickName;
 
-	public String getUserName() {
-		return userName;
-	}
+      /**
+     * 用户性别 0-男，1-女
+     */
+      private Integer userSex;
 
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
+      /**
+     * 用户邮箱
+     */
+      private String email;
 
-	@Override
-	protected Serializable pkVal() {
-		return this.id;
-	}
+      /**
+     * 用户手机号
+     */
+      private String userPhone;
 
-	@Override
-	public String toString() {
-		return "User{" +
-			"id=" + id +
-			", userName=" + userName +
-			"}";
-	}
+      /**
+     * 创建时间
+     */
+      private LocalDateTime beginTime;
+
+      /**
+     * 修改时间
+     */
+      private LocalDateTime updateTime;
+
+    
+    public Integer getUuid() {
+        return uuid;
+    }
+
+      public void setUuid(Integer uuid) {
+          this.uuid = uuid;
+      }
+    
+    public String getUserName() {
+        return userName;
+    }
+
+      public void setUserName(String userName) {
+          this.userName = userName;
+      }
+    
+    public String getUserPwd() {
+        return userPwd;
+    }
+
+      public void setUserPwd(String userPwd) {
+          this.userPwd = userPwd;
+      }
+    
+    public String getNickName() {
+        return nickName;
+    }
+
+      public void setNickName(String nickName) {
+          this.nickName = nickName;
+      }
+    
+    public Integer getUserSex() {
+        return userSex;
+    }
+
+      public void setUserSex(Integer userSex) {
+          this.userSex = userSex;
+      }
+    
+    public String getEmail() {
+        return email;
+    }
+
+      public void setEmail(String email) {
+          this.email = email;
+      }
+    
+    public String getUserPhone() {
+        return userPhone;
+    }
+
+      public void setUserPhone(String userPhone) {
+          this.userPhone = userPhone;
+      }
+    
+    public LocalDateTime getBeginTime() {
+        return beginTime;
+    }
+
+      public void setBeginTime(LocalDateTime beginTime) {
+          this.beginTime = beginTime;
+      }
+    
+    public LocalDateTime getUpdateTime() {
+        return updateTime;
+    }
+
+      public void setUpdateTime(LocalDateTime updateTime) {
+          this.updateTime = updateTime;
+      }
+
+    @Override
+    protected Serializable pkVal() {
+          return this.uuid;
+      }
+
+    @Override
+    public String toString() {
+        return "User{" +
+              "uuid=" + uuid +
+                  ", userName=" + userName +
+                  ", userPwd=" + userPwd +
+                  ", nickName=" + nickName +
+                  ", userSex=" + userSex +
+                  ", email=" + email +
+                  ", userPhone=" + userPhone +
+                  ", beginTime=" + beginTime +
+                  ", updateTime=" + updateTime +
+              "}";
+    }
 }

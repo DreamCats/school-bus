@@ -9,6 +9,8 @@ import com.baomidou.mybatisplus.generator.config.DataSourceConfig;
 import com.baomidou.mybatisplus.generator.config.GlobalConfig;
 import com.baomidou.mybatisplus.generator.config.PackageConfig;
 import com.baomidou.mybatisplus.generator.config.StrategyConfig;
+import com.baomidou.mybatisplus.generator.config.converts.MySqlTypeConvert;
+import com.baomidou.mybatisplus.generator.config.rules.DbColumnType;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 import org.junit.Test;
 
@@ -43,22 +45,22 @@ public class EntityGenerator {
         dsc.setDbType(DbType.MYSQL);
 //        dsc.setTypeConvert(new MySqlTypeConvert() {
 //            // 自定义数据库表字段类型转换【可选】
-//            @Override
-//            public DbColumnType processTypeConvert(String fieldType) {
-//                return super.processTypeConvert(fieldType);
-//            }
-//        });
+////            @Override
+////            public DbColumnType processTypeConvert(String fieldType) {
+////                return super.processTypeConvert(fieldType);
+////            }
+////        });
         dsc.setDriverName("com.mysql.cj.jdbc.Driver");
         dsc.setUsername("root");
-        dsc.setPassword("123");
-        dsc.setUrl("jdbc:mysql://127.0.0.1:3306/school_bus?serverTimeZone=UTC&useSSL=false");
+        dsc.setPassword("mai");
+        dsc.setUrl("jdbc:mysql://39.108.93.119:3306/school_bus?serverTimeZone=UTC&useSSL=false");
         mpg.setDataSource(dsc);
 
         // 策略配置
         StrategyConfig strategy = new StrategyConfig();
-        //strategy.setTablePrefix(new String[]{"_"});// 此处可以修改为您的表前缀
+        strategy.setTablePrefix(new String[]{"sb_"});// 此处可以修改为您的表前缀
         strategy.setNaming(NamingStrategy.underline_to_camel);// 表名生成策略
-        strategy.setInclude(new String[]{"sb_user_t"});
+        strategy.setInclude(new String[]{"sb_user"});
         mpg.setStrategy(strategy);
 
         // 包配置

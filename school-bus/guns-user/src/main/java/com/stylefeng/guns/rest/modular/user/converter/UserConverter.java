@@ -7,7 +7,7 @@
 package com.stylefeng.guns.rest.modular.user.converter;
 
 import com.stylefeng.guns.rest.common.convert.DateMapper;
-import com.stylefeng.guns.rest.common.persistence.model.SbUserT;
+import com.stylefeng.guns.rest.common.persistence.model.User;
 import com.stylefeng.guns.rest.user.vo.UserRegisterRequest;
 import com.stylefeng.guns.rest.user.vo.UserUpdateInfoRequest;
 import com.stylefeng.guns.rest.user.vo.UserVo;
@@ -24,15 +24,15 @@ public interface UserConverter {
             @Mapping(source = "request.password", target = "userPwd"),
             @Mapping(source = "request.phone", target = "userPhone")
     })
-    SbUserT res2SbUserT(UserRegisterRequest request);
+    User res2SbUserT(UserRegisterRequest request);
 
     @Mappings({
     })
-    UserVo sbUserT2Res(SbUserT sbUserT);
+    UserVo sbUserT2Res(User user);
 
     @Mappings({
             @Mapping(source = "request.id", target = "uuid"),
     })
-    SbUserT res2SbUserT(UserUpdateInfoRequest request);
+    User res2SbUserT(UserUpdateInfoRequest request);
 
 }

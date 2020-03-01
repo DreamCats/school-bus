@@ -1,15 +1,15 @@
 package com.stylefeng.guns.rest.common.persistence.dao;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.stylefeng.guns.rest.common.persistence.model.User;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
  * <p>
-  *  Mapper 接口
+ * 用户表 Mapper 接口
  * </p>
  *
- * @author stylefeng
- * @since 2017-08-23
+ * @author Maifeng
+ * @since 2020-03-01
  */
 public interface UserMapper extends BaseMapper<User> {
 

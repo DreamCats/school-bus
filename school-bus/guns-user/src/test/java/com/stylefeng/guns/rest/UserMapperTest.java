@@ -7,8 +7,8 @@
 
 package com.stylefeng.guns.rest;
 
-import com.stylefeng.guns.rest.common.persistence.dao.SbUserTMapper;
-import com.stylefeng.guns.rest.common.persistence.model.SbUserT;
+import com.stylefeng.guns.rest.common.persistence.dao.UserMapper;
+import com.stylefeng.guns.rest.common.persistence.model.User;
 import com.stylefeng.guns.rest.modular.user.converter.UserConverter;
 import com.stylefeng.guns.rest.user.vo.UserVo;
 import org.junit.Test;
@@ -22,22 +22,22 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class UserMapperTest {
 
     @Autowired
-    private SbUserTMapper sbUserTMapper;
+    private UserMapper userMapper;
 
     @Autowired
     private UserConverter userConverter;
 
     @Test
     public void test() {
-        SbUserT sbUserT = sbUserTMapper.selectById(2);
-        System.out.println(sbUserT);
+        User user = userMapper.selectById(2);
+        System.out.println(user);
     }
 
 
     @Test
     public void registerTest() {
-        SbUserT sbUserT = sbUserTMapper.selectById(2);
-        UserVo userVo = userConverter.sbUserT2Res(sbUserT);
+        User user = userMapper.selectById(2);
+        UserVo userVo = userConverter.sbUserT2Res(user);
         System.out.println(userVo);
     }
 }

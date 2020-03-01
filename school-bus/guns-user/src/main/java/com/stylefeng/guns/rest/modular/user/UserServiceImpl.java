@@ -11,8 +11,8 @@ import com.alibaba.dubbo.config.annotation.Service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.stylefeng.guns.core.util.MD5Util;
 import com.stylefeng.guns.rest.common.constants.RetCodeConstants;
-import com.stylefeng.guns.rest.common.persistence.dao.SbUserTMapper;
-import com.stylefeng.guns.rest.common.persistence.model.SbUserT;
+import com.stylefeng.guns.rest.common.persistence.dao.UserMapper;
+import com.stylefeng.guns.rest.common.persistence.model.User;
 import com.stylefeng.guns.rest.modular.user.converter.UserConverter;
 import com.stylefeng.guns.rest.user.IUserService;
 import com.stylefeng.guns.rest.user.vo.*;
@@ -26,7 +26,7 @@ import org.springframework.stereotype.Component;
 public class UserServiceImpl implements IUserService {
 
     @Autowired
-    private SbUserTMapper sbUserTMapper;
+    private UserMapper userMapper;
 
     @Autowired
     private UserConverter userConverter;
@@ -40,10 +40,10 @@ public class UserServiceImpl implements IUserService {
     public UserCheckResponse checkUsername(UserCheckRequest request) {
         UserCheckResponse res = new UserCheckResponse();
         try {
-            QueryWrapper<SbUserT> queryWrapper = new QueryWrapper<>();
+            QueryWrapper<User> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("user_name", request.getUsername());
-            SbUserT sbUserT = sbUserTMapper.selectOne(queryWrapper);
-            if (sbUserT != null) {
+            User user = userMapper.selectOne(queryWrapper);
+            if (user != null) {
                 res.setCheckUsername(0);
                 res.setCode(RetCodeConstants.SUCCESS.getCode());
                 res.setMsg(RetCodeConstants.SUCCESS.getMessage());
@@ -67,13 +67,13 @@ public class UserServiceImpl implements IUserService {
     @Override
     public UserRegisterResponse regsiter(UserRegisterRequest request) {
         UserRegisterResponse res = new UserRegisterResponse();
-        SbUserT sbUserT = userConverter.res2SbUserT(request);
-        System.out.println(sbUserT);
+        User user = userConverter.res2SbUserT(request);
+        System.out.println(user);
         // 加密
-        String md5Password = MD5Util.encrypt(sbUserT.getUserPwd());
-        sbUserT.setUserPwd(md5Password);
+        String md5Password = MD5Util.encrypt(user.getUserPwd());
+        user.setUserPwd(md5Password);
         try {
-            sbUserTMapper.insert(sbUserT);
+            userMapper.insert(user);
             res.setRegister(true);
             res.setCode(RetCodeConstants.SUCCESS.getCode());
             res.setMsg(RetCodeConstants.SUCCESS.getMessage());
@@ -97,13 +97,13 @@ public class UserServiceImpl implements IUserService {
         res.setCode(RetCodeConstants.USERORPASSWORD_ERRROR.getCode());
         res.setMsg(RetCodeConstants.USERORPASSWORD_ERRROR.getMessage());
         try {
-            QueryWrapper<SbUserT> queryWrapper = new QueryWrapper<>();
+            QueryWrapper<User> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("user_name", request.getUsername());
-            SbUserT sbUserT = sbUserTMapper.selectOne(queryWrapper);
-            if (sbUserT != null && sbUserT.getUuid() > 0) {
+            User user = userMapper.selectOne(queryWrapper);
+            if (user != null && user.getUuid() > 0) {
                 String md5Password = MD5Util.encrypt(request.getPassword());
-                if (sbUserT.getUserPwd().equals(md5Password)) {
-                    res.setUserId(sbUserT.getUuid());
+                if (user.getUserPwd().equals(md5Password)) {
+                    res.setUserId(user.getUuid());
                     res.setCode(RetCodeConstants.SUCCESS.getCode());
                     res.setMsg(RetCodeConstants.SUCCESS.getMessage());
                 }
@@ -122,8 +122,8 @@ public class UserServiceImpl implements IUserService {
     @Override
     public UserResponse getUserById(UserRequest request) {
         UserResponse response = new UserResponse();
-        SbUserT sbUserT = sbUserTMapper.selectById(request.getId());
-        UserVo userVo = userConverter.sbUserT2Res(sbUserT);
+        User user = userMapper.selectById(request.getId());
+        UserVo userVo = userConverter.sbUserT2Res(user);
         response.setUserVo(userVo);
         response.setCode(RetCodeConstants.SUCCESS.getCode());
         response.setMsg(RetCodeConstants.SUCCESS.getMessage());
@@ -138,15 +138,15 @@ public class UserServiceImpl implements IUserService {
     @Override
     public UserResponse updateUserInfo(UserUpdateInfoRequest request) {
         UserResponse response = new UserResponse();
-        SbUserT sbUserT = userConverter.res2SbUserT(request);
+        User user = userConverter.res2SbUserT(request);
         // 不改变密码
-        Integer integer = sbUserTMapper.updateById(sbUserT);
+        Integer integer = userMapper.updateById(user);
         if (integer == 0) {
             response.setCode(RetCodeConstants.USER_INFOR_INVALID.getCode());
             response.setMsg(RetCodeConstants.USER_INFOR_INVALID.getMessage());
         }
-        SbUserT sbUserT1 = sbUserTMapper.selectById(sbUserT.getUuid());
-        response.setUserVo(userConverter.sbUserT2Res(sbUserT1));
+        User user1 = userMapper.selectById(user.getUuid());
+        response.setUserVo(userConverter.sbUserT2Res(user1));
         response.setCode(RetCodeConstants.SUCCESS.getCode());
         response.setMsg(RetCodeConstants.SUCCESS.getMessage());
         return response;
