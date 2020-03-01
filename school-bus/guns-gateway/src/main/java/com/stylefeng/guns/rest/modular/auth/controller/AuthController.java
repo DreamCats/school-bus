@@ -1,6 +1,7 @@
 package com.stylefeng.guns.rest.modular.auth.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
+import com.stylefeng.guns.rest.common.CommonBindingResult;
 import com.stylefeng.guns.rest.common.ResponseData;
 import com.stylefeng.guns.rest.common.ResponseUtil;
 import com.stylefeng.guns.rest.modular.auth.controller.dto.AuthRequest;
@@ -14,6 +15,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
@@ -21,6 +23,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 请求验证的
@@ -49,7 +53,7 @@ public class AuthController {
             for (FieldError fieldError : bindingResult.getFieldErrors()) {
                 log.error("参数：{}校验失败，原因：{}", fieldError.getField(), fieldError.getDefaultMessage());
             }
-            return new ResponseUtil<>().setErrorMsg("用户参数设置错误:" + bindingResult.getFieldErrors().toString());
+            return new ResponseUtil<>().setErrorMsg("用户参数设置错误:" + CommonBindingResult.getErrors(bindingResult));
         }
         UserLoginRequst req = new UserLoginRequst();
         req.setUsername(authRequest.getUserName());

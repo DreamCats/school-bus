@@ -7,7 +7,7 @@
 > - 后端：
 >   - Springboot
 >   - MyBatisPlus（可自定义sql语句）
->   - Dubbo（负载均衡，异步调用）
+>   - Dubbo（负载均衡，异步调用，结果缓存）
 >   - Mysql
 >   - Redis
 >   - RocketMQ
