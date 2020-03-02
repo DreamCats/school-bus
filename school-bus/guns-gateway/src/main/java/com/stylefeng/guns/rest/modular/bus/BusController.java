@@ -11,6 +11,8 @@ import com.alibaba.dubbo.config.annotation.Reference;
 import com.stylefeng.guns.rest.bus.IBusService;
 import com.stylefeng.guns.rest.bus.dto.PageBusRequest;
 import com.stylefeng.guns.rest.bus.dto.PageBusResponse;
+import com.stylefeng.guns.rest.bus.dto.PageCountRequest;
+import com.stylefeng.guns.rest.bus.dto.PageCountResponse;
 import com.stylefeng.guns.rest.common.ResponseData;
 import com.stylefeng.guns.rest.common.ResponseUtil;
 import com.stylefeng.guns.rest.common.constants.RetCodeConstants;
@@ -29,13 +31,26 @@ public class BusController {
     @Reference
     private IBusService busService;
 
-    @GetMapping("/getBus")
+    @GetMapping("getBus")
     @ApiImplicitParam(name = "分页信息")
     public ResponseData getBus(PageInfo pageInfo) {
         PageBusRequest request = new PageBusRequest();
         request.setCurrentPage(pageInfo.getCurrentPage());
         request.setPageSize(pageInfo.getPageSize());
         PageBusResponse response = busService.getBus(request);
+        if (!response.getCode().equals(RetCodeConstants.SUCCESS.getCode())) {
+            return new ResponseUtil<>().setErrorMsg(response.getMsg());
+        }
+        return new ResponseUtil().setData(response);
+    }
+
+    @GetMapping("getCount")
+    @ApiImplicitParam(name = "分页信息")
+    public ResponseData getCount(PageInfo pageInfo) {
+        PageCountRequest request = new PageCountRequest();
+        request.setCurrentPage(pageInfo.getCurrentPage());
+        request.setPageSize(pageInfo.getPageSize());
+        PageCountResponse response = busService.getCount(request);
         if (!response.getCode().equals(RetCodeConstants.SUCCESS.getCode())) {
             return new ResponseUtil<>().setErrorMsg(response.getMsg());
         }

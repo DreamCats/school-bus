@@ -26,6 +26,7 @@ import com.stylefeng.guns.rest.modular.bus.converter.BusConverter;
 import com.stylefeng.guns.rest.modular.bus.converter.CountConverter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -99,5 +100,46 @@ public class BusServiceImpl implements IBusService {
             return response;
         }
         return response;
+    }
+
+    /**
+     * 私有，谁也无法访问
+     */
+    @Scheduled(cron = "0 0/30 7-21 * * ?") // 每天上午7点到晚上21点，每隔30分钟执行一次
+    private void schedulChangeBusStatus() {
+        // 获取
+        String currTime = DateUtil.getTime();
+        log.warn("schedulChangeBusStatus->目前时间：" + currTime);
+        QueryWrapper<Count> queryWrapper = new QueryWrapper<>();
+        // 先取出beingtime和now相等的表或者end_time和now相等到表
+        queryWrapper
+                .eq("begin_time", currTime)
+                .or()
+                .eq("end_time", currTime);
+        List<Count> counts = countMapper.selectList(queryWrapper);
+        // 开始作妖
+        for (Count count : counts) {
+            String busStatus = count.getBusStatus();
+            String beginTime = count.getBeginTime();
+            String endTime = count.getEndTime();
+            if (currTime.equals(beginTime)) {
+                if (busStatus.equals("0")) { // 沙河空闲
+                    count.setBusStatus("2"); // 沙河->清水河
+                }
+                if (busStatus.equals("1")) { // 清水河空闲
+                    count.setBusStatus("3"); // 清水河->沙河
+                }
+            }
+            if (currTime.equals(endTime)) {
+                if (busStatus.equals("2")) { // 沙河->清水河
+                    count.setBusStatus("1"); // 清水河空闲
+                }
+                if (busStatus.equals("3")) { // 清水河->沙河
+                    count.setBusStatus("0"); // 沙河空闲
+                }
+            }
+            // 写入数据库
+            countMapper.update(count, null);
+        }
     }
 }

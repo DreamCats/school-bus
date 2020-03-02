@@ -13,6 +13,7 @@
 >   - RocketMQ
 >   - Swagger2
 >   - Validated
+>   - Spring定时器
 >   - 持续补充...
 > - 前端：
 >   - vue
