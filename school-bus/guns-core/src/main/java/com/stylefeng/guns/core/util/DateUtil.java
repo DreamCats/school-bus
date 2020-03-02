@@ -64,6 +64,14 @@ public class DateUtil {
     }
 
     /**
+     * 获取HH:mm格式
+     * @return
+     */
+    public static String getHours() {
+        return formatDate(new Date(), "HH:mm");
+    }
+
+    /**
      * 获取YYYYMMDD格式
      */
     public static String getDays(Date date) {

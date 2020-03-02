@@ -8,8 +8,10 @@
 package com.stylefeng.guns.rest.modular.bus;
 
 import com.alibaba.dubbo.config.annotation.Service;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.stylefeng.guns.core.util.DateUtil;
 import com.stylefeng.guns.rest.bus.IBusService;
 import com.stylefeng.guns.rest.bus.dto.PageBusRequest;
 import com.stylefeng.guns.rest.bus.dto.PageBusResponse;
@@ -70,7 +72,18 @@ public class BusServiceImpl implements IBusService {
         PageCountResponse response = new PageCountResponse();
         try {
             IPage<Count> countIPage = new Page<>(request.getCurrentPage(), request.getPageSize());
-            countIPage = countMapper.selectPage(countIPage, null);
+            QueryWrapper<Count> queryWrapper = new QueryWrapper<>();
+            // 获取时间
+            String currHours = DateUtil.getHours();
+            System.out.println("当前时间："+currHours);
+            // 判断条件
+            queryWrapper
+                    .ge("begin_time", currHours) // 时间
+                    .and(o -> o.eq("bus_status", "0")
+                            .or()
+                            .eq("bus_status", "1"));
+
+            countIPage = countMapper.selectPage(countIPage, queryWrapper);
             response.setCurrentPage(countIPage.getCurrent());
             response.setPageSize(countIPage.getSize());
             response.setPages(countIPage.getPages());
