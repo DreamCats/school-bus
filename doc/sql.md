@@ -7,7 +7,7 @@
 
 ## 用户服务
 
-### sb_user_t
+### sb_user
 
 |    表名     |    类型     |        备注         |
 | :---------: | :---------: | :-----------------: |
@@ -22,8 +22,8 @@
 | update_time |  TIMESTAMP  |      更新时间       |
 
 ```sql
-DROP TABLE IF EXISTS sb_user_t;
-CREATE TABLE sb_user_t(
+DROP TABLE IF EXISTS sb_user;
+CREATE TABLE sb_user(
    uuid INT PRIMARY KEY AUTO_INCREMENT COMMENT '主键编号',
    user_name VARCHAR(50) NOT NULL DEFAULT '' UNIQUE COMMENT '用户账号',
    user_pwd VARCHAR(50) NOT NULL DEFAULT '' COMMENT '用户密码',
@@ -35,13 +35,13 @@ CREATE TABLE sb_user_t(
    update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间'
 ) COMMENT '用户表' ENGINE = INNODB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
-insert into sb_user_t(user_name,user_pwd,nick_name,user_sex,email,user_phone) values('admin','0192023a7bbd73250516f069df18b500','隔壁泰山',0,'admin@qq.com','13888888888');
-insert into sb_user_t(user_name,user_pwd,nick_name,user_sex,email,user_phone) values('jiangzh','5e2de6bd1c9b50f6e27d4e55da43b917','阿里郎',0,'jiangzh@qq.com','13866666666');
+insert into sb_user(user_name,user_pwd,nick_name,user_sex,email,user_phone) values('admin','0192023a7bbd73250516f069df18b500','隔壁泰山',0,'admin@qq.com','13888888888');
+insert into sb_user(user_name,user_pwd,nick_name,user_sex,email,user_phone) values('jiangzh','5e2de6bd1c9b50f6e27d4e55da43b917','阿里郎',0,'jiangzh@qq.com','13866666666');
 ```
 
 ## 班车服务
 
-### sb_bus_t
+### sb_bus
 
 |     表名     |   类型    |          备注          |
 | :----------: | :-------: | :--------------------: |
@@ -56,8 +56,8 @@ insert into sb_user_t(user_name,user_pwd,nick_name,user_sex,email,user_phone) va
 | update_time  | TIMESTAMP |        更新时间        |
 
 ```sql
-DROP TABLE IF EXISTS sb_bus_t;
-CREATE TABLE sb_bus_t(
+DROP TABLE IF EXISTS sb_bus;
+CREATE TABLE sb_bus(
    uuid INT PRIMARY KEY AUTO_INCREMENT COMMENT '主键编号',
    limit_number VARCHAR(10) NOT NULL DEFAULT '' COMMENT '限制人数',
    driver_name VARCHAR(50) NOT NULL DEFAULT '' COMMENT '司机姓名',
@@ -67,17 +67,17 @@ CREATE TABLE sb_bus_t(
    `update_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间'
 ) COMMENT '班车表' ENGINE = INNODB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
-insert into sb_bus_t(limit_number,driver_name,drive_phone,seats_number, begin_time) values('20','买','135','/file/seat.json', NOW());
-insert into sb_bus_t(limit_number,driver_name,drive_phone,seats_number, begin_time) values('20','赵','135','/file/seat.json', NOW());
-insert into sb_bus_t(limit_number,driver_name,drive_phone,seats_number, begin_time) values('20','李','135','/file/seat.json', NOW());
-insert into sb_bus_t(limit_number,driver_name,drive_phone,seats_number, begin_time) values('20','王','135','/file/seat.json', NOW());
-insert into sb_bus_t(limit_number,driver_name,drive_phone,seats_number, begin_time) values('20','牛','135','/file/seat.json', NOW());
-insert into sb_bus_t(limit_number,driver_name,drive_phone,seats_number, begin_time) values('20','马','135','/file/seat.json', NOW());
-insert into sb_bus_t(limit_number,driver_name,drive_phone,seats_number, begin_time) values('20','狗','135','/file/seat.json', NOW());
-insert into sb_bus_t(limit_number,driver_name,drive_phone,seats_number, begin_time) values('20','王','135','/file/seat.json', NOW());
+insert into sb_bus(limit_number,driver_name,drive_phone,seats_number, begin_time) values('20','买','135','/file/seat.json', NOW());
+insert into sb_bus(limit_number,driver_name,drive_phone,seats_number, begin_time) values('20','赵','135','/file/seat.json', NOW());
+insert into sb_bus(limit_number,driver_name,drive_phone,seats_number, begin_time) values('20','李','135','/file/seat.json', NOW());
+insert into sb_bus(limit_number,driver_name,drive_phone,seats_number, begin_time) values('20','王','135','/file/seat.json', NOW());
+insert into sb_bus(limit_number,driver_name,drive_phone,seats_number, begin_time) values('20','牛','135','/file/seat.json', NOW());
+insert into sb_bus(limit_number,driver_name,drive_phone,seats_number, begin_time) values('20','马','135','/file/seat.json', NOW());
+insert into sb_bus(limit_number,driver_name,drive_phone,seats_number, begin_time) values('20','狗','135','/file/seat.json', NOW());
+insert into sb_bus(limit_number,driver_name,drive_phone,seats_number, begin_time) values('20','王','135','/file/seat.json', NOW());
 ```
 
-### sb_count_t
+### sb_count
 
 |      字段      |  类型   |                         备注                         |
 | :------------: | :-----: | :--------------------------------------------------: |
@@ -91,8 +91,8 @@ insert into sb_bus_t(limit_number,driver_name,drive_phone,seats_number, begin_ti
 |  seat_status   | VARCHAR |                    0:未满；1:已满                    |
 
 ```sql
-DROP TABLE IF EXISTS sb_count_t;
-CREATE TABLE `sb_count_t` (
+DROP TABLE IF EXISTS sb_count;
+CREATE TABLE `sb_count` (
   `uuid` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键编号',
   `bus_id` int(11) NOT NULL COMMENT '班车id',
   `begin_time` varchar(50) NOT NULL DEFAULT '' COMMENT '开始时间',
@@ -102,23 +102,23 @@ CREATE TABLE `sb_count_t` (
   `selected_seats` varchar(50) NOT NULL DEFAULT '' COMMENT '已选座位',
   `seat_status` varchar(50) NOT NULL DEFAULT '' COMMENT '0:未满；1:已满',
   PRIMARY KEY (`uuid`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='场次表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='场次表';
 
-insert into sb_count_t(bus_id,begin_time,end_time,bus_status,price,selected_seats,seat_status) values(1,'08:00','09:00','0',4.00,'', '0');
-insert into sb_count_t(bus_id,begin_time,end_time,bus_status,price,selected_seats,seat_status) values(2,'08:30','09:30','0',4.00,'', '0');
-insert into sb_count_t(bus_id,begin_time,end_time,bus_status,price,selected_seats,seat_status) values(3,'09:00','10:00','0',4.00, '', '0');
-insert into sb_count_t(bus_id,begin_time,end_time,bus_status,price,selected_seats,seat_status) values(4,'09:30','10:30','0',4.00, '', '0');
-insert into sb_count_t(bus_id,begin_time,end_time,bus_status,price,selected_seats,seat_status) values(1,'09:30','10:30','1',4.00, '', '0');
-insert into sb_count_t(bus_id,begin_time,end_time,bus_status,price,selected_seats,seat_status) values(2,'10:00','11:30','1',4.00, '', '0');
-insert into sb_count_t(bus_id,begin_time,end_time,bus_status,price,selected_seats,seat_status) values(5,'08:00','09:00','1',4.00, '', '0');
-insert into sb_count_t(bus_id,begin_time,end_time,bus_status,price,selected_seats,seat_status) values(6,'09:30','10:30','1',4.00, '', '0');
-insert into sb_count_t(bus_id,begin_time,end_time,bus_status,price,selected_seats,seat_status) values(3,'14:00','15:00','1',4.00, '', '0');
-insert into sb_count_t(bus_id,begin_time,end_time,bus_status,price,selected_seats,seat_status) values(4,'15:30','16:30','1',4.00, '', '0');
-insert into sb_count_t(bus_id,begin_time,end_time,bus_status,price,selected_seats,seat_status) values(7,'17:00','18:00','1',4.00, '', '0');
-insert into sb_count_t(bus_id,begin_time,end_time,bus_status,price,selected_seats,seat_status) values(5,'14:00','15:00','0',4.00, '', '0');
-insert into sb_count_t(bus_id,begin_time,end_time,bus_status,price,selected_seats,seat_status) values(6,'15:30','16:30','0',4.00, '', '0');
-insert into sb_count_t(bus_id,begin_time,end_time,bus_status,price,selected_seats,seat_status) values(8,'17:00','18:00','0',4.00, '', '0');
-insert into sb_count_t(bus_id,begin_time,end_time,bus_status,price,selected_seats,seat_status) values(7,'20:00','21:00','0',4.00, '', '0');
-insert into sb_count_t(bus_id,begin_time,end_time,bus_status,price,selected_seats,seat_status) values(8,'20:00','21:00','1',4.00, '', '0');
+insert into sb_count(bus_id,begin_time,end_time,bus_status,price,selected_seats,seat_status) values(1,'08:00','09:00','0',4.00,'', '0');
+insert into sb_count(bus_id,begin_time,end_time,bus_status,price,selected_seats,seat_status) values(2,'08:30','09:30','0',4.00,'', '0');
+insert into sb_count(bus_id,begin_time,end_time,bus_status,price,selected_seats,seat_status) values(3,'09:00','10:00','0',4.00, '', '0');
+insert into sb_count(bus_id,begin_time,end_time,bus_status,price,selected_seats,seat_status) values(4,'09:30','10:30','0',4.00, '', '0');
+insert into sb_count(bus_id,begin_time,end_time,bus_status,price,selected_seats,seat_status) values(1,'09:30','10:30','1',4.00, '', '0');
+insert into sb_count(bus_id,begin_time,end_time,bus_status,price,selected_seats,seat_status) values(2,'10:00','11:30','1',4.00, '', '0');
+insert into sb_count(bus_id,begin_time,end_time,bus_status,price,selected_seats,seat_status) values(5,'08:00','09:00','1',4.00, '', '0');
+insert into sb_count(bus_id,begin_time,end_time,bus_status,price,selected_seats,seat_status) values(6,'09:30','10:30','1',4.00, '', '0');
+insert into sb_count(bus_id,begin_time,end_time,bus_status,price,selected_seats,seat_status) values(3,'14:00','15:00','1',4.00, '', '0');
+insert into sb_count(bus_id,begin_time,end_time,bus_status,price,selected_seats,seat_status) values(4,'15:30','16:30','1',4.00, '', '0');
+insert into sb_count(bus_id,begin_time,end_time,bus_status,price,selected_seats,seat_status) values(7,'17:00','18:00','1',4.00, '', '0');
+insert into sb_count(bus_id,begin_time,end_time,bus_status,price,selected_seats,seat_status) values(5,'14:00','15:00','0',4.00, '', '0');
+insert into sb_count(bus_id,begin_time,end_time,bus_status,price,selected_seats,seat_status) values(6,'15:30','16:30','0',4.00, '', '0');
+insert into sb_count(bus_id,begin_time,end_time,bus_status,price,selected_seats,seat_status) values(8,'17:00','18:00','0',4.00, '', '0');
+insert into sb_count(bus_id,begin_time,end_time,bus_status,price,selected_seats,seat_status) values(7,'20:00','21:00','0',4.00, '', '0');
+insert into sb_count(bus_id,begin_time,end_time,bus_status,price,selected_seats,seat_status) values(8,'20:00','21:00','1',4.00, '', '0');
 ```
 

@@ -118,7 +118,8 @@ public class BusServiceImpl implements IBusService {
                 .or()
                 .eq("end_time", currTime);
         List<Count> counts = countMapper.selectList(queryWrapper);
-        System.out.println("查询到的:"+counts.toString());
+        log.warn("schedulChangeBusStatus->查询到的：" + counts.toString());
+//        System.out.println("查询到的:"+counts.toString());
         // 开始作妖
         for (Count count : counts) {
             String busStatus = count.getBusStatus();
@@ -141,9 +142,9 @@ public class BusServiceImpl implements IBusService {
                 }
             }
             System.out.println("修改的：" + count);
+            log.warn("schedulChangeBusStatus->修改的：" + count);
             // 写入数据库
             countMapper.updateById(count);
         }
-        System.out.println("定时器执行了。。。");
     }
 }
