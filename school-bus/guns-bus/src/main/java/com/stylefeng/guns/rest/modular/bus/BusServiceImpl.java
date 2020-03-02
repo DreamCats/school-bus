@@ -108,8 +108,9 @@ public class BusServiceImpl implements IBusService {
     @Scheduled(cron = "0 0/30 7-21 * * ?") // 每天上午7点到晚上21点，每隔30分钟执行一次
     private void schedulChangeBusStatus() {
         // 获取
-        String currTime = DateUtil.getTime();
+        String currTime = DateUtil.getHours();
         log.warn("schedulChangeBusStatus->目前时间：" + currTime);
+        System.out.println("目前时间:"+ currTime);
         QueryWrapper<Count> queryWrapper = new QueryWrapper<>();
         // 先取出beingtime和now相等的表或者end_time和now相等到表
         queryWrapper
@@ -117,6 +118,7 @@ public class BusServiceImpl implements IBusService {
                 .or()
                 .eq("end_time", currTime);
         List<Count> counts = countMapper.selectList(queryWrapper);
+        System.out.println("查询到的:"+counts.toString());
         // 开始作妖
         for (Count count : counts) {
             String busStatus = count.getBusStatus();
@@ -138,8 +140,10 @@ public class BusServiceImpl implements IBusService {
                     count.setBusStatus("0"); // 沙河空闲
                 }
             }
+            System.out.println("修改的：" + count);
             // 写入数据库
-            countMapper.update(count, null);
+            countMapper.updateById(count);
         }
+        System.out.println("定时器执行了。。。");
     }
 }
