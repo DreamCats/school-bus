@@ -13,6 +13,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.stylefeng.guns.rest.bus.IBusService;
 import com.stylefeng.guns.rest.bus.dto.PageBusRequest;
 import com.stylefeng.guns.rest.bus.dto.PageBusResponse;
+import com.stylefeng.guns.rest.bus.dto.PageCountRequest;
+import com.stylefeng.guns.rest.bus.dto.PageCountResponse;
 import com.stylefeng.guns.rest.common.constants.RetCodeConstants;
 import com.stylefeng.guns.rest.common.persistence.dao.BusMapper;
 import com.stylefeng.guns.rest.common.persistence.model.Bus;
@@ -54,5 +56,10 @@ public class BusServiceImpl implements IBusService {
             return response;
         }
         return response;
+    }
+
+    @Override
+    public PageCountResponse getCount(PageCountRequest request) {
+        return null;
     }
 }
