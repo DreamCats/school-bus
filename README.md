@@ -7,13 +7,14 @@
 > - 后端：
 >   - Springboot
 >   - MyBatisPlus（可自定义sql语句）
->   - Dubbo（负载均衡，异步调用，结果缓存）
+>   - Dubbo（负载均衡，异步调用，结果缓存，分组聚合）
 >   - Mysql
 >   - Redis
 >   - RocketMQ
 >   - Swagger2
 >   - Validated
 >   - Spring定时器
+>   - Hystrix熔断降级
 >   - 持续补充...
 > - 前端：
 >   - vue
