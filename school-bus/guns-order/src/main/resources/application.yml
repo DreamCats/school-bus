@@ -1,0 +1,37 @@
+
+server:
+  port: 8083 #项目端口
+
+mybatis-plus:
+  mapper-locations: classpath*:com/stylefeng/guns/rest/**/mapping/*.xml
+  typeAliasesPackage: com.stylefeng.guns.rest.common.persistence.model
+
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: true #配置的缓存的全局开关
+    lazyLoadingEnabled: true #延时加载的开关
+    multipleResultSetsEnabled: true #开启的话，延时加载一个属性时会加载该对象全部属性，否则按需加载属性
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl #打印sql语句,调试用
+
+spring:
+  datasource:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://39.108.93.119:3306/school_bus?serverTimeZone=UTC&useSSL=false
+      username: root
+      password: mai
+      filters: log4j,wall,mergeStat
+
+logging:
+  level.root: info
+  level.com.stylefeng: debug
+  path: logs/
+  file: sb-order.log
+
+dubbo:
+  application:
+    name: guns-user
+  registry:
+    protocol: zookeeper
+    address: 39.108.93.119:2181
+  protocol:
+    port: 20882

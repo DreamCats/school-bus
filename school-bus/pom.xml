@@ -16,6 +16,7 @@
         <module>guns-api</module>
         <module>guns-user</module>
         <module>guns-bus</module>
+        <module>guns-order</module>
         <!-- <module>guns-generator</module> -->
     </modules>
 
