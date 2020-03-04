@@ -4,6 +4,7 @@
 >
 > - sb代表SchoolBus
 > - t代表table
+> - 表中所有的uuid， 随着自增长，暂时不考虑分布式id
 
 ## 用户服务
 
@@ -120,5 +121,45 @@ insert into sb_count(bus_id,begin_time,end_time,bus_status,price,selected_seats,
 insert into sb_count(bus_id,begin_time,end_time,bus_status,price,selected_seats,seat_status) values(8,'17:00','18:00','0',4.00, '', '0');
 insert into sb_count(bus_id,begin_time,end_time,bus_status,price,selected_seats,seat_status) values(7,'20:00','21:00','0',4.00, '', '0');
 insert into sb_count(bus_id,begin_time,end_time,bus_status,price,selected_seats,seat_status) values(8,'20:00','21:00','1',4.00, '', '0');
+```
+
+## 订单服务
+
+### sb_order
+
+|      字段       |   类型    |              备注              |
+| :-------------: | :-------: | :----------------------------: |
+|      uuid       |    INT    |             订单id             |
+|    count_id     |    INT    |             场次id             |
+|   bus_status    |  VARCHAR  | 0:沙河->清水河；1:清水河->沙河 |
+|    seats_ids    |  VARCHAR  |          已售座位编号          |
+|   count_price   |  DOUBLE   |          场次预售价格          |
+|   order_price   |  DOUBLE   |           订单总金额           |
+|   order_time    | TIMESTAMP |            下单时间            |
+|   order_user    |    INT    |             下单人             |
+|  order_status   |  VARCHAR  |   0-待支付,1-已支付,2-已关闭   |
+| evaluate_status |  VARCHAR  |       0:未评价；1:已评价       |
+|     comment     |  VARCHAR  |              评论              |
+
+```sql
+DROP TABLE IF EXISTS sb_order;
+CREATE TABLE `sb_order` (
+  `uuid` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键编号',
+  `count_id` int(11) NOT NULL COMMENT '场次id',
+  `bus_status` varchar(50) NOT NULL DEFAULT '' COMMENT '0:沙河->清水河；1:清水河->沙河',
+  `seats_ids` varchar(50) NOT NULL DEFAULT '' COMMENT '已售座位编号',
+  `count_price` double NOT NULL  COMMENT '场次预售价格',
+  `order_price` double NOT NULL COMMENT '订单总金额',
+  `order_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `order_user` int(11) NOT NULL COMMENT '下单人',
+  `order_status` varchar(50) NOT NULL DEFAULT '' COMMENT '0-待支付,1-已支付,2-已关闭',
+  `evaluate_status` varchar(50) NOT NULL DEFAULT '' COMMENT '0:未评价；1:已评价',
+  `comment` varchar(255) NOT NULL DEFAULT '' COMMENT '评论',
+  PRIMARY KEY (`uuid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='订单表';
+
+insert into sb_order(count_id,bus_status,seats_ids,count_price,order_price,order_time,order_user,order_status, evaluate_status,comment) values(1,'0','1',4.00,4.00, NOW(),4, '0', '0', '');
+insert into sb_order(count_id,bus_status,seats_ids,count_price,order_price,order_time,order_user,order_status, evaluate_status,comment) values(1,'0','1',4.00,4.00, NOW(),4, '1', '1', 'aaa');
+insert into sb_order(count_id,bus_status,seats_ids,count_price,order_price,order_time,order_user,order_status, evaluate_status,comment) values(1,'0','1',4.00,4.00, NOW(),4, '2', '0', '');
 ```
 
