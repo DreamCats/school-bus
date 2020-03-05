@@ -38,7 +38,9 @@ public class OrderServiceImpl implements IOrderSerice {
         NoTakeBusResponse response = new NoTakeBusResponse();
         IPage<Order> orderIPage = new  Page<>(request.getCurrentPage(), request.getPageSize());
         QueryWrapper<Order> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("order_user", request.getUserId());
+        queryWrapper
+                .eq("order_user", request.getUserId())
+                .and(o -> o.eq("order_status", "0"));
         orderIPage = orderMapper.selectPage(orderIPage, queryWrapper);
         try {
             response.setCurrentPage(orderIPage.getCurrent());
