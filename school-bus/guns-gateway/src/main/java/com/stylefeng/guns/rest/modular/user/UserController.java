@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/user/")
 public class UserController {
 
-    @Reference
+    @Reference(check = false)
     private IUserService userAPI;
 
     @ApiOperation(value = "检查用户名接口", notes = "给定用户名，查询是否存在", response = ResponseData.class)
