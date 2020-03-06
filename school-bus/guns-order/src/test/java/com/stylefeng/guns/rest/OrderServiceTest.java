@@ -9,6 +9,8 @@ package com.stylefeng.guns.rest;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.stylefeng.guns.rest.order.IOrderSerice;
+import com.stylefeng.guns.rest.order.dto.EvaluateRequest;
+import com.stylefeng.guns.rest.order.dto.EvaluateResponse;
 import com.stylefeng.guns.rest.order.dto.NoTakeBusRequest;
 import com.stylefeng.guns.rest.order.dto.NoTakeBusResponse;
 import org.junit.Test;
@@ -30,6 +32,17 @@ public class OrderServiceTest {
         request.setCurrentPage(1);
         request.setPageSize(2);
         NoTakeBusResponse response = orderSerice.getNoTakeOrdersById(request);
+        System.out.println(response);
+    }
+
+    @Test
+    public void getEvaluateOrdersById() {
+        EvaluateRequest request = new EvaluateRequest();
+        request.setUserId(4);
+        request.setCurrentPage(1);
+        request.setPageSize(2);
+        request.setEvaluateStatus("1");
+        EvaluateResponse response = orderSerice.getEvaluateOrdersById(request);
         System.out.println(response);
     }
 }

@@ -16,6 +16,8 @@ import com.stylefeng.guns.rest.common.persistence.dao.OrderMapper;
 import com.stylefeng.guns.rest.common.persistence.model.Order;
 import com.stylefeng.guns.rest.modular.order.converter.OrderConvertver;
 import com.stylefeng.guns.rest.order.IOrderSerice;
+import com.stylefeng.guns.rest.order.dto.EvaluateRequest;
+import com.stylefeng.guns.rest.order.dto.EvaluateResponse;
 import com.stylefeng.guns.rest.order.dto.NoTakeBusRequest;
 import com.stylefeng.guns.rest.order.dto.NoTakeBusResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -53,6 +55,39 @@ public class OrderServiceImpl implements IOrderSerice {
         } catch (Exception e) {
             e.printStackTrace();
             log.error("getNoTakeOrdersById:",e);
+            response.setCode(RetCodeConstants.DB_EXCEPTION.getCode());
+            response.setMsg(RetCodeConstants.DB_EXCEPTION.getMessage());
+            return response;
+        }
+        return response;
+    }
+
+    /**
+     * 该业务可以和上一个业务合并
+     * @param request
+     * @return
+     */
+    @Override
+    public EvaluateResponse getEvaluateOrdersById(EvaluateRequest request) {
+        EvaluateResponse response = new EvaluateResponse();
+        IPage<Order> orderIPage = new Page<>(request.getCurrentPage(), request.getPageSize());
+        QueryWrapper<Order> queryWrapper = new QueryWrapper<>();
+        queryWrapper
+                .eq("order_user", request.getUserId())
+                .eq("order_status", "1")
+                .eq("evaluate_status", request.getEvaluateStatus());
+        try {
+            orderIPage = orderMapper.selectPage(orderIPage, queryWrapper);
+            response.setCurrentPage(orderIPage.getCurrent());
+            response.setPages(orderIPage.getPages());
+            response.setPageSize(orderIPage.getSize());
+            response.setTotal(orderIPage.getTotal());
+            response.setOrderDtos(orderConvertver.order2Res(orderIPage.getRecords()));
+            response.setCode(RetCodeConstants.SUCCESS.getCode());
+            response.setMsg(RetCodeConstants.SUCCESS.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("getEvaluateOrdersById:",e);
             response.setCode(RetCodeConstants.DB_EXCEPTION.getCode());
             response.setMsg(RetCodeConstants.DB_EXCEPTION.getMessage());
             return response;
