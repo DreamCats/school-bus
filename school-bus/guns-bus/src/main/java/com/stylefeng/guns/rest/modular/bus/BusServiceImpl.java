@@ -43,7 +43,7 @@ public class BusServiceImpl implements IBusService {
     private CountMapper countMapper;
     @Autowired
     private BusConverter busConverter;
-    @Reference(check = false)
+    @Autowired
     private CountConverter countConverter;
 
     @Override
