@@ -13,6 +13,7 @@ import com.stylefeng.guns.rest.common.CurrentUser;
 import com.stylefeng.guns.rest.common.ResponseData;
 import com.stylefeng.guns.rest.common.ResponseUtil;
 import com.stylefeng.guns.rest.common.constants.RetCodeConstants;
+import com.stylefeng.guns.rest.exception.CommonResponse;
 import com.stylefeng.guns.rest.modular.form.UserRegstierForm;
 import com.stylefeng.guns.rest.modular.form.UserUpdateForm;
 import com.stylefeng.guns.rest.user.IUserService;
@@ -20,10 +21,12 @@ import com.stylefeng.guns.rest.user.dto.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @Api(value = "用户服务", description = "用户服务相关接口")
 @RestController
 @RequestMapping("/user/")
@@ -32,24 +35,27 @@ public class UserController {
     @Reference(check = false)
     private IUserService userAPI;
 
-    @ApiOperation(value = "检查用户名接口", notes = "给定用户名，查询是否存在", response = ResponseData.class)
+    @ApiOperation(value = "检查用户名接口", notes = "给定用户名，查询是否存在", response = UserCheckResponse.class)
     @ApiImplicitParam(name = "username", required = true, dataType = "String", paramType = "query")
     @GetMapping("check")
     public ResponseData checkUsername(String username) {
+        if (username.equals("")) {
+            return new ResponseUtil<>().setErrorMsg("用户名不能为空");
+        }
         UserCheckRequest req = new UserCheckRequest();
         req.setUsername(username);
         UserCheckResponse res = userAPI.checkUsername(req);
-        if (!res.getCode().equals(RetCodeConstants.SUCCESS.getCode())) {
-            return new ResponseUtil<>().setErrorMsg(res.getMsg());
-        }
         return new ResponseUtil().setData(res);
     }
 
-    @ApiOperation(value = "注册接口", notes = "用户注册相关信息", response = ResponseData.class)
+    @ApiOperation(value = "注册接口", notes = "用户注册相关信息", response = UserRegisterResponse.class)
     @PostMapping("register")
     public ResponseData register(@Validated UserRegstierForm form, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return new ResponseUtil<>().setErrorMsg("参数错误" + CommonBindingResult.getErrors(bindingResult));
+            CommonResponse response = new CommonResponse();
+            response.setCode(RetCodeConstants.REQUISITE_PARAMETER_NOT_EXIST.getCode());
+            response.setCode(RetCodeConstants.REQUISITE_PARAMETER_NOT_EXIST.getMessage());
+            return new ResponseUtil<>().setData(response);
         }
         UserRegisterRequest request = new UserRegisterRequest();
         request.setUsername(form.getUsername());
@@ -58,13 +64,10 @@ public class UserController {
         request.setEmail(form.getEmail());
         // 不想写那么多了
         UserRegisterResponse res = userAPI.regsiter(request);
-        if (!res.getCode().equals(RetCodeConstants.SUCCESS.getCode())) {
-            return new ResponseUtil<>().setErrorMsg("服务器内部错误..");
-        }
         return new ResponseUtil<>().setData(res);
     }
 
-    @ApiOperation(value = "获取用户信息接口", notes = "获取用户相关信息，前提请获取用户token放在headers中", response = ResponseData.class)
+    @ApiOperation(value = "获取用户信息接口", notes = "获取用户相关信息，前提请获取用户token放在headers中", response = UserResponse.class)
     @GetMapping("getUserInfo")
     public ResponseData getUserById() {
         // 从本地缓存中取
@@ -75,9 +78,6 @@ public class UserController {
         UserRequest request = new UserRequest();
         request.setId(Integer.parseInt(userId));
         UserResponse response = userAPI.getUserById(request);
-        if (!response.getCode().equals(RetCodeConstants.SUCCESS.getCode())) {
-            return new ResponseUtil<>().setErrorMsg("服务器内部错误..");
-        }
         return new ResponseUtil<>().setData(response);
     }
 
@@ -87,7 +87,10 @@ public class UserController {
         // id 从本队缓存中取
         String userId = CurrentUser.getCurrentUser();
         if (userId == null) {
-            return new ResponseUtil<>().setErrorMsg("请重新登陆...");
+            CommonResponse response = new CommonResponse();
+            response.setCode(RetCodeConstants.TOKEN_VALID_FAILED.getCode());
+            response.setMsg(RetCodeConstants.TOKEN_VALID_FAILED.getMessage()+",请重新登陆...");
+            return new ResponseUtil<>().setData(response);
         }
         UserUpdateInfoRequest request = new UserUpdateInfoRequest();
         request.setUserSex(form.getUserSex());
@@ -116,6 +119,9 @@ public class UserController {
             现状：
                 1、前端删除掉JWT
          */
-        return new ResponseUtil<>().setData("退出成功...");
+        CommonResponse response = new CommonResponse();
+        response.setCode(RetCodeConstants.SUCCESS.getCode());
+        response.setMsg(RetCodeConstants.SUCCESS.getMessage());
+        return new ResponseUtil<>().setData(response);
     }
 }

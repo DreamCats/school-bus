@@ -2,7 +2,13 @@ package com.stylefeng.guns.rest.common.aop;
 
 import com.stylefeng.guns.core.aop.BaseControllerExceptionHandler;
 import com.stylefeng.guns.core.base.tips.ErrorTip;
+import com.stylefeng.guns.rest.common.AbstractResponse;
+import com.stylefeng.guns.rest.common.ResponseData;
+import com.stylefeng.guns.rest.common.ResponseUtil;
+import com.stylefeng.guns.rest.common.constants.RetCodeConstants;
 import com.stylefeng.guns.rest.common.exception.BizExceptionEnum;
+import com.stylefeng.guns.rest.exception.CommonResponse;
+import com.stylefeng.guns.rest.user.dto.UserLoginResponse;
 import io.jsonwebtoken.JwtException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,10 +32,19 @@ public class GlobalExceptionHandler extends BaseControllerExceptionHandler {
     /**
      * 拦截jwt相关异常
      */
-    @ExceptionHandler(JwtException.class)
+//    @ExceptionHandler(JwtException.class)
+//    @ResponseStatus(HttpStatus.BAD_REQUEST)
+//    @ResponseBody
+//    public ErrorTip jwtException(JwtException e) {
+//        return new ErrorTip(BizExceptionEnum.TOKEN_ERROR.getCode(), BizExceptionEnum.TOKEN_ERROR.getMessage());
+//    }
+
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public ErrorTip jwtException(JwtException e) {
-        return new ErrorTip(BizExceptionEnum.TOKEN_ERROR.getCode(), BizExceptionEnum.TOKEN_ERROR.getMessage());
+    public ResponseData jwtException (JwtException e) {
+        CommonResponse response = new CommonResponse();
+        response.setCode(RetCodeConstants.TOKEN_VALID_FAILED.getCode());
+        response.setMsg(RetCodeConstants.TOKEN_VALID_FAILED.getMessage());
+        return new ResponseUtil<>().setData(response);
     }
 }

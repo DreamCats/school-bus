@@ -81,6 +81,8 @@ public class UserServiceImpl implements IUserService {
             res.setRegister(false);
             res.setCode(RetCodeConstants.USER_REGISTER_VERIFY_FAILED.getCode());
             res.setMsg(RetCodeConstants.USER_REGISTER_VERIFY_FAILED.getMessage());
+            log.info("regsiter:", e);
+            return res;
         }
         return res;
     }
@@ -110,6 +112,7 @@ public class UserServiceImpl implements IUserService {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            // 这里在auth那里设置了异常
         }
         return res;
     }
@@ -122,11 +125,20 @@ public class UserServiceImpl implements IUserService {
     @Override
     public UserResponse getUserById(UserRequest request) {
         UserResponse response = new UserResponse();
-        User user = userMapper.selectById(request.getId());
-        UserDto userDto = userConverter.User2Res(user);
-        response.setUserDto(userDto);
-        response.setCode(RetCodeConstants.SUCCESS.getCode());
-        response.setMsg(RetCodeConstants.SUCCESS.getMessage());
+        try {
+            User user = userMapper.selectById(request.getId());
+            UserDto userDto = userConverter.User2Res(user);
+            response.setUserDto(userDto);
+            response.setCode(RetCodeConstants.SUCCESS.getCode());
+            response.setMsg(RetCodeConstants.SUCCESS.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.setCode(RetCodeConstants.DB_EXCEPTION.getCode());
+            response.setMsg(RetCodeConstants.DB_EXCEPTION.getMessage());
+            log.error("getUserById", e);
+            return response;
+        }
+
         return response;
     }
 
@@ -139,16 +151,25 @@ public class UserServiceImpl implements IUserService {
     public UserResponse updateUserInfo(UserUpdateInfoRequest request) {
         UserResponse response = new UserResponse();
         User user = userConverter.res2User(request);
-        // 不改变密码
-        Integer integer = userMapper.updateById(user);
-        if (integer == 0) {
-            response.setCode(RetCodeConstants.USER_INFOR_INVALID.getCode());
-            response.setMsg(RetCodeConstants.USER_INFOR_INVALID.getMessage());
+        try {
+            // 不改变密码
+            Integer integer = userMapper.updateById(user);
+            if (integer == 0) {
+                response.setCode(RetCodeConstants.USER_INFOR_INVALID.getCode());
+                response.setMsg(RetCodeConstants.USER_INFOR_INVALID.getMessage());
+            } else {
+                User user1 = userMapper.selectById(user.getUuid());
+                response.setUserDto(userConverter.User2Res(user1));
+                response.setCode(RetCodeConstants.SUCCESS.getCode());
+                response.setMsg(RetCodeConstants.SUCCESS.getMessage());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.setCode(RetCodeConstants.DB_EXCEPTION.getCode());
+            response.setMsg(RetCodeConstants.DB_EXCEPTION.getMessage());
+            log.error("updateUserInfo", e);
+            return response;
         }
-        User user1 = userMapper.selectById(user.getUuid());
-        response.setUserDto(userConverter.User2Res(user1));
-        response.setCode(RetCodeConstants.SUCCESS.getCode());
-        response.setMsg(RetCodeConstants.SUCCESS.getMessage());
         return response;
     }
 }

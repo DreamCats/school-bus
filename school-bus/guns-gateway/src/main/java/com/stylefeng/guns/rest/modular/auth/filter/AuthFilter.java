@@ -3,10 +3,14 @@ package com.stylefeng.guns.rest.modular.auth.filter;
 import com.stylefeng.guns.core.base.tips.ErrorTip;
 import com.stylefeng.guns.core.util.RenderUtil;
 import com.stylefeng.guns.rest.common.CurrentUser;
+import com.stylefeng.guns.rest.common.ResponseUtil;
+import com.stylefeng.guns.rest.common.constants.RetCodeConstants;
 import com.stylefeng.guns.rest.common.exception.BizExceptionEnum;
 import com.stylefeng.guns.rest.config.properties.JwtProperties;
+import com.stylefeng.guns.rest.exception.CommonResponse;
 import com.stylefeng.guns.rest.modular.auth.util.JwtTokenUtil;
 import io.jsonwebtoken.JwtException;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +28,7 @@ import java.io.IOException;
  * @author fengshuonan
  * @Date 2017/8/24 14:04
  */
+@Slf4j
 public class AuthFilter extends OncePerRequestFilter {
 
     private final Log logger = LogFactory.getLog(this.getClass());
@@ -36,6 +41,8 @@ public class AuthFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
+        System.out.println("当前url：" + request.getServletPath());
+        log.info("当前url：" + request.getServletPath());
         if (request.getServletPath().equals("/" + jwtProperties.getAuthPath())) {
             chain.doFilter(request, response);
             return;
@@ -67,17 +74,29 @@ public class AuthFilter extends OncePerRequestFilter {
             try {
                 boolean flag = jwtTokenUtil.isTokenExpired(authToken);
                 if (flag) {
-                    RenderUtil.renderJson(response, new ErrorTip(BizExceptionEnum.TOKEN_EXPIRED.getCode(), BizExceptionEnum.TOKEN_EXPIRED.getMessage()));
+//                    RenderUtil.renderJson(response, new ErrorTip(BizExceptionEnum.TOKEN_EXPIRED.getCode(), BizExceptionEnum.TOKEN_EXPIRED.getMessage()));
+                    CommonResponse response1 = new CommonResponse();
+                    response1.setCode(RetCodeConstants.TOKEN_VALID_FAILED.getCode());
+                    response1.setMsg(RetCodeConstants.TOKEN_VALID_FAILED.getMessage());
+                    RenderUtil.renderJson(response, new ResponseUtil<>().setData(response1));
                     return;
                 }
             } catch (JwtException e) {
                 //有异常就是token解析失败
-                RenderUtil.renderJson(response, new ErrorTip(BizExceptionEnum.TOKEN_ERROR.getCode(), BizExceptionEnum.TOKEN_ERROR.getMessage()));
+//                RenderUtil.renderJson(response, new ErrorTip(BizExceptionEnum.TOKEN_ERROR.getCode(), BizExceptionEnum.TOKEN_ERROR.getMessage()));
+                CommonResponse response1 = new CommonResponse();
+                response1.setCode(RetCodeConstants.TOKEN_VALID_FAILED.getCode());
+                response1.setMsg(RetCodeConstants.TOKEN_VALID_FAILED.getMessage());
+                RenderUtil.renderJson(response, new ResponseUtil<>().setData(response1));
                 return;
             }
         } else {
             //header没有带Bearer字段
-            RenderUtil.renderJson(response, new ErrorTip(BizExceptionEnum.TOKEN_ERROR.getCode(), BizExceptionEnum.TOKEN_ERROR.getMessage()));
+//            RenderUtil.renderJson(response, new ErrorTip(BizExceptionEnum.TOKEN_ERROR.getCode(), BizExceptionEnum.TOKEN_ERROR.getMessage()));
+            CommonResponse response1 = new CommonResponse();
+            response1.setCode(RetCodeConstants.TOKEN_VALID_FAILED.getCode());
+            response1.setMsg(RetCodeConstants.TOKEN_VALID_FAILED.getMessage());
+            RenderUtil.renderJson(response, new ResponseUtil<>().setData(response1));
             return;
         }
         chain.doFilter(request, response);
