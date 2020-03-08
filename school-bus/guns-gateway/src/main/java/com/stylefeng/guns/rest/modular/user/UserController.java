@@ -81,7 +81,7 @@ public class UserController {
         return new ResponseUtil<>().setData(response);
     }
 
-    @ApiOperation(value = "更新接口", notes = "更新用户相关信息", response = ResponseData.class)
+    @ApiOperation(value = "更新接口", notes = "更新用户相关信息", response = UserResponse.class)
     @PostMapping("updateInfo")
     public ResponseData updateUserInfo(UserUpdateForm form) {
         // id 从本队缓存中取
@@ -105,7 +105,7 @@ public class UserController {
         return new ResponseUtil<>().setData(response);
     }
 
-    @ApiOperation(value = "登出接口", notes = "用户登出，暂时是前端删除token", response = ResponseData.class)
+    @ApiOperation(value = "登出接口", notes = "用户登出，暂时是前端删除token", response = CommonResponse.class)
     @GetMapping("logout")
     public ResponseData logout() {
         /*

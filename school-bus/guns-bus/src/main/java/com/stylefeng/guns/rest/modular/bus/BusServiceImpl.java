@@ -7,6 +7,7 @@
 
 package com.stylefeng.guns.rest.modular.bus;
 
+import com.alibaba.dubbo.config.annotation.Reference;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -42,7 +43,7 @@ public class BusServiceImpl implements IBusService {
     private CountMapper countMapper;
     @Autowired
     private BusConverter busConverter;
-    @Autowired
+    @Reference(check = false)
     private CountConverter countConverter;
 
     @Override

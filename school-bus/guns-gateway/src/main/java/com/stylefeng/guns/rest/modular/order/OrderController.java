@@ -12,6 +12,7 @@ import com.stylefeng.guns.rest.common.CurrentUser;
 import com.stylefeng.guns.rest.common.ResponseData;
 import com.stylefeng.guns.rest.common.ResponseUtil;
 import com.stylefeng.guns.rest.common.constants.RetCodeConstants;
+import com.stylefeng.guns.rest.exception.CommonResponse;
 import com.stylefeng.guns.rest.modular.form.PageInfo;
 import com.stylefeng.guns.rest.order.IOrderSerice;
 import com.stylefeng.guns.rest.order.dto.EvaluateRequest;
@@ -34,25 +35,25 @@ public class OrderController {
     @Reference(check = false)
     private IOrderSerice orderSerice;
 
-    @ApiOperation(value = "根据订单状态获取订单接口", notes = "前提Auth，获取用户订单未乘坐服务", response = ResponseData.class)
+    @ApiOperation(value = "根据订单状态获取订单接口", notes = "前提Auth，获取用户订单未乘坐服务", response = NoTakeBusResponse.class)
     @GetMapping("getNoTakeOrders")
     public ResponseData getNoTakeOrdersById(PageInfo pageInfo) {
         NoTakeBusRequest request = new NoTakeBusRequest();
         String userId = CurrentUser.getCurrentUser();
         if (userId == null) {
-            return new ResponseUtil<>().setErrorMsg("请重新登陆..");
+            CommonResponse response = new CommonResponse();
+            response.setCode(RetCodeConstants.TOKEN_VALID_FAILED.getCode());
+            response.setMsg(RetCodeConstants.TOKEN_VALID_FAILED.getMessage()+",请重新登陆...");
+            return new ResponseUtil<>().setData(response);
         }
         request.setUserId(Integer.parseInt(userId));
         request.setCurrentPage(pageInfo.getCurrentPage());
         request.setPageSize(pageInfo.getPageSize());
         NoTakeBusResponse response = orderSerice.getNoTakeOrdersById(request);
-        if (!response.getCode().equals(RetCodeConstants.SUCCESS.getCode())) {
-            return new ResponseUtil<>().setErrorMsg(response.getMsg());
-        }
         return new ResponseUtil().setData(response);
     }
 
-    @ApiOperation(value = "根据评价状态获取用户订单接口", notes = "前提Auth，根据评价状态获取订单服务", response = ResponseData.class)
+    @ApiOperation(value = "根据评价状态获取用户订单接口", notes = "前提Auth，根据评价状态获取订单服务", response = EvaluateResponse.class)
     @ApiImplicitParams({
             @ApiImplicitParam(name = "evaluateStauts", value = "评价状态：0->未评价 1->已评价", example = "0", required = true, dataType = "String")
     })
@@ -61,16 +62,16 @@ public class OrderController {
         EvaluateRequest request = new EvaluateRequest();
         String userId = CurrentUser.getCurrentUser();
         if (userId == null) {
-            return new ResponseUtil<>().setErrorMsg("请重新登陆..");
+            CommonResponse response = new CommonResponse();
+            response.setCode(RetCodeConstants.TOKEN_VALID_FAILED.getCode());
+            response.setMsg(RetCodeConstants.TOKEN_VALID_FAILED.getMessage()+",请重新登陆...");
+            return new ResponseUtil<>().setData(response);
         }
         request.setUserId(Integer.parseInt(userId));
         request.setCurrentPage(pageInfo.getCurrentPage());
         request.setPageSize(pageInfo.getPageSize());
         request.setEvaluateStatus(evaluateStauts);
         EvaluateResponse response = orderSerice.getEvaluateOrdersById(request);
-        if (!response.getCode().equals(RetCodeConstants.SUCCESS.getCode())) {
-            return new ResponseUtil<>().setErrorMsg(response.getMsg());
-        }
         return new ResponseUtil().setData(response);
     }
 

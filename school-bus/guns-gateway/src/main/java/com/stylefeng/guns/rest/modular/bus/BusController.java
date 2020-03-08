@@ -19,6 +19,7 @@ import com.stylefeng.guns.rest.common.constants.RetCodeConstants;
 import com.stylefeng.guns.rest.modular.form.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,6 +32,7 @@ public class BusController {
     @Reference
     private IBusService busService;
 
+    @ApiOperation(value = "获取班车", notes = "获取班车", response = PageBusResponse.class)
     @GetMapping("getBus")
     @ApiImplicitParam(name = "分页信息")
     public ResponseData getBus(PageInfo pageInfo) {
@@ -38,12 +40,10 @@ public class BusController {
         request.setCurrentPage(pageInfo.getCurrentPage());
         request.setPageSize(pageInfo.getPageSize());
         PageBusResponse response = busService.getBus(request);
-        if (!response.getCode().equals(RetCodeConstants.SUCCESS.getCode())) {
-            return new ResponseUtil<>().setErrorMsg(response.getMsg());
-        }
         return new ResponseUtil().setData(response);
     }
 
+    @ApiOperation(value = "获取车次列表", notes = "获取车次列表", response = PageCountResponse.class)
     @GetMapping("getCount")
     @ApiImplicitParam(name = "分页信息")
     public ResponseData getCount(PageInfo pageInfo) {
@@ -51,9 +51,6 @@ public class BusController {
         request.setCurrentPage(pageInfo.getCurrentPage());
         request.setPageSize(pageInfo.getPageSize());
         PageCountResponse response = busService.getCount(request);
-        if (!response.getCode().equals(RetCodeConstants.SUCCESS.getCode())) {
-            return new ResponseUtil<>().setErrorMsg(response.getMsg());
-        }
         return new ResponseUtil().setData(response);
     }
 }
