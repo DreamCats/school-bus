@@ -8,12 +8,14 @@
 package com.stylefeng.guns.rest.bus.dto;
 
 import com.stylefeng.guns.rest.common.AbstractResponse;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.util.List;
 
 @Data
+@ApiModel(description = "车次列表Dto")
 public class PageCountResponse extends AbstractResponse {
     // 当前页
     @ApiModelProperty(notes = "当前页")

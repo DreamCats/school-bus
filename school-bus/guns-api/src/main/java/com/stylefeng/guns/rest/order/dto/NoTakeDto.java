@@ -12,7 +12,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 @Data
-@ApiModel(description = "未乘坐订单简单展示实体")
+@ApiModel(description = "未乘坐订单简单Dto")
 public class NoTakeDto {
     @ApiModelProperty(notes = "订单id")
     private Integer uuid;
