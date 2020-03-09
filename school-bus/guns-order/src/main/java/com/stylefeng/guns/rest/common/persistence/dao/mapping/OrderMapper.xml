@@ -17,4 +17,37 @@
         <result column="comment" property="comment" />
     </resultMap>
 
+    <select id="selectNoTakeOrders"  resultType="com.stylefeng.guns.rest.order.dto.NoTakeDto">
+        SELECT
+            so.uuid ,
+            so.bus_status ,
+            so.seats_ids ,
+            so.order_user ,
+            so.order_status ,
+            so.order_time ,
+            sc.bus_id ,
+            CONCAT(sc.begin_date, '-', sc.begin_time) begin_time
+        FROM
+            sb_order so
+        LEFT JOIN sb_count sc ON so.count_id = sc.uuid
+        ${ew.customSqlSegment}
+    </select>
+
+    <select id="selectEvaluateOrders"  resultType="com.stylefeng.guns.rest.order.dto.EvaluateDto">
+        SELECT
+            so.uuid ,
+            so.bus_status ,
+            so.seats_ids ,
+            so.order_user ,
+            so.order_time ,
+            sc.bus_id ,
+            so.evaluate_status,
+            so.comment,
+            CONCAT(sc.begin_date, '-', sc.begin_time) begin_time
+        FROM
+            sb_order so
+        LEFT JOIN sb_count sc ON so.count_id = sc.uuid
+        ${ew.customSqlSegment}
+    </select>
+
 </mapper>

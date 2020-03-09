@@ -28,5 +28,6 @@ public class EvaluateResponse extends AbstractResponse {
     @ApiModelProperty(notes = "总页")
     private Long pages;
     @ApiModelProperty(notes = "订单列表")
-    List<OrderDto> orderDtos;
+//    List<OrderDto> orderDtos;
+    List<EvaluateDto> evaluateDtos;
 }

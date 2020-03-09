@@ -16,10 +16,7 @@ import com.stylefeng.guns.rest.common.persistence.dao.OrderMapper;
 import com.stylefeng.guns.rest.common.persistence.model.Order;
 import com.stylefeng.guns.rest.modular.order.converter.OrderConvertver;
 import com.stylefeng.guns.rest.order.IOrderSerice;
-import com.stylefeng.guns.rest.order.dto.EvaluateRequest;
-import com.stylefeng.guns.rest.order.dto.EvaluateResponse;
-import com.stylefeng.guns.rest.order.dto.NoTakeBusRequest;
-import com.stylefeng.guns.rest.order.dto.NoTakeBusResponse;
+import com.stylefeng.guns.rest.order.dto.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -38,18 +35,21 @@ public class OrderServiceImpl implements IOrderSerice {
     @Override
     public NoTakeBusResponse getNoTakeOrdersById(NoTakeBusRequest request) {
         NoTakeBusResponse response = new NoTakeBusResponse();
-        IPage<Order> orderIPage = new  Page<>(request.getCurrentPage(), request.getPageSize());
-        QueryWrapper<Order> queryWrapper = new QueryWrapper<>();
+        IPage<NoTakeDto> orderIPage = new  Page<>(request.getCurrentPage(), request.getPageSize());
+        QueryWrapper<NoTakeDto> queryWrapper = new QueryWrapper<>();
         queryWrapper
-                .eq("order_user", request.getUserId())
-                .and(o -> o.eq("order_status", "0"));
-        orderIPage = orderMapper.selectPage(orderIPage, queryWrapper);
+                .eq("user_id", request.getUserId())
+                .and(o -> o.eq("order_status", "0")
+                        .or()
+                        .eq("order_status", "1"));
+//        orderIPage = orderMapper.selectPage(orderIPage, queryWrapper);
+        orderIPage = orderMapper.selectNoTakeOrders(orderIPage, queryWrapper);
         try {
             response.setCurrentPage(orderIPage.getCurrent());
             response.setPages(orderIPage.getPages());
             response.setPageSize(orderIPage.getSize());
             response.setTotal(orderIPage.getTotal());
-            response.setOrderDtos(orderConvertver.order2Res(orderIPage.getRecords()));
+            response.setNoTakeDtos(orderIPage.getRecords());
             response.setCode(RetCodeConstants.SUCCESS.getCode());
             response.setMsg(RetCodeConstants.SUCCESS.getMessage());
         } catch (Exception e) {
@@ -70,19 +70,19 @@ public class OrderServiceImpl implements IOrderSerice {
     @Override
     public EvaluateResponse getEvaluateOrdersById(EvaluateRequest request) {
         EvaluateResponse response = new EvaluateResponse();
-        IPage<Order> orderIPage = new Page<>(request.getCurrentPage(), request.getPageSize());
-        QueryWrapper<Order> queryWrapper = new QueryWrapper<>();
+        IPage<EvaluateDto> orderIPage = new Page<>(request.getCurrentPage(), request.getPageSize());
+        QueryWrapper<EvaluateDto> queryWrapper = new QueryWrapper<>();
         queryWrapper
-                .eq("order_user", request.getUserId())
+                .eq("user_id", request.getUserId())
                 .eq("order_status", "1")
                 .eq("evaluate_status", request.getEvaluateStatus());
         try {
-            orderIPage = orderMapper.selectPage(orderIPage, queryWrapper);
+            orderIPage = orderMapper.selectEvaluateOrders(orderIPage, queryWrapper);
             response.setCurrentPage(orderIPage.getCurrent());
             response.setPages(orderIPage.getPages());
             response.setPageSize(orderIPage.getSize());
             response.setTotal(orderIPage.getTotal());
-            response.setOrderDtos(orderConvertver.order2Res(orderIPage.getRecords()));
+            response.setEvaluateDtos(orderIPage.getRecords());
             response.setCode(RetCodeConstants.SUCCESS.getCode());
             response.setMsg(RetCodeConstants.SUCCESS.getMessage());
         } catch (Exception e) {

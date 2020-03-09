@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import com.baomidou.mybatisplus.annotation.TableId;
+import lombok.Data;
+
 import java.io.Serializable;
 
 /**
@@ -15,6 +17,7 @@ import java.io.Serializable;
  * @since 2020-03-01
  */
 @TableName("sb_count")
+@Data
 public class Count extends Model<Count> {
 
     private static final long serialVersionUID=1L;
@@ -22,8 +25,8 @@ public class Count extends Model<Count> {
       /**
      * 主键编号
      */
-        @TableId(value = "uuid", type = IdType.AUTO)
-      private Integer uuid;
+    @TableId(value = "uuid", type = IdType.AUTO)
+    private Integer uuid;
 
       /**
      * 班车id
@@ -60,87 +63,10 @@ public class Count extends Model<Count> {
      */
       private String seatStatus;
 
-    
-    public Integer getUuid() {
-        return uuid;
-    }
+    /**
+     * 出入日期
+     */
+    private String begin_date;
 
-      public void setUuid(Integer uuid) {
-          this.uuid = uuid;
-      }
-    
-    public Integer getBusId() {
-        return busId;
-    }
 
-      public void setBusId(Integer busId) {
-          this.busId = busId;
-      }
-    
-    public String getBeginTime() {
-        return beginTime;
-    }
-
-      public void setBeginTime(String beginTime) {
-          this.beginTime = beginTime;
-      }
-    
-    public String getEndTime() {
-        return endTime;
-    }
-
-      public void setEndTime(String endTime) {
-          this.endTime = endTime;
-      }
-    
-    public String getBusStatus() {
-        return busStatus;
-    }
-
-      public void setBusStatus(String busStatus) {
-          this.busStatus = busStatus;
-      }
-    
-    public Double getPrice() {
-        return price;
-    }
-
-      public void setPrice(Double price) {
-          this.price = price;
-      }
-    
-    public String getSelectedSeats() {
-        return selectedSeats;
-    }
-
-      public void setSelectedSeats(String selectedSeats) {
-          this.selectedSeats = selectedSeats;
-      }
-    
-    public String getSeatStatus() {
-        return seatStatus;
-    }
-
-      public void setSeatStatus(String seatStatus) {
-          this.seatStatus = seatStatus;
-      }
-
-    @Override
-    protected Serializable pkVal() {
-          return this.uuid;
-      }
-
-    @Override
-    public String toString() {
-        return "Count{" +
-              "uuid=" + uuid +
-                  ", busId=" + busId +
-                  ", beginTime=" + beginTime +
-                  ", endTime=" + endTime +
-                  ", busStatus=" + busStatus +
-                  ", price=" + price +
-                  ", selectedSeats=" + selectedSeats +
-                  ", seatStatus=" + seatStatus +
-              "}";
-    }
 }

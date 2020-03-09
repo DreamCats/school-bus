@@ -30,5 +30,7 @@ public class CountDto implements Serializable {
     private String selectedSeats;
     @ApiModelProperty(notes = "0:未满；1:已满")
     private String seatStatus;
+    @ApiModelProperty(notes = "出发日期")
+    private String beginDate;
 
 }

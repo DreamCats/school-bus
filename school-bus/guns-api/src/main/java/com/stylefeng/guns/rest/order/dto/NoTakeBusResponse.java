@@ -28,5 +28,6 @@ public class NoTakeBusResponse extends AbstractResponse {
     @ApiModelProperty(notes = "总页")
     private Long pages;
     @ApiModelProperty(notes = "未乘坐订单列表")
-    List<OrderDto> orderDtos;
+    List<NoTakeDto> noTakeDtos;
+//    List<OrderDto> orderDtos;
 }
