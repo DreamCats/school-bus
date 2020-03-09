@@ -7,11 +7,15 @@
 
 package com.stylefeng.guns.rest.order.dto;
 
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Data
-public class EvaluateDto {
+@ApiModel("评价订单Dto")
+public class EvaluateDto implements Serializable {
     @ApiModelProperty(notes = "订单id")
     private Integer uuid;
     @ApiModelProperty(notes = "0：沙河->清水河，1：清水河->沙河")

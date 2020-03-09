@@ -34,7 +34,6 @@ public class BusController {
 
     @ApiOperation(value = "获取班车", notes = "获取班车", response = PageBusResponse.class)
     @GetMapping("getBus")
-    @ApiImplicitParam(name = "分页信息")
     public ResponseData getBus(PageInfo pageInfo) {
         PageBusRequest request = new PageBusRequest();
         request.setCurrentPage(pageInfo.getCurrentPage());
@@ -45,7 +44,6 @@ public class BusController {
 
     @ApiOperation(value = "获取车次列表", notes = "获取车次列表", response = PageCountResponse.class)
     @GetMapping("getCount")
-    @ApiImplicitParam(name = "分页信息")
     public ResponseData getCount(PageInfo pageInfo) {
         PageCountRequest request = new PageCountRequest();
         request.setCurrentPage(pageInfo.getCurrentPage());

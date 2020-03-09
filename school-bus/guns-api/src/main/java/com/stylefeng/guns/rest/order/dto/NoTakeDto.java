@@ -11,9 +11,11 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Data
 @ApiModel(description = "未乘坐订单简单Dto")
-public class NoTakeDto {
+public class NoTakeDto implements Serializable {
     @ApiModelProperty(notes = "订单id")
     private Integer uuid;
     @ApiModelProperty(notes = "0：沙河->清水河，1：清水河->沙河")
