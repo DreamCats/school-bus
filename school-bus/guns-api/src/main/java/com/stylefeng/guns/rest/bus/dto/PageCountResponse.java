@@ -29,5 +29,7 @@ public class PageCountResponse extends AbstractResponse {
     private Long pages;
     // count
     @ApiModelProperty(notes = "场次列表")
-    List<CountDto> countDtos;
+    List<CountSimpleDto> countSimpleDtos;
+//    List<CountDto> countDtos;
+
 }

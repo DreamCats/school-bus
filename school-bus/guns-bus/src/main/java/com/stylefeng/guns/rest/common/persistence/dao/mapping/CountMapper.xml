@@ -14,4 +14,15 @@
         <result column="seat_status" property="seatStatus" />
     </resultMap>
 
+    <select id="selectCounts"  resultType="com.stylefeng.guns.rest.bus.dto.CountSimpleDto">
+        SELECT
+            sc.uuid ,
+            sc.begin_date ,
+            sc.begin_time ,
+            sc.bus_id ,
+            sc.bus_status
+        FROM
+            sb_count sc
+        ${ew.customSqlSegment}
+    </select>
 </mapper>

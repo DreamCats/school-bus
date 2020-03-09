@@ -14,10 +14,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.stylefeng.guns.core.util.DateUtil;
 import com.stylefeng.guns.rest.bus.IBusService;
-import com.stylefeng.guns.rest.bus.dto.PageBusRequest;
-import com.stylefeng.guns.rest.bus.dto.PageBusResponse;
-import com.stylefeng.guns.rest.bus.dto.PageCountRequest;
-import com.stylefeng.guns.rest.bus.dto.PageCountResponse;
+import com.stylefeng.guns.rest.bus.dto.*;
 import com.stylefeng.guns.rest.common.constants.RetCodeConstants;
 import com.stylefeng.guns.rest.common.persistence.dao.BusMapper;
 import com.stylefeng.guns.rest.common.persistence.dao.CountMapper;
@@ -73,8 +70,8 @@ public class BusServiceImpl implements IBusService {
     public PageCountResponse getCount(PageCountRequest request) {
         PageCountResponse response = new PageCountResponse();
         try {
-            IPage<Count> countIPage = new Page<>(request.getCurrentPage(), request.getPageSize());
-            QueryWrapper<Count> queryWrapper = new QueryWrapper<>();
+            IPage<CountSimpleDto> countIPage = new Page<>(request.getCurrentPage(), request.getPageSize());
+            QueryWrapper<CountSimpleDto> queryWrapper = new QueryWrapper<>();
             // 获取时间
             String currHours = DateUtil.getHours();
             System.out.println("当前时间："+currHours);
@@ -85,12 +82,12 @@ public class BusServiceImpl implements IBusService {
                             .or()
                             .eq("bus_status", "1"));
 
-            countIPage = countMapper.selectPage(countIPage, queryWrapper);
+            countIPage = countMapper.selectCounts(countIPage, queryWrapper);
             response.setCurrentPage(countIPage.getCurrent());
             response.setPageSize(countIPage.getSize());
             response.setPages(countIPage.getPages());
             response.setTotal(countIPage.getTotal());
-            response.setCountDtos(countConverter.count2Res(countIPage.getRecords()));
+            response.setCountSimpleDtos(countIPage.getRecords());
             response.setCode(RetCodeConstants.SUCCESS.getCode());
             response.setMsg(RetCodeConstants.SUCCESS.getMessage());
         } catch (Exception e) {
