@@ -11,12 +11,12 @@ mybatis-plus:
     cache-enabled: true #配置的缓存的全局开关
     lazyLoadingEnabled: true #延时加载的开关
     multipleResultSetsEnabled: true #开启的话，延时加载一个属性时会加载该对象全部属性，否则按需加载属性
-#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl #打印sql语句,调试用
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl #打印sql语句,调试用
 
 spring:
   datasource:
       driver-class-name: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://39.108.93.119:3306/school_bus?serverTimeZone=UTC&useSSL=false
+      url: jdbc:mysql://39.108.93.119:3306/school_bus?serverTimeZone=UTC&useSSL=false&characterEncoding=UTF-8
       username: root
       password: mai
       filters: log4j,wall,mergeStat

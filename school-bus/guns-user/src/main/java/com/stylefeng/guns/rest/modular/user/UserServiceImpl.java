@@ -154,6 +154,7 @@ public class UserServiceImpl implements IUserService {
         try {
             // 不改变密码
             Integer integer = userMapper.updateById(user);
+
             if (integer == 0) {
                 response.setCode(RetCodeConstants.USER_INFOR_INVALID.getCode());
                 response.setMsg(RetCodeConstants.USER_INFOR_INVALID.getMessage());
