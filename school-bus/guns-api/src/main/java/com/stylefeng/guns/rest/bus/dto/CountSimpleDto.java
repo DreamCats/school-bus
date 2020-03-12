@@ -14,7 +14,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 @Data
-@ApiModel(description = "车次列表的DTo")
+@ApiModel(description = "车次列表的Dto")
 public class CountSimpleDto implements Serializable {
     @ApiModelProperty(notes = "场次id")
     private Integer uuid;
@@ -26,4 +26,6 @@ public class CountSimpleDto implements Serializable {
     private String busStatus;
     @ApiModelProperty(notes = "出发日期")
     private String beginDate;
+    @ApiModelProperty(notes = "0:未满；1:已满")
+    private String seatStatus;
 }

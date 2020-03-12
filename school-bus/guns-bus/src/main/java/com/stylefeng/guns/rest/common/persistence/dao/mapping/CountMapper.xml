@@ -20,7 +20,8 @@
             sc.begin_date ,
             sc.begin_time ,
             sc.bus_id ,
-            sc.bus_status
+            sc.bus_status,
+            sc.seat_status
         FROM
             sb_count sc
         ${ew.customSqlSegment}
