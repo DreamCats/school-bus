@@ -9,10 +9,7 @@ package com.stylefeng.guns.rest.modular.bus;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.stylefeng.guns.rest.bus.IBusService;
-import com.stylefeng.guns.rest.bus.dto.PageBusRequest;
-import com.stylefeng.guns.rest.bus.dto.PageBusResponse;
-import com.stylefeng.guns.rest.bus.dto.PageCountRequest;
-import com.stylefeng.guns.rest.bus.dto.PageCountResponse;
+import com.stylefeng.guns.rest.bus.dto.*;
 import com.stylefeng.guns.rest.common.ResponseData;
 import com.stylefeng.guns.rest.common.ResponseUtil;
 import com.stylefeng.guns.rest.common.constants.RetCodeConstants;
@@ -50,6 +47,16 @@ public class BusController {
         request.setPageSize(pageInfo.getPageSize());
         request.setBusStatus(pageInfo.getBusStatus());
         PageCountResponse response = busService.getCount(request);
+        return new ResponseUtil().setData(response);
+    }
+
+    @ApiOperation(value = "获取车次详情", notes = "获取车次详情", response = CountDetailResponse.class)
+    @ApiImplicitParam(name = "countId", required = true, dataType = "String", paramType = "query")
+    @GetMapping("getCountDetail")
+    public ResponseData getCountDetailById(String countId) {
+        CountDetailRequest request = new CountDetailRequest();
+        request.setCountId(Integer.parseInt(countId));
+        CountDetailResponse response = busService.getCountDetailById(request);
         return new ResponseUtil().setData(response);
     }
 }

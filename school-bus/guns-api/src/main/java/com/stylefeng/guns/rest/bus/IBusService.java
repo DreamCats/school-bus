@@ -6,10 +6,7 @@
  */
 package com.stylefeng.guns.rest.bus;
 
-import com.stylefeng.guns.rest.bus.dto.PageBusRequest;
-import com.stylefeng.guns.rest.bus.dto.PageBusResponse;
-import com.stylefeng.guns.rest.bus.dto.PageCountRequest;
-import com.stylefeng.guns.rest.bus.dto.PageCountResponse;
+import com.stylefeng.guns.rest.bus.dto.*;
 
 public interface IBusService {
 
@@ -26,4 +23,11 @@ public interface IBusService {
      * @return
      */
     PageCountResponse getCount(PageCountRequest request);
+
+    /**
+     * 根据场次id获取场次详情
+     * @param request
+     * @return
+     */
+    CountDetailResponse getCountDetailById(CountDetailRequest request);
 }

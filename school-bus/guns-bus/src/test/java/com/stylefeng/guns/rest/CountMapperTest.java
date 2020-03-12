@@ -10,6 +10,7 @@ package com.stylefeng.guns.rest;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.stylefeng.guns.rest.bus.dto.CountDetailDto;
 import com.stylefeng.guns.rest.bus.dto.CountSimpleDto;
 import com.stylefeng.guns.rest.common.persistence.dao.CountMapper;
 import org.junit.Test;
@@ -32,5 +33,13 @@ public class CountMapperTest {
         wrapper.eq("bus_id", 1);
         simpleDtoIPage = countMapper.selectCounts(simpleDtoIPage, wrapper);
         System.out.println(simpleDtoIPage.getRecords());
+    }
+
+    @Test
+    public void selectCountDetailById() {
+        QueryWrapper<CountDetailDto> wrapper = new QueryWrapper<>();
+        wrapper.eq("sc.uuid", 1);
+        CountDetailDto countDetailDto = countMapper.selectCountDetailById(wrapper);
+        System.out.println(countDetailDto);
     }
 }

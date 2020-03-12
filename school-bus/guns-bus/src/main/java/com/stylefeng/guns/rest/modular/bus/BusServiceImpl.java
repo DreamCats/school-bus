@@ -98,6 +98,26 @@ public class BusServiceImpl implements IBusService {
         return response;
     }
 
+    @Override
+    public CountDetailResponse getCountDetailById(CountDetailRequest request) {
+        CountDetailResponse response = new CountDetailResponse();
+        try {
+            QueryWrapper<CountDetailDto> wrapper = new QueryWrapper<>();
+            wrapper.eq("sc.uuid", request.getCountId());
+            CountDetailDto countDetailDto = countMapper.selectCountDetailById(wrapper);
+            response.setCountDetailDto(countDetailDto);
+            response.setCode(RetCodeConstants.SUCCESS.getCode());
+            response.setMsg(RetCodeConstants.SUCCESS.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("getCountDetail", e);
+            response.setCode(RetCodeConstants.DB_EXCEPTION.getCode());
+            response.setMsg(RetCodeConstants.DB_EXCEPTION.getMessage());
+            return response;
+        }
+        return response;
+    }
+
     /**
      * 私有，谁也无法访问
      */

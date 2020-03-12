@@ -26,4 +26,21 @@
             sb_count sc
         ${ew.customSqlSegment}
     </select>
+
+    <select id="selectCountDetailById" resultType="com.stylefeng.guns.rest.bus.dto.CountDetailDto">
+        SELECT
+            sc.uuid ,
+            sc.bus_id ,
+            sc.bus_status ,
+            sc.begin_time ,
+            sc.begin_date ,
+            sc.selected_seats ,
+            sb.driver_name ,
+            sb.seats_number
+        FROM
+            sb_count sc
+        LEFT JOIN sb_bus sb ON
+            sc.bus_id = sb.uuid
+        ${ew.customSqlSegment}
+    </select>
 </mapper>
