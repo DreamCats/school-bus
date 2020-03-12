@@ -19,7 +19,24 @@ spring:
       url: jdbc:mysql://39.108.93.119:3306/school_bus?serverTimeZone=UTC&useSSL=false&characterEncoding=UTF-8
       username: root
       password: mai
-      filters: log4j,wall,mergeStat
+      type: com.alibaba.druid.pool.DruidDataSource
+      druid:
+        initial-size: 5
+        max-active: 20
+        min-idle: 5
+        max-wait: 3000
+        timeBetweenEvictionRunsMillis: 60000
+        pool-prepared-statements: false
+        maxPoolPreparedStatementPerConnectionSize: 20
+        filters: stat,wall,slf4j
+        connectionProperties: druid.stat.mergeSql\=true;druid.stat.slowSqlMillis\=5000
+        web-stat-filter:
+          enabled: true
+          url-pattern: "/*"
+          exclusions: "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*"
+        stat-view-servlet:
+          login-username: admin
+          login-password: 123
 
 logging:
   level.root: info

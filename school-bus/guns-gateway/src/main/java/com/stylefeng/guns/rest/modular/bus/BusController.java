@@ -48,6 +48,7 @@ public class BusController {
         PageCountRequest request = new PageCountRequest();
         request.setCurrentPage(pageInfo.getCurrentPage());
         request.setPageSize(pageInfo.getPageSize());
+        request.setBusStatus(pageInfo.getBusStatus());
         PageCountResponse response = busService.getCount(request);
         return new ResponseUtil().setData(response);
     }

@@ -17,4 +17,6 @@ public class PageCountRequest extends AbstractRequest {
     private Integer currentPage;
     // 每页数量
     private Integer pageSize;
+    // 地区状态
+    private String busStatus;
 }

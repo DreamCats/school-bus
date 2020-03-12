@@ -17,7 +17,6 @@
         <module>guns-user</module>
         <module>guns-bus</module>
         <module>guns-order</module>
-        <!-- <module>guns-generator</module> -->
     </modules>
 
     <parent>
@@ -31,9 +30,6 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
         <guns.version>1.0.0</guns.version>
-<!--        <mybatisplus-spring-boot-starter.version>1.0.5</mybatisplus-spring-boot-starter.version>-->
-        <!-- <shiro.version>1.4.0</shiro.version> -->
-<!--         <mybatis-plus.version>2.3</mybatis-plus.version>-->
         <mybatis-plus.version>3.3.0</mybatis-plus.version>
         <fastjson.version>1.2.47</fastjson.version>
         <velocity.version>1.7</velocity.version>
@@ -47,7 +43,7 @@
         <ehcache.core.version>2.6.11</ehcache.core.version>
         <mysql-connector-java.version>8.0.11</mysql-connector-java.version>
         <jwt.version>0.9.0</jwt.version>
-        <!-- <hutool    .version>4.1.1</hutool.version> -->
+        <hutool.version>4.1.1</hutool.version>
         <!--my        -->
         <dubbo-spring.version>0.2.0</dubbo-spring.version>
         <lombok.version>1.18.8</lombok.version>
@@ -57,11 +53,6 @@
 
     <dependencyManagement>
         <dependencies>
-            <!-- <dependency>
-                <groupId>com.stylefeng</groupId>
-                <artifactId>guns-generator</artifactId>
-                <version>${guns.version}</version>
-            </dependency> -->
             <dependency>
                 <groupId>com.stylefeng</groupId>
                 <artifactId>guns-core</artifactId>
@@ -75,42 +66,13 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-<!--            <dependency>-->
-<!--                <groupId>com.baomidou</groupId>-->
-<!--                <artifactId>mybatisplus-spring-boot-starter</artifactId>-->
-<!--                <version>${mybatisplus-spring-boot-starter.version}</version>-->
-<!--            </dependency>-->
-            <!--shiro依赖-->
-            <!-- <dependency>
-                <groupId>org.apache.shiro</groupId>
-                <artifactId>shiro-core</artifactId>
-                <version>${shiro.version}</version>
-            </dependency> -->
-            <!-- <dependency>
-                <groupId>org.apache.shiro</groupId>
-                <artifactId>shiro-spring</artifactId>
-                <version>${shiro.version}</version>
-            </dependency> -->
-            <!-- <dependency>
-                <groupId>org.apache.shiro</groupId>
-                <artifactId>shiro-ehcache</artifactId>
-                <version>${shiro.version}</version>
-            </dependency> -->
+
             <dependency>
                 <groupId>mysql</groupId>
                 <artifactId>mysql-connector-java</artifactId>
                 <version>${mysql-connector-java.version}</version>
             </dependency>
-<!--            <dependency>-->
-<!--                <groupId>com.baomidou</groupId>-->
-<!--                <artifactId>mybatis-plus</artifactId>-->
-<!--                <version>${mybatis-plus.version}</version>-->
-<!--            </dependency>-->
-            <!-- <dependency>
-                <groupId>com.baomidou</groupId>
-                <artifactId>mybatis-plus-generate</artifactId>
-                <version>${mybatis-plus.version}</version>
-            </dependency> -->
+
             <dependency>
                 <groupId>com.alibaba</groupId>
                 <artifactId>fastjson</artifactId>
@@ -118,7 +80,7 @@
             </dependency>
             <dependency>
                 <groupId>com.alibaba</groupId>
-                <artifactId>druid</artifactId>
+                <artifactId>druid-spring-boot-starter</artifactId>
                 <version>${druid.version}</version>
             </dependency>
             <dependency>
@@ -141,21 +103,6 @@
                 <artifactId>velocity</artifactId>
                 <version>${velocity.version}</version>
             </dependency>
-            <!-- <dependency>
-                <groupId>com.ibeetl</groupId>
-                <artifactId>beetl</artifactId>
-                <version>${beetl.version}</version>
-            </dependency> -->
-<!--            <dependency>-->
-<!--                <groupId>io.springfox</groupId>-->
-<!--                <artifactId>springfox-swagger2</artifactId>-->
-<!--                <version>${swagger.version}</version>-->
-<!--            </dependency>-->
-<!--            <dependency>-->
-<!--                <groupId>io.springfox</groupId>-->
-<!--                <artifactId>springfox-swagger-ui</artifactId>-->
-<!--                <version>${swagger.version}</version>-->
-<!--            </dependency>-->
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
@@ -171,11 +118,11 @@
                 <artifactId>jjwt</artifactId>
                 <version>${jwt.version}</version>
             </dependency>
-            <!-- <dependency>
+            <dependency>
                 <groupId>cn.hutool</groupId>
                 <artifactId>hutool-all</artifactId>
                 <version>${hutool.version}</version>
-            </dependency> -->
+            </dependency>
             <!--dubbo-spring-->
             <dependency>
                 <groupId>com.alibaba.boot</groupId>

@@ -12,8 +12,8 @@ import org.springframework.context.annotation.PropertySource;
  * @author fengshuonan
  * @date 2018-01-07 12:33
  */
-@Configuration
-@PropertySource("classpath:/default-config.properties")
+//@Configuration
+//@PropertySource("classpath:/default-config.properties")
 public class DefaultProperties {
 
     @Bean
