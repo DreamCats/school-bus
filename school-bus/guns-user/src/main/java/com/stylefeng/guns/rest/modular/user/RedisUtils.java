@@ -5,7 +5,7 @@
  * @create: 2020/03/13 17:53
  */
 
-package com.stylefeng.guns.core.myutil;
+package com.stylefeng.guns.rest.modular.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;

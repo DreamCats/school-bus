@@ -5,7 +5,7 @@
  * @create: 2020/03/13 17:45
  */
 
-package com.stylefeng.guns.core.myconfig;
+package com.stylefeng.guns.rest.config;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
