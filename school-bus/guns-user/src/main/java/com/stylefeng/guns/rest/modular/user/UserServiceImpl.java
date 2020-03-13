@@ -112,6 +112,8 @@ public class UserServiceImpl implements IUserService {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            log.error("login:",e);
+            return res;
             // 这里在auth那里设置了异常
         }
         return res;

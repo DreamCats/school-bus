@@ -13,6 +13,7 @@
 >   - RocketMQ
 >   - Swagger2
 >   - Validated
+>   - Druid监测
 >   - Spring定时器
 >   - Hystrix熔断降级
 >   - 持续补充...
