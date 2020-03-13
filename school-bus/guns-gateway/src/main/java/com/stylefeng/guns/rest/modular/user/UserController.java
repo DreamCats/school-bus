@@ -36,7 +36,7 @@ public class UserController {
     private IUserService userAPI;
 
     @ApiOperation(value = "检查用户名接口", notes = "给定用户名，查询是否存在", response = UserCheckResponse.class)
-    @ApiImplicitParam(name = "username", required = true, dataType = "String", paramType = "query")
+    @ApiImplicitParam(name = "username", value = "用户名", required = true, dataType = "String", paramType = "query")
     @GetMapping("check")
     public ResponseData checkUsername(String username) {
         if (username.equals("")) {
