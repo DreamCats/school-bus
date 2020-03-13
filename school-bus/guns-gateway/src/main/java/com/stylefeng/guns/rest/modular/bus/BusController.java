@@ -51,7 +51,7 @@ public class BusController {
     }
 
     @ApiOperation(value = "获取车次详情", notes = "获取车次详情", response = CountDetailResponse.class)
-    @ApiImplicitParam(name = "countId", required = true, dataType = "String", paramType = "query")
+    @ApiImplicitParam(name = "countId", value = "场次id,CountSimpleDto中的uuid",required = true, dataType = "String", paramType = "query")
     @GetMapping("getCountDetail")
     public ResponseData getCountDetailById(String countId) {
         CountDetailRequest request = new CountDetailRequest();
