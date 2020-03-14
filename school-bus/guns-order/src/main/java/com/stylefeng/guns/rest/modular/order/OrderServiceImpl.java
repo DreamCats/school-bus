@@ -48,9 +48,7 @@ public class OrderServiceImpl implements IOrderSerice {
         QueryWrapper<NoTakeDto> queryWrapper = new QueryWrapper<>();
         queryWrapper
                 .eq("user_id", request.getUserId())
-                .and(o -> o.eq("order_status", "0")
-                        .or()
-                        .eq("order_status", "1"));
+                .and(o -> o.eq("order_status", "1")); // 1：已经支付
 //        orderIPage = orderMapper.selectPage(orderIPage, queryWrapper);
         orderIPage = orderMapper.selectNoTakeOrders(orderIPage, queryWrapper);
         try {
