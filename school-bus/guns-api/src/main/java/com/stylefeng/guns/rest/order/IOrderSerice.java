@@ -30,4 +30,11 @@ public interface IOrderSerice {
      * @return
      */
     AddOrderResponse addOrder(AddOrderRequest request);
+
+    /**
+     * 通过id获取详情订单呢
+     * @param request
+     * @return
+     */
+    OrderResponse selectOrderById(OrderRequest request);
 }
