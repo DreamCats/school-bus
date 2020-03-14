@@ -14,4 +14,6 @@ import lombok.Data;
 public class OrderRequest extends AbstractRequest {
 
     private String uuid;
+
+    private String orderStatus;
 }

@@ -116,4 +116,26 @@ public class OrderController {
         return new ResponseUtil().setData(response);
     }
 
+    @ApiOperation(value = "更改订单状态", notes = "前提Auth，更改订单状态", response = OrderResponse.class)
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "orderId", value = "订单id", example = "1", required = true, dataType = "String"),
+            @ApiImplicitParam(name = "orderStatus", value = "状态：0-待支付,1-已支付,2-已关闭", example = "1", required = true, dataType = "String")
+    })
+    @PostMapping("updateOrderStatus")
+    public ResponseData updateOrderStatus(String orderId, String orderStatus) {
+        // id 从本队缓存中取
+        String userId = CurrentUser.getCurrentUser();
+        if (userId == null) {
+            CommonResponse response = new CommonResponse();
+            response.setCode(RetCodeConstants.TOKEN_VALID_FAILED.getCode());
+            response.setMsg(RetCodeConstants.TOKEN_VALID_FAILED.getMessage()+",请重新登陆...");
+            return new ResponseUtil<>().setData(response);
+        }
+        OrderRequest request = new OrderRequest();
+        request.setUuid(orderId);
+        request.setOrderStatus(orderStatus);
+        OrderResponse response = orderSerice.updateOrderStatus(request);
+        return new ResponseUtil().setData(response);
+    }
+
 }

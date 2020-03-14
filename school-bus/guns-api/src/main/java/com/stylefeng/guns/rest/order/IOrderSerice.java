@@ -37,4 +37,11 @@ public interface IOrderSerice {
      * @return
      */
     OrderResponse selectOrderById(OrderRequest request);
+
+    /**
+     * 修改订单状态
+     * @param request
+     * @return
+     */
+    OrderResponse updateOrderStatus(OrderRequest request);
 }
