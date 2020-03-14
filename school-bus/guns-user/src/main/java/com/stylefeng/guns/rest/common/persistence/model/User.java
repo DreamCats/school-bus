@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Data;
 
 import java.time.LocalDateTime;
 import java.io.Serializable;
@@ -18,6 +19,7 @@ import java.io.Serializable;
  * @since 2020-03-01
  */
 @TableName("sb_user")
+@Data
 public class User extends Model<User> {
 
     private static final long serialVersionUID=1L;
@@ -58,6 +60,11 @@ public class User extends Model<User> {
      */
       private String userPhone;
 
+     /**
+      * 用户余额
+     */
+      private Double money;
+
       /**
      * 创建时间
      */
@@ -70,96 +77,4 @@ public class User extends Model<User> {
       @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
       private LocalDateTime updateTime;
 
-    
-    public Integer getUuid() {
-        return uuid;
-    }
-
-      public void setUuid(Integer uuid) {
-          this.uuid = uuid;
-      }
-    
-    public String getUserName() {
-        return userName;
-    }
-
-      public void setUserName(String userName) {
-          this.userName = userName;
-      }
-    
-    public String getUserPwd() {
-        return userPwd;
-    }
-
-      public void setUserPwd(String userPwd) {
-          this.userPwd = userPwd;
-      }
-    
-    public String getNickName() {
-        return nickName;
-    }
-
-      public void setNickName(String nickName) {
-          this.nickName = nickName;
-      }
-    
-    public Integer getUserSex() {
-        return userSex;
-    }
-
-      public void setUserSex(Integer userSex) {
-          this.userSex = userSex;
-      }
-    
-    public String getEmail() {
-        return email;
-    }
-
-      public void setEmail(String email) {
-          this.email = email;
-      }
-    
-    public String getUserPhone() {
-        return userPhone;
-    }
-
-      public void setUserPhone(String userPhone) {
-          this.userPhone = userPhone;
-      }
-    
-    public LocalDateTime getBeginTime() {
-        return beginTime;
-    }
-
-      public void setBeginTime(LocalDateTime beginTime) {
-          this.beginTime = beginTime;
-      }
-    
-    public LocalDateTime getUpdateTime() {
-        return updateTime;
-    }
-
-      public void setUpdateTime(LocalDateTime updateTime) {
-          this.updateTime = updateTime;
-      }
-
-    @Override
-    protected Serializable pkVal() {
-          return this.uuid;
-      }
-
-    @Override
-    public String toString() {
-        return "User{" +
-              "uuid=" + uuid +
-                  ", userName=" + userName +
-                  ", userPwd=" + userPwd +
-                  ", nickName=" + nickName +
-                  ", userSex=" + userSex +
-                  ", email=" + email +
-                  ", userPhone=" + userPhone +
-                  ", beginTime=" + beginTime +
-                  ", updateTime=" + updateTime +
-              "}";
-    }
 }
