@@ -13,17 +13,16 @@ import com.stylefeng.guns.rest.common.ResponseData;
 import com.stylefeng.guns.rest.common.ResponseUtil;
 import com.stylefeng.guns.rest.common.constants.RetCodeConstants;
 import com.stylefeng.guns.rest.exception.CommonResponse;
+import com.stylefeng.guns.rest.modular.form.AddOrderForm;
 import com.stylefeng.guns.rest.modular.form.PageInfo;
 import com.stylefeng.guns.rest.order.IOrderSerice;
-import com.stylefeng.guns.rest.order.dto.EvaluateRequest;
-import com.stylefeng.guns.rest.order.dto.EvaluateResponse;
-import com.stylefeng.guns.rest.order.dto.NoTakeBusRequest;
-import com.stylefeng.guns.rest.order.dto.NoTakeBusResponse;
+import com.stylefeng.guns.rest.order.dto.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -72,6 +71,28 @@ public class OrderController {
         request.setPageSize(pageInfo.getPageSize());
         request.setEvaluateStatus(evaluateStauts);
         EvaluateResponse response = orderSerice.getEvaluateOrdersById(request);
+        return new ResponseUtil().setData(response);
+    }
+
+    @ApiOperation(value = "添加订单接口", notes = "添加订单接口信息", response = AddOrderResponse.class)
+    @PostMapping("addOrder")
+    public ResponseData addOrder(AddOrderForm form) {
+        // id 从本队缓存中取
+        String userId = CurrentUser.getCurrentUser();
+        if (userId == null) {
+            CommonResponse response = new CommonResponse();
+            response.setCode(RetCodeConstants.TOKEN_VALID_FAILED.getCode());
+            response.setMsg(RetCodeConstants.TOKEN_VALID_FAILED.getMessage()+",请重新登陆...");
+            return new ResponseUtil<>().setData(response);
+        }
+        AddOrderRequest request = new AddOrderRequest();
+        request.setCountId(form.getCountId());
+        request.setUserId(Integer.parseInt(userId));
+        request.setOrderUser(form.getOrderUser());
+        request.setSeatsIds(form.getSeatsIds());
+        request.setCountPrice(form.getCountPrice());
+        request.setBusStatus(form.getBusStatus());
+        AddOrderResponse response = orderSerice.addOrder(request);
         return new ResponseUtil().setData(response);
     }
 
