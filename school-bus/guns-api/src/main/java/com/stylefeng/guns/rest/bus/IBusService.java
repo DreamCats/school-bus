@@ -30,4 +30,21 @@ public interface IBusService {
      * @return
      */
     CountDetailResponse getCountDetailById(CountDetailRequest request);
+
+    /**
+     * 我懒了，这个方法就不想写request的形式了，本身参数不是特别多
+     * 判断一下 传进来的座位， 是否和当前场次的座位中， 有没有重复的
+     * @param seats
+     * @param coundId
+     * @return
+     */
+    boolean selectedSeats(String seats, Integer coundId);
+
+    /**
+     * 更新座位信息
+     * @param seats
+     * @param coundId
+     * @return
+     */
+    boolean updateSeats(String seats, Integer coundId);
 }

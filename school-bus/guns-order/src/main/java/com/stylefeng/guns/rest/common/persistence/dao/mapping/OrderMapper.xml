@@ -50,4 +50,23 @@
         ${ew.customSqlSegment}
     </select>
 
+    <select id="selectOrderById" resultType="com.stylefeng.guns.rest.order.dto.OrderDto">
+        SELECT
+            so.uuid ,
+            so.count_id ,
+            so.user_id ,
+            so.order_user ,
+            so.bus_status ,
+            so.order_status ,
+            so.count_price ,
+            so.order_price ,
+            so.seats_ids ,
+            sc.begin_date ,
+            sc.begin_time ,
+            sc.bus_id
+        FROM
+            sb_order so
+        LEFT JOIN sb_count sc ON so.count_id = sc.uuid
+        ${ew.customSqlSegment}
+    </select>
 </mapper>

@@ -7,7 +7,6 @@
 
 package com.stylefeng.guns.rest.modular.bus;
 
-import com.alibaba.dubbo.config.annotation.Reference;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -27,6 +26,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 @Slf4j
@@ -116,6 +117,59 @@ public class BusServiceImpl implements IBusService {
             return response;
         }
         return response;
+    }
+
+    @Override
+    public boolean selectedSeats(String seats, Integer coundId) {
+        // 查查数据库， 找到座位字段
+        boolean b = false; // false:不重复，true：重复
+        try {
+            Count count = countMapper.selectById(coundId);
+            b = repeatSeats(seats, count.getSelectedSeats());
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("selectedSeats", e);
+            return true; // 异常就算是重复
+        }
+        return b;
+    }
+
+    @Override
+    public boolean updateSeats(String seats, Integer coundId) {
+        // 直接找场次的座位
+        try {
+            Count count = countMapper.selectById(coundId);
+            String selectedSeats = count.getSelectedSeats();
+            String newSelectedSeats = selectedSeats + "," + seats; // 这里可以优化，字符串拼接，这样的方式爆内存
+            count.setSelectedSeats(newSelectedSeats);
+            countMapper.updateById(count);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("updateSeats", e);
+            return false;
+        }
+        return true;
+    }
+
+    private boolean repeatSeats(String selectedSeats, String currDbSeats) {
+        // 比如，selectedSeats 是1,2
+        // dbSeats：""，
+        // dbSeats："1,2,3"，
+        // dbSeats: "4,5"
+        // 前端传来的selectedSeats， 前端判断是否为空，要不然后端也判断一下得了
+        if (selectedSeats.equals("")) {
+            return true;
+        }
+        if (currDbSeats.equals("")) {
+            return false;
+        }
+        String[] ss = selectedSeats.split(",");
+        String[] cs = currDbSeats.split(",");
+        HashSet<String> hashSet = new HashSet<>(Arrays.asList(cs)); // 这步存在并发问题 值得优化的地方
+        for (String s : ss) {
+            if (hashSet.contains(s)) return true;
+        }
+        return false;
     }
 
     /**

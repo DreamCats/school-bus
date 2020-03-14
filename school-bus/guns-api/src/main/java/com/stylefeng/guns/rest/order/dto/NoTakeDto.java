@@ -17,7 +17,7 @@ import java.io.Serializable;
 @ApiModel(description = "未乘坐订单简单Dto")
 public class NoTakeDto implements Serializable {
     @ApiModelProperty(notes = "订单id")
-    private Integer uuid;
+    private String uuid;
     @ApiModelProperty(notes = "0：沙河->清水河，1：清水河->沙河")
     private String busStatus;
     @ApiModelProperty(notes = "已选座位")

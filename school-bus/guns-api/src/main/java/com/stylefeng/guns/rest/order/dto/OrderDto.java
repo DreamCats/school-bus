@@ -18,9 +18,11 @@ import java.io.Serializable;
 public class OrderDto implements Serializable {
 
     @ApiModelProperty(notes = "订单id")
-    private Integer uuid;
+    private String uuid;
     @ApiModelProperty(notes = "场次id")
     private Integer countId;
+    @ApiModelProperty(notes = "车牌号")
+    private Integer busId;
     @ApiModelProperty(notes = "0：沙河->清水河，1：清水河->沙河")
     private String busStatus;
     @ApiModelProperty(notes = "已选座位")
@@ -29,15 +31,13 @@ public class OrderDto implements Serializable {
     private Double countPrice;
     @ApiModelProperty(notes = "订单总价格")
     private Double orderPrice;
-    @ApiModelProperty(notes = "下单时间")
-    private String orderTime;
+    @ApiModelProperty(notes = "发车日期")
+    private String beginDate;
+    @ApiModelProperty(notes = "发车时间")
+    private String beginTime;
     @ApiModelProperty(notes = "下单用户")
-    private Integer orderUser;
+    private String orderUser;
     @ApiModelProperty(notes = "订单状态，0-待支付,1-已支付,2-已关闭")
     private String orderStatus;
-    @ApiModelProperty(notes = "0:未评价；1:已评价")
-    private String evaluateStatus;
-    @ApiModelProperty(notes = "评论内容")
-    private String comment;
 }
 

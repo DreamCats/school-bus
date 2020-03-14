@@ -26,8 +26,8 @@ public class Order extends Model<Order> {
       /**
      * 主键编号
      */
-        @TableId(value = "uuid", type = IdType.AUTO)
-      private Integer uuid;
+        @TableId(value = "uuid")
+      private String uuid;
 
       /**
      * 场次id

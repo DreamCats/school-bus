@@ -15,6 +15,9 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Arrays;
+import java.util.HashSet;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class BusServiceTest {
@@ -46,5 +49,21 @@ public class BusServiceTest {
         request.setCountId(1);
         CountDetailResponse response = busService.getCountDetailById(request);
         System.out.println(response);
+    }
+
+    @Test
+    public void repeatSeats() {
+        String a = "1,2";
+        String b = "2,3";
+        String[] as = a.split(",");
+        String[] bs = b.split(",");
+        HashSet<String> hashSet = new HashSet<>(Arrays.asList(bs)); // 这步存在并发问题 值得优化的地方
+        for (String s : as) {
+            if (hashSet.contains(s)) {
+                System.out.println("包含");
+                return;
+            }
+        }
+        System.out.println("不包含");
     }
 }

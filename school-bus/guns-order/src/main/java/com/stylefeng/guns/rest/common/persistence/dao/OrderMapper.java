@@ -7,6 +7,7 @@ import com.stylefeng.guns.rest.common.persistence.model.Order;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.stylefeng.guns.rest.order.dto.EvaluateDto;
 import com.stylefeng.guns.rest.order.dto.NoTakeDto;
+import com.stylefeng.guns.rest.order.dto.OrderDto;
 import org.apache.ibatis.annotations.Param;
 
 /**
@@ -33,4 +34,11 @@ public interface OrderMapper extends BaseMapper<Order> {
      * @return
      */
     IPage<EvaluateDto> selectEvaluateOrders(IPage<EvaluateDto> page, @Param(Constants.WRAPPER) Wrapper<EvaluateDto> wrapper);
+
+    /**
+     *
+     * @param wrapper
+     * @return
+     */
+    OrderDto selectOrderById(@Param(Constants.WRAPPER) Wrapper<OrderDto> wrapper);
 }
