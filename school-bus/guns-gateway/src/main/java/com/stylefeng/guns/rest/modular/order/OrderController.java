@@ -96,4 +96,24 @@ public class OrderController {
         return new ResponseUtil().setData(response);
     }
 
+    @ApiOperation(value = "根据订单id获取详情订单", notes = "前提Auth，根据订单id获取详情订单", response = OrderResponse.class)
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "orderUuid", value = "订单id", example = "1", required = true, dataType = "String")
+    })
+    @GetMapping("getOrder")
+    public ResponseData selectOrderById(String orderUuid) {
+        // id 从本队缓存中取
+        String userId = CurrentUser.getCurrentUser();
+        if (userId == null) {
+            CommonResponse response = new CommonResponse();
+            response.setCode(RetCodeConstants.TOKEN_VALID_FAILED.getCode());
+            response.setMsg(RetCodeConstants.TOKEN_VALID_FAILED.getMessage()+",请重新登陆...");
+            return new ResponseUtil<>().setData(response);
+        }
+        OrderRequest request = new OrderRequest();
+        request.setUuid(orderUuid);
+        OrderResponse response = orderSerice.selectOrderById(request);
+        return new ResponseUtil().setData(response);
+    }
+
 }

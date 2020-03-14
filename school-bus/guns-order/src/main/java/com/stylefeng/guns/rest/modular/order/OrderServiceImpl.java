@@ -156,6 +156,26 @@ public class OrderServiceImpl implements IOrderSerice {
         return response;
     }
 
+    @Override
+    public OrderResponse selectOrderById(OrderRequest request) {
+        OrderResponse response = new OrderResponse();
+        try {
+            QueryWrapper<OrderDto> wrapper = new QueryWrapper<>();
+            wrapper.eq("so.uuid", request.getUuid());
+            OrderDto orderDto = orderMapper.selectOrderById(wrapper);
+            response.setOrderDto(orderDto);
+            response.setCode(RetCodeConstants.SUCCESS.getCode());
+            response.setMsg(RetCodeConstants.SUCCESS.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("selectOrderById", e);
+            response.setCode(RetCodeConstants.DB_EXCEPTION.getCode());
+            response.setMsg(RetCodeConstants.DB_EXCEPTION.getMessage());
+            return response;
+        }
+        return response;
+    }
+
     private double getTotalPrice(Integer seatNumbers, double countPrice) {
         BigDecimal seatNumbersDeci = new BigDecimal(seatNumbers);
         BigDecimal countPriceDeci = new BigDecimal(countPrice);
