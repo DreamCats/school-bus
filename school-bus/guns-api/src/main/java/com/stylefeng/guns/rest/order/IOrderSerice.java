@@ -6,10 +6,7 @@
  */
 package com.stylefeng.guns.rest.order;
 
-import com.stylefeng.guns.rest.order.dto.EvaluateRequest;
-import com.stylefeng.guns.rest.order.dto.EvaluateResponse;
-import com.stylefeng.guns.rest.order.dto.NoTakeBusRequest;
-import com.stylefeng.guns.rest.order.dto.NoTakeBusResponse;
+import com.stylefeng.guns.rest.order.dto.*;
 
 public interface IOrderSerice {
 
@@ -26,4 +23,11 @@ public interface IOrderSerice {
      * @return
      */
     EvaluateResponse getEvaluateOrdersById(EvaluateRequest request);
+
+    /**
+     * 添加订单
+     * @param request
+     * @return
+     */
+    AddOrderResponse addOrder(AddOrderRequest request);
 }

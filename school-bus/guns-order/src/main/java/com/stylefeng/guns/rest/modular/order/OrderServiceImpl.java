@@ -94,4 +94,9 @@ public class OrderServiceImpl implements IOrderSerice {
         }
         return response;
     }
+
+    @Override
+    public AddOrderResponse addOrder(AddOrderRequest request) {
+        return null;
+    }
 }
