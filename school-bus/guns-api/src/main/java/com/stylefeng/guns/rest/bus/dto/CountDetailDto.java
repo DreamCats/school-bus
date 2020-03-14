@@ -33,5 +33,7 @@ public class CountDetailDto implements Serializable {
     private String selectedSeats;
     @ApiModelProperty(notes = "座位路径")
     private String seatsNumber;
+    @ApiModelProperty(notes = "场次价格")
+    private Double price;
 
 }

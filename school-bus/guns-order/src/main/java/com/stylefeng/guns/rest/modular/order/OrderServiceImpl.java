@@ -97,6 +97,8 @@ public class OrderServiceImpl implements IOrderSerice {
 
     @Override
     public AddOrderResponse addOrder(AddOrderRequest request) {
+        // 判断座位
+
         return null;
     }
 }

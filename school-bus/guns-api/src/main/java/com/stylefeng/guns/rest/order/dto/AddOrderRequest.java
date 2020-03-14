@@ -16,9 +16,8 @@ public class AddOrderRequest extends AbstractRequest {
     private Integer countId;
     // 用户id
     private Integer userId;
-    // 班车id
-    private Integer busId;
     private String orderUser;
     private String busStatus;
     private String seatsIds;
+    private Double countPrice;
 }

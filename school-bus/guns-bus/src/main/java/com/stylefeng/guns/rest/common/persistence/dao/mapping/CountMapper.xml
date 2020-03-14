@@ -35,6 +35,7 @@
             sc.begin_time ,
             sc.begin_date ,
             sc.selected_seats ,
+            sc.price,
             sb.driver_name ,
             sb.seats_number
         FROM
