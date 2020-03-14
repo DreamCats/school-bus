@@ -23,8 +23,8 @@ public class RedisTest {
 
     @Test
     public void test() {
-        // 判断key是否存在
         System.out.println(redisUtils.set("a", 1));
         System.out.println(redisUtils.get("a"));
+        redisUtils.set("b", 2, 20);
     }
 }

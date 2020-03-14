@@ -31,6 +31,8 @@ public class UserDto implements Serializable {
     private String email;
     @ApiModelProperty(notes = "用户手机号码")
     private String userPhone;
+    @ApiModelProperty(notes = "用户余额")
+    private String money;
     @ApiModelProperty("创建时间")
     private String beginTime;
     @ApiModelProperty("更新时间")
