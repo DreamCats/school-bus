@@ -29,4 +29,7 @@ public class UserUpdateForm {
 
     @ApiModelProperty(value = "手机号", required = false)
     private String userPhone;
+
+    @ApiModelProperty(value = "用户余额", dataType = "double", required = false)
+    private Double money;
 }
