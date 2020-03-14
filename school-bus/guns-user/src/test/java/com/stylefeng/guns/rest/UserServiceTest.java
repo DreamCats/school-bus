@@ -51,4 +51,12 @@ public class UserServiceTest {
         System.out.println(userResponse);
     }
 
+    @Test
+    public void  getUserInfoById() {
+        UserRequest request = new UserRequest();
+        request.setId(4);
+        UserResponse response = userAPI.getUserById(request);
+        System.out.println(response);
+    }
+
 }

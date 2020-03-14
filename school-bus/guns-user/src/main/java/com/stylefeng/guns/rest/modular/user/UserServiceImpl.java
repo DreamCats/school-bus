@@ -130,6 +130,7 @@ public class UserServiceImpl implements IUserService {
         try {
             User user = userMapper.selectById(request.getId());
             UserDto userDto = userConverter.User2Res(user);
+            System.out.println(userDto);
             response.setUserDto(userDto);
             response.setCode(RetCodeConstants.SUCCESS.getCode());
             response.setMsg(RetCodeConstants.SUCCESS.getMessage());

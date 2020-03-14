@@ -32,7 +32,7 @@ public class UserDto implements Serializable {
     @ApiModelProperty(notes = "用户手机号码")
     private String userPhone;
     @ApiModelProperty(notes = "用户余额")
-    private String money;
+    private Double money;
     @ApiModelProperty("创建时间")
     private String beginTime;
     @ApiModelProperty("更新时间")

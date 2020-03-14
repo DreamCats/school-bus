@@ -27,6 +27,7 @@ public interface UserConverter {
     User res2User(UserRegisterRequest request);
 
     @Mappings({
+            @Mapping(source = "user.money", target = "money")
     })
     UserDto User2Res(User user);
 
