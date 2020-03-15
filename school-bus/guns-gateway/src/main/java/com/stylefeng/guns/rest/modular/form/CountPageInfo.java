@@ -13,7 +13,7 @@ import lombok.Data;
 
 @Data
 @ApiModel(value = "分页实体", description = "分页请求信息")
-public class PageInfo {
+public class CountPageInfo {
 
     @ApiModelProperty(name = "currentPage", value = "当前页", example = "1", dataType = "int", required = true)
     private Integer currentPage;

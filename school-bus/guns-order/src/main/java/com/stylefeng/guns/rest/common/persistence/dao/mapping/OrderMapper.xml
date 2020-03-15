@@ -33,6 +33,22 @@
         ${ew.customSqlSegment}
     </select>
 
+    <select id="selectNoPayOrders"  resultType="com.stylefeng.guns.rest.order.dto.NoPayDto">
+        SELECT
+            so.uuid ,
+            so.bus_status ,
+            so.seats_ids ,
+            so.order_user ,
+            so.order_status ,
+            so.order_time ,
+            sc.bus_id ,
+            CONCAT(sc.begin_date, '-', sc.begin_time) begin_time
+        FROM
+            sb_order so
+        LEFT JOIN sb_count sc ON so.count_id = sc.uuid
+        ${ew.customSqlSegment}
+    </select>
+
     <select id="selectEvaluateOrders"  resultType="com.stylefeng.guns.rest.order.dto.EvaluateDto">
         SELECT
             so.uuid ,

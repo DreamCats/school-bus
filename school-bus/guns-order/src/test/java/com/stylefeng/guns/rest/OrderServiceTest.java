@@ -33,6 +33,16 @@ public class OrderServiceTest {
     }
 
     @Test
+    public void getNoPayOrdersById() {
+        NoPayRequest request = new NoPayRequest();
+        request.setUserId(4);
+        request.setCurrentPage(1);
+        request.setPageSize(2);
+        NoPayResponse response = orderSerice.getNoPayOrdersById(request);
+        System.out.println(response);
+    }
+
+    @Test
     public void getEvaluateOrdersById() {
         EvaluateRequest request = new EvaluateRequest();
         request.setUserId(4);

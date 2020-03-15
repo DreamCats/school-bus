@@ -14,7 +14,7 @@ import com.stylefeng.guns.rest.common.ResponseUtil;
 import com.stylefeng.guns.rest.common.constants.RetCodeConstants;
 import com.stylefeng.guns.rest.exception.CommonResponse;
 import com.stylefeng.guns.rest.modular.form.AddOrderForm;
-import com.stylefeng.guns.rest.modular.form.PageInfo;
+import com.stylefeng.guns.rest.modular.form.OrderPageInfo;
 import com.stylefeng.guns.rest.order.IOrderSerice;
 import com.stylefeng.guns.rest.order.dto.*;
 import io.swagger.annotations.Api;
@@ -36,7 +36,7 @@ public class OrderController {
 
     @ApiOperation(value = "根据订单状态获取订单接口", notes = "前提Auth，获取用户订单未乘坐服务", response = NoTakeBusResponse.class)
     @GetMapping("getNoTakeOrders")
-    public ResponseData getNoTakeOrdersById(PageInfo pageInfo) {
+    public ResponseData getNoTakeOrdersById(OrderPageInfo pageInfo) {
         NoTakeBusRequest request = new NoTakeBusRequest();
         String userId = CurrentUser.getCurrentUser();
         if (userId == null) {
@@ -52,12 +52,30 @@ public class OrderController {
         return new ResponseUtil().setData(response);
     }
 
+    @ApiOperation(value = "根据订单状态获取订单接口", notes = "前提Auth，获取用户订单未支付服务", response = NoPayResponse.class)
+    @GetMapping("getNoPayOrders")
+    public ResponseData getNoPayOrdersById(OrderPageInfo pageInfo) {
+        NoPayRequest request = new NoPayRequest();
+        String userId = CurrentUser.getCurrentUser();
+        if (userId == null) {
+            CommonResponse response = new CommonResponse();
+            response.setCode(RetCodeConstants.TOKEN_VALID_FAILED.getCode());
+            response.setMsg(RetCodeConstants.TOKEN_VALID_FAILED.getMessage()+",请重新登陆...");
+            return new ResponseUtil<>().setData(response);
+        }
+        request.setUserId(Integer.parseInt(userId));
+        request.setCurrentPage(pageInfo.getCurrentPage());
+        request.setPageSize(pageInfo.getPageSize());
+        NoPayResponse response = orderSerice.getNoPayOrdersById(request);
+        return new ResponseUtil().setData(response);
+    }
+
     @ApiOperation(value = "根据评价状态获取用户订单接口", notes = "前提Auth，根据评价状态获取订单服务", response = EvaluateResponse.class)
     @ApiImplicitParams({
             @ApiImplicitParam(name = "evaluateStauts", value = "评价状态：0->未评价 1->已评价", example = "0", required = true, dataType = "String")
     })
     @GetMapping("getEvaluateOrders")
-    public ResponseData getEvaluateOrdersById(PageInfo pageInfo, String evaluateStauts) {
+    public ResponseData getEvaluateOrdersById(OrderPageInfo pageInfo, String evaluateStauts) {
         EvaluateRequest request = new EvaluateRequest();
         String userId = CurrentUser.getCurrentUser();
         if (userId == null) {

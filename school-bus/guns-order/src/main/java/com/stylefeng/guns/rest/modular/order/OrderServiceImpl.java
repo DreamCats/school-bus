@@ -50,8 +50,8 @@ public class OrderServiceImpl implements IOrderSerice {
                 .eq("user_id", request.getUserId())
                 .and(o -> o.eq("order_status", "1")); // 1：已经支付
 //        orderIPage = orderMapper.selectPage(orderIPage, queryWrapper);
-        orderIPage = orderMapper.selectNoTakeOrders(orderIPage, queryWrapper);
         try {
+            orderIPage = orderMapper.selectNoTakeOrders(orderIPage, queryWrapper);
             response.setCurrentPage(orderIPage.getCurrent());
             response.setPages(orderIPage.getPages());
             response.setPageSize(orderIPage.getSize());
@@ -95,6 +95,33 @@ public class OrderServiceImpl implements IOrderSerice {
         } catch (Exception e) {
             e.printStackTrace();
             log.error("getEvaluateOrdersById:",e);
+            response.setCode(RetCodeConstants.DB_EXCEPTION.getCode());
+            response.setMsg(RetCodeConstants.DB_EXCEPTION.getMessage());
+            return response;
+        }
+        return response;
+    }
+
+    @Override
+    public NoPayResponse getNoPayOrdersById(NoPayRequest request) {
+        NoPayResponse response = new NoPayResponse();
+        IPage<NoPayDto> noPayDtoIPage = new Page<>(request.getCurrentPage(), request.getPageSize());
+        QueryWrapper<NoPayDto> queryWrapper = new QueryWrapper<>();
+        queryWrapper
+                .eq("user_id", request.getUserId())
+                .and(o -> o.eq("order_status", "0")); // 未支付
+        try {
+            noPayDtoIPage = orderMapper.selectNoPayOrders(noPayDtoIPage, queryWrapper);
+            response.setCurrentPage(noPayDtoIPage.getCurrent());
+            response.setPages(noPayDtoIPage.getPages());
+            response.setPageSize(noPayDtoIPage.getSize());
+            response.setTotal(noPayDtoIPage.getTotal());
+            response.setNoPayDtos(noPayDtoIPage.getRecords());
+            response.setCode(RetCodeConstants.SUCCESS.getCode());
+            response.setMsg(RetCodeConstants.SUCCESS.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("getNoPayOrdersById:",e);
             response.setCode(RetCodeConstants.DB_EXCEPTION.getCode());
             response.setMsg(RetCodeConstants.DB_EXCEPTION.getMessage());
             return response;

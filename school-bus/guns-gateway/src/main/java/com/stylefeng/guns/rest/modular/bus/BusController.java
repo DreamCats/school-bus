@@ -12,8 +12,7 @@ import com.stylefeng.guns.rest.bus.IBusService;
 import com.stylefeng.guns.rest.bus.dto.*;
 import com.stylefeng.guns.rest.common.ResponseData;
 import com.stylefeng.guns.rest.common.ResponseUtil;
-import com.stylefeng.guns.rest.common.constants.RetCodeConstants;
-import com.stylefeng.guns.rest.modular.form.PageInfo;
+import com.stylefeng.guns.rest.modular.form.CountPageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -29,19 +28,10 @@ public class BusController {
     @Reference
     private IBusService busService;
 
-    @ApiOperation(value = "获取班车", notes = "获取班车", response = PageBusResponse.class)
-    @GetMapping("getBus")
-    public ResponseData getBus(PageInfo pageInfo) {
-        PageBusRequest request = new PageBusRequest();
-        request.setCurrentPage(pageInfo.getCurrentPage());
-        request.setPageSize(pageInfo.getPageSize());
-        PageBusResponse response = busService.getBus(request);
-        return new ResponseUtil().setData(response);
-    }
 
     @ApiOperation(value = "获取车次列表", notes = "获取车次列表", response = PageCountResponse.class)
     @GetMapping("getCount")
-    public ResponseData getCount(PageInfo pageInfo) {
+    public ResponseData getCount(CountPageInfo pageInfo) {
         PageCountRequest request = new PageCountRequest();
         request.setCurrentPage(pageInfo.getCurrentPage());
         request.setPageSize(pageInfo.getPageSize());
