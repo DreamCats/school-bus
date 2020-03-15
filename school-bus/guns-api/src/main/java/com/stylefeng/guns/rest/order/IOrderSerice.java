@@ -25,6 +25,13 @@ public interface IOrderSerice {
     EvaluateResponse getEvaluateOrdersById(EvaluateRequest request);
 
     /**
+     * 获取待支付订单
+     * @param request
+     * @return
+     */
+    NoPayResponse getNoPayOrdersById(NoPayRequest request);
+
+    /**
      * 添加订单
      * @param request
      * @return
