@@ -202,6 +202,7 @@ public class BusServiceImpl implements IBusService {
                 if (busStatus.equals("1")) { // 清水河空闲
                     count.setBusStatus("3"); // 清水河->沙河
                 }
+                count.setSelectedSeats(""); // 清空座位
             }
             if (currTime.equals(endTime)) {
                 if (busStatus.equals("2")) { // 沙河->清水河

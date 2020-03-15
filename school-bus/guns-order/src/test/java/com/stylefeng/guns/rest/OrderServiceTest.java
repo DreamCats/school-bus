@@ -47,8 +47,8 @@ public class OrderServiceTest {
         EvaluateRequest request = new EvaluateRequest();
         request.setUserId(4);
         request.setCurrentPage(1);
-        request.setPageSize(2);
-        request.setEvaluateStatus("1");
+        request.setPageSize(8);
+        request.setEvaluateStatus("0");
         EvaluateResponse response = orderSerice.getEvaluateOrdersById(request);
         System.out.println(response);
     }

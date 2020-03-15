@@ -12,6 +12,7 @@ import com.alibaba.dubbo.config.annotation.Service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.stylefeng.guns.core.util.DateUtil;
 import com.stylefeng.guns.rest.bus.IBusService;
 import com.stylefeng.guns.rest.common.constants.RetCodeConstants;
 import com.stylefeng.guns.rest.common.persistence.dao.OrderMapper;
@@ -46,9 +47,16 @@ public class OrderServiceImpl implements IOrderSerice {
         NoTakeBusResponse response = new NoTakeBusResponse();
         IPage<NoTakeDto> orderIPage = new  Page<>(request.getCurrentPage(), request.getPageSize());
         QueryWrapper<NoTakeDto> queryWrapper = new QueryWrapper<>();
+        // 获取系统年月日
+        String day = DateUtil.getDay();
+        String hours = DateUtil.getHours();
+        System.out.println("当前日期:" + day);
+        System.out.println("当前时间:" + hours);
         queryWrapper
                 .eq("user_id", request.getUserId())
-                .and(o -> o.eq("order_status", "1")); // 1：已经支付
+                .eq("order_status", "1")// 1：已经支付
+                .ge("sc.begin_date", day) // 比如，
+                .ge("sc.begin_time", hours);
 //        orderIPage = orderMapper.selectPage(orderIPage, queryWrapper);
         try {
             orderIPage = orderMapper.selectNoTakeOrders(orderIPage, queryWrapper);
@@ -79,9 +87,16 @@ public class OrderServiceImpl implements IOrderSerice {
         EvaluateResponse response = new EvaluateResponse();
         IPage<EvaluateDto> orderIPage = new Page<>(request.getCurrentPage(), request.getPageSize());
         QueryWrapper<EvaluateDto> queryWrapper = new QueryWrapper<>();
+        // 获取系统年月日
+        String day = DateUtil.getDay();
+        String hours = DateUtil.getHours();
+        System.out.println("当前日期:" + day);
+        System.out.println("当前时间:" + hours);
         queryWrapper
                 .eq("user_id", request.getUserId())
                 .eq("order_status", "1")
+                .and(o -> o.eq("sc.begin_date", day).lt("sc.begin_time", hours)
+                                .or().lt("sc.begin_date", day))
                 .eq("evaluate_status", request.getEvaluateStatus());
         try {
             orderIPage = orderMapper.selectEvaluateOrders(orderIPage, queryWrapper);
