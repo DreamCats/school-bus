@@ -33,6 +33,8 @@ public class UserDto implements Serializable {
     private String userPhone;
     @ApiModelProperty(notes = "用户余额")
     private Double money;
+    @ApiModelProperty(notes = "用户支付密码") // 后期加密
+    private String payPassword;
     @ApiModelProperty("创建时间")
     private String beginTime;
     @ApiModelProperty("更新时间")
