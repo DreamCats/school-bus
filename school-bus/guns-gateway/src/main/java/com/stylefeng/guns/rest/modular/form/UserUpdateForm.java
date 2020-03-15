@@ -32,4 +32,7 @@ public class UserUpdateForm {
 
     @ApiModelProperty(value = "用户余额", dataType = "double", required = false)
     private Double money;
+
+    @ApiModelProperty(value = "用户支付密码", required = false)
+    private String payPassword;
 }

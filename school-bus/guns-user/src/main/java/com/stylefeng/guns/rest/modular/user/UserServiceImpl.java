@@ -156,6 +156,7 @@ public class UserServiceImpl implements IUserService {
         User user = userConverter.res2User(request);
         try {
             // 不改变密码
+            // 支付密码暂时用明文
             Integer integer = userMapper.updateById(user);
 
             if (integer == 0) {

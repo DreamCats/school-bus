@@ -64,6 +64,10 @@ public class User extends Model<User> {
       * 用户余额
      */
       private Double money;
+      /**
+     * 支付密码
+     */
+      private String payPassword;
 
       /**
      * 创建时间

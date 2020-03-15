@@ -98,6 +98,7 @@ public class UserController {
         request.setEmail(form.getEmail());
         request.setUserPhone(form.getUserPhone());
         request.setMoney(form.getMoney());
+        request.setPayPassword(form.getPayPassword());
         request.setId(Integer.parseInt(userId));
         UserResponse response = userAPI.updateUserInfo(request);
         if (!response.getCode().equals(RetCodeConstants.SUCCESS.getCode())) {

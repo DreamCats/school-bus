@@ -25,4 +25,6 @@ public class UserUpdateInfoRequest extends AbstractRequest {
     private String userPhone;
 
     private Double money;
+
+    private String payPassword;
 }
