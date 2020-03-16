@@ -39,5 +39,7 @@ public class OrderDto implements Serializable {
     private String orderUser;
     @ApiModelProperty(notes = "订单状态，0-待支付,1-已支付,2-已关闭")
     private String orderStatus;
+    @ApiModelProperty(notes = "下单时间")
+    private String orderTime;
 }
 

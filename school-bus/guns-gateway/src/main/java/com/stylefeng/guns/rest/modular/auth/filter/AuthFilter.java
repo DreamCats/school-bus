@@ -1,8 +1,10 @@
 package com.stylefeng.guns.rest.modular.auth.filter;
 
+import cn.hutool.core.util.StrUtil;
 import com.stylefeng.guns.core.base.tips.ErrorTip;
 import com.stylefeng.guns.core.util.RenderUtil;
 import com.stylefeng.guns.rest.common.CurrentUser;
+import com.stylefeng.guns.rest.common.RedisUtils;
 import com.stylefeng.guns.rest.common.ResponseUtil;
 import com.stylefeng.guns.rest.common.constants.RetCodeConstants;
 import com.stylefeng.guns.rest.common.exception.BizExceptionEnum;
@@ -39,6 +41,9 @@ public class AuthFilter extends OncePerRequestFilter {
     @Autowired
     private JwtProperties jwtProperties;
 
+    @Autowired
+    private RedisUtils redisUtils;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         System.out.println("当前url：" + request.getServletPath());
@@ -61,15 +66,21 @@ public class AuthFilter extends OncePerRequestFilter {
         String authToken = null;
         if (requestHeader != null && requestHeader.startsWith("Bearer ")) {
             authToken = requestHeader.substring(7);
-
-            // 通过Token获取userID，并且将之存入Threadlocal，以便后续业务调用
-            String userId = jwtTokenUtil.getUsernameFromToken(authToken);
-            if(userId == null){
-                return;
-            } else {
-                System.out.println("验证每次请求是不是都要被拦截...");
-                CurrentUser.saveUserId(userId);
+            if (redisUtils.get(authToken) == null) {
+                CommonResponse response1 = new CommonResponse();
+                response1.setCode(RetCodeConstants.TOKEN_VALID_FAILED.getCode());
+                response1.setMsg(RetCodeConstants.TOKEN_VALID_FAILED.getMessage());
+                RenderUtil.renderJson(response, new ResponseUtil<>().setData(response1));
+                return; // 你虽然携带了， 但是我redis的不存在，说明你传的是过期的
             }
+//            // 通过Token获取userID，并且将之存入Threadlocal，以便后续业务调用
+//            String userId = jwtTokenUtil.getUsernameFromToken(authToken);
+//            if(userId == null){
+//                return;
+//            } else {
+//                System.out.println("验证每次请求是不是都要被拦截...");
+//                CurrentUser.saveUserId(userId);
+//            }
             //验证token是否过期,包含了验证jwt是否正确
             try {
                 boolean flag = jwtTokenUtil.isTokenExpired(authToken);

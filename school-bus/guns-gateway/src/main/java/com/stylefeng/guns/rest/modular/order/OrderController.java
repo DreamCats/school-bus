@@ -7,8 +7,10 @@
 
 package com.stylefeng.guns.rest.modular.order;
 
+import cn.hutool.core.convert.Convert;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.stylefeng.guns.rest.common.CurrentUser;
+import com.stylefeng.guns.rest.common.RedisUtils;
 import com.stylefeng.guns.rest.common.ResponseData;
 import com.stylefeng.guns.rest.common.ResponseUtil;
 import com.stylefeng.guns.rest.common.constants.RetCodeConstants;
@@ -22,10 +24,13 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
 
 @Slf4j
 @Api(value = "班车服务", description = "班车服务相关接口")
@@ -35,18 +40,15 @@ public class OrderController {
 
     @Reference(check = false)
     private IOrderSerice orderSerice;
+    @Autowired
+    private RedisUtils redisUtils;
 
     @ApiOperation(value = "根据订单状态获取订单接口", notes = "前提Auth，获取用户订单未乘坐服务", response = NoTakeBusResponse.class)
     @GetMapping("getNoTakeOrders")
-    public ResponseData getNoTakeOrdersById(OrderPageInfo pageInfo) {
+    public ResponseData getNoTakeOrdersById(OrderPageInfo pageInfo, HttpServletRequest req) {
         NoTakeBusRequest request = new NoTakeBusRequest();
-        String userId = CurrentUser.getCurrentUser();
-        if (userId == null) {
-            CommonResponse response = new CommonResponse();
-            response.setCode(RetCodeConstants.TOKEN_VALID_FAILED.getCode());
-            response.setMsg(RetCodeConstants.TOKEN_VALID_FAILED.getMessage()+",请重新登陆...");
-            return new ResponseUtil<>().setData(response);
-        }
+        String token = CurrentUser.getToken(req);
+        String userId = Convert.toStr(redisUtils.get(token));
         request.setUserId(Integer.parseInt(userId));
         request.setCurrentPage(pageInfo.getCurrentPage());
         request.setPageSize(pageInfo.getPageSize());
@@ -57,15 +59,10 @@ public class OrderController {
 
     @ApiOperation(value = "根据订单状态获取订单接口", notes = "前提Auth，获取用户订单未支付服务", response = NoPayResponse.class)
     @GetMapping("getNoPayOrders")
-    public ResponseData getNoPayOrdersById(OrderPageInfo pageInfo) {
+    public ResponseData getNoPayOrdersById(OrderPageInfo pageInfo, HttpServletRequest req) {
         NoPayRequest request = new NoPayRequest();
-        String userId = CurrentUser.getCurrentUser();
-        if (userId == null) {
-            CommonResponse response = new CommonResponse();
-            response.setCode(RetCodeConstants.TOKEN_VALID_FAILED.getCode());
-            response.setMsg(RetCodeConstants.TOKEN_VALID_FAILED.getMessage()+",请重新登陆...");
-            return new ResponseUtil<>().setData(response);
-        }
+        String token = CurrentUser.getToken(req);
+        String userId = Convert.toStr(redisUtils.get(token));
         request.setUserId(Integer.parseInt(userId));
         request.setCurrentPage(pageInfo.getCurrentPage());
         request.setPageSize(pageInfo.getPageSize());
@@ -79,15 +76,10 @@ public class OrderController {
             @ApiImplicitParam(name = "evaluateStauts", value = "评价状态：0->未评价 1->已评价", example = "0", required = true, dataType = "String")
     })
     @GetMapping("getEvaluateOrders")
-    public ResponseData getEvaluateOrdersById(OrderPageInfo pageInfo, String evaluateStauts) {
+    public ResponseData getEvaluateOrdersById(OrderPageInfo pageInfo, String evaluateStauts, HttpServletRequest req) {
         EvaluateRequest request = new EvaluateRequest();
-        String userId = CurrentUser.getCurrentUser();
-        if (userId == null) {
-            CommonResponse response = new CommonResponse();
-            response.setCode(RetCodeConstants.TOKEN_VALID_FAILED.getCode());
-            response.setMsg(RetCodeConstants.TOKEN_VALID_FAILED.getMessage()+",请重新登陆...");
-            return new ResponseUtil<>().setData(response);
-        }
+        String token = CurrentUser.getToken(req);
+        String userId = Convert.toStr(redisUtils.get(token));
         request.setUserId(Integer.parseInt(userId));
         request.setCurrentPage(pageInfo.getCurrentPage());
         request.setPageSize(pageInfo.getPageSize());
@@ -99,15 +91,10 @@ public class OrderController {
 
     @ApiOperation(value = "添加订单接口", notes = "添加订单接口信息", response = AddOrderResponse.class)
     @PostMapping("addOrder")
-    public ResponseData addOrder(AddOrderForm form) {
+    public ResponseData addOrder(AddOrderForm form, HttpServletRequest req) {
         // id 从本队缓存中取
-        String userId = CurrentUser.getCurrentUser();
-        if (userId == null) {
-            CommonResponse response = new CommonResponse();
-            response.setCode(RetCodeConstants.TOKEN_VALID_FAILED.getCode());
-            response.setMsg(RetCodeConstants.TOKEN_VALID_FAILED.getMessage()+",请重新登陆...");
-            return new ResponseUtil<>().setData(response);
-        }
+        String token = CurrentUser.getToken(req);
+        String userId = Convert.toStr(redisUtils.get(token));
         AddOrderRequest request = new AddOrderRequest();
         request.setCountId(form.getCountId());
         request.setUserId(Integer.parseInt(userId));
@@ -125,15 +112,7 @@ public class OrderController {
             @ApiImplicitParam(name = "orderUuid", value = "订单id", example = "1", required = true, dataType = "String")
     })
     @GetMapping("getOrder")
-    public ResponseData selectOrderById(String orderUuid) {
-        // id 从本队缓存中取
-        String userId = CurrentUser.getCurrentUser();
-        if (userId == null) {
-            CommonResponse response = new CommonResponse();
-            response.setCode(RetCodeConstants.TOKEN_VALID_FAILED.getCode());
-            response.setMsg(RetCodeConstants.TOKEN_VALID_FAILED.getMessage()+",请重新登陆...");
-            return new ResponseUtil<>().setData(response);
-        }
+    public ResponseData selectOrderById(String orderUuid, HttpServletRequest req) {
         OrderRequest request = new OrderRequest();
         request.setUuid(orderUuid);
         OrderResponse response = orderSerice.selectOrderById(request);
@@ -147,15 +126,7 @@ public class OrderController {
             @ApiImplicitParam(name = "orderStatus", value = "状态：0-待支付,1-已支付,2-已关闭", example = "1", required = true, dataType = "String")
     })
     @PostMapping("updateOrderStatus")
-    public ResponseData updateOrderStatus(String orderId, String orderStatus) {
-        // id 从本队缓存中取
-        String userId = CurrentUser.getCurrentUser();
-        if (userId == null) {
-            CommonResponse response = new CommonResponse();
-            response.setCode(RetCodeConstants.TOKEN_VALID_FAILED.getCode());
-            response.setMsg(RetCodeConstants.TOKEN_VALID_FAILED.getMessage()+",请重新登陆...");
-            return new ResponseUtil<>().setData(response);
-        }
+    public ResponseData updateOrderStatus(String orderId, String orderStatus, HttpServletRequest req) {
         OrderRequest request = new OrderRequest();
         request.setUuid(orderId);
         request.setOrderStatus(orderStatus);

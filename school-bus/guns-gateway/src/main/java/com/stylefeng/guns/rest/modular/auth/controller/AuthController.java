@@ -2,8 +2,10 @@ package com.stylefeng.guns.rest.modular.auth.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.stylefeng.guns.rest.common.CommonBindingResult;
+import com.stylefeng.guns.rest.common.RedisUtils;
 import com.stylefeng.guns.rest.common.ResponseData;
 import com.stylefeng.guns.rest.common.ResponseUtil;
+import com.stylefeng.guns.rest.common.constants.RedisConstants;
 import com.stylefeng.guns.rest.modular.auth.controller.dto.AuthRequest;
 import com.stylefeng.guns.rest.modular.auth.util.JwtTokenUtil;
 import com.stylefeng.guns.rest.user.IUserService;
@@ -38,6 +40,9 @@ public class AuthController {
     @Reference
     private IUserService userAPI;
 
+    @Autowired
+    private RedisUtils redisUtils;
+
     @ApiOperation(value = "获取token接口", notes = "每调用一次，就会随机生成一串token", response = ResponseData.class)
     @RequestMapping(value = "${jwt.auth-path}")
     public ResponseData createAuthenticationToken(@Validated AuthRequest authRequest, BindingResult bindingResult) {
@@ -54,6 +59,7 @@ public class AuthController {
         if (res.getUserId() != 0) {
             res.setRandomKey(jwtTokenUtil.getRandomKey());
             res.setToken(jwtTokenUtil.generateToken(""+res.getUserId(), res.getRandomKey()));
+            redisUtils.set(res.getToken(), res.getUserId(), RedisConstants.TOKEN_EXPIRE.getTime());
             return new ResponseUtil<>().setData(res);
         } else {
             return new ResponseUtil<>().setErrorMsg("账号密码错误");
