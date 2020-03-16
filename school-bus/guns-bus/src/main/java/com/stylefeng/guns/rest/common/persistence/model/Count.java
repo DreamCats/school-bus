@@ -66,7 +66,7 @@ public class Count extends Model<Count> {
     /**
      * 出入日期
      */
-    private String begin_date;
+    private String beginDate;
 
 
 }

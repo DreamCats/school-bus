@@ -75,11 +75,14 @@ public class BusServiceImpl implements IBusService {
             QueryWrapper<CountSimpleDto> queryWrapper = new QueryWrapper<>();
             // 获取时间
             String currHours = DateUtil.getHours();
+            String day = DateUtil.getDay();
             System.out.println("当前时间："+currHours);
+            System.out.println("当前日期："+day);
             // 判断条件
             queryWrapper
-                    .ge("begin_time", currHours) // 时间
-                    .and(o -> o.eq("bus_status", request.getBusStatus()));
+                    .eq("begin_date", day)
+                    .ge("begin_time", currHours)
+                    .eq("bus_status", request.getBusStatus());// 时间
 
             countIPage = countMapper.selectCounts(countIPage, queryWrapper);
             response.setCurrentPage(countIPage.getCurrent());
@@ -216,6 +219,31 @@ public class BusServiceImpl implements IBusService {
             log.warn("schedulChangeBusStatus->修改的：" + count);
             // 写入数据库
             countMapper.updateById(count);
+        }
+    }
+
+    /**
+     * 私有， 目的是每天添加一些场次
+     * 没有后台管理
+     */
+    @Scheduled(cron = "0 0 1 * * ?") // 每天凌晨1点执行
+    private void addCounts() {
+        // 获取日期
+        String day = DateUtil.getDay();
+        // 肯定是先获取所有的场次
+        Integer number = countMapper.selectCount(null);
+        // 获取前17个场次
+        QueryWrapper<Count> wrapper = new QueryWrapper<>();
+        wrapper.between("uuid", 1, 17);
+        List<Count> counts = countMapper.selectList(wrapper);
+        // 开始修改 这里可以用java8 的特性， 还不是很熟悉，后期优化一下
+        for (Count count : counts) {
+            // 更改日期
+            count.setBeginDate(day);
+            // 更改uuid
+            count.setUuid(count.getUuid() + number);
+            // 插入
+            countMapper.insert(count);
         }
     }
 }

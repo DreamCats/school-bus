@@ -8,15 +8,21 @@
 package com.stylefeng.guns.rest;
 
 import com.alibaba.dubbo.config.annotation.Reference;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.stylefeng.guns.core.util.DateUtil;
 import com.stylefeng.guns.rest.bus.IBusService;
 import com.stylefeng.guns.rest.bus.dto.*;
+import com.stylefeng.guns.rest.common.persistence.dao.CountMapper;
+import com.stylefeng.guns.rest.common.persistence.model.Count;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -24,6 +30,8 @@ public class BusServiceTest {
 
     @Reference
     private IBusService busService;
+    @Autowired
+    private CountMapper countMapper;
 
     @Test
     public void getBus() {
@@ -65,5 +73,27 @@ public class BusServiceTest {
             }
         }
         System.out.println("不包含");
+    }
+
+    @Test
+    public void addCounts() {
+        // 获取日期
+        String day = DateUtil.getDay();
+        // 肯定是先获取所有的场次
+        Integer number = countMapper.selectCount(null);
+        // 获取前17个场次
+        QueryWrapper<Count> wrapper = new QueryWrapper<>();
+        wrapper.between("uuid", 1, 17);
+        List<Count> counts = countMapper.selectList(wrapper);
+        // 开始修改 这里可以用java8 的特性， 还不是很熟悉，后期优化一下
+        for (Count count : counts) {
+            // 更改日期
+            count.setBeginDate(day);
+            // 更改uuid
+            count.setUuid(count.getUuid() + number);
+            // 插入
+            countMapper.insert(count);
+        }
+
     }
 }

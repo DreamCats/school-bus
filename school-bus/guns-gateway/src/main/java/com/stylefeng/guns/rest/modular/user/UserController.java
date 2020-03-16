@@ -45,6 +45,7 @@ public class UserController {
         UserCheckRequest req = new UserCheckRequest();
         req.setUsername(username);
         UserCheckResponse res = userAPI.checkUsername(req);
+        log.info("checkUsername", res);
         return new ResponseUtil().setData(res);
     }
 
@@ -64,6 +65,7 @@ public class UserController {
         request.setEmail(form.getEmail());
         // 不想写那么多了
         UserRegisterResponse res = userAPI.regsiter(request);
+        log.info("register", res);
         return new ResponseUtil<>().setData(res);
     }
 
@@ -78,6 +80,7 @@ public class UserController {
         UserRequest request = new UserRequest();
         request.setId(Integer.parseInt(userId));
         UserResponse response = userAPI.getUserById(request);
+        log.info("getUserById", response);
         return new ResponseUtil<>().setData(response);
     }
 
@@ -101,9 +104,7 @@ public class UserController {
         request.setPayPassword(form.getPayPassword());
         request.setId(Integer.parseInt(userId));
         UserResponse response = userAPI.updateUserInfo(request);
-        if (!response.getCode().equals(RetCodeConstants.SUCCESS.getCode())) {
-            return new ResponseUtil<>().setErrorMsg("服务器内部错误..");
-        }
+        log.info("updateUserInfo", response);
         return new ResponseUtil<>().setData(response);
     }
 
@@ -124,6 +125,7 @@ public class UserController {
         CommonResponse response = new CommonResponse();
         response.setCode(RetCodeConstants.SUCCESS.getCode());
         response.setMsg(RetCodeConstants.SUCCESS.getMessage());
+        log.info("logout", response);
         return new ResponseUtil<>().setData(response);
     }
 }

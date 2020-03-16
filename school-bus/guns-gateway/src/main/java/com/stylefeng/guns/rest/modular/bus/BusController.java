@@ -16,10 +16,12 @@ import com.stylefeng.guns.rest.modular.form.CountPageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @Api(value = "班车服务", description = "班车服务相关接口")
 @RestController
 @RequestMapping("/bus/")
@@ -37,6 +39,7 @@ public class BusController {
         request.setPageSize(pageInfo.getPageSize());
         request.setBusStatus(pageInfo.getBusStatus());
         PageCountResponse response = busService.getCount(request);
+        log.info("getCount", response);
         return new ResponseUtil().setData(response);
     }
 
@@ -47,6 +50,7 @@ public class BusController {
         CountDetailRequest request = new CountDetailRequest();
         request.setCountId(Integer.parseInt(countId));
         CountDetailResponse response = busService.getCountDetailById(request);
+        log.info("getCountDetailById", response);
         return new ResponseUtil().setData(response);
     }
 }
