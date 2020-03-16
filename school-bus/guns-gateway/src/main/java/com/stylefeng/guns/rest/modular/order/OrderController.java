@@ -13,8 +13,7 @@ import com.stylefeng.guns.rest.common.CurrentUser;
 import com.stylefeng.guns.rest.common.RedisUtils;
 import com.stylefeng.guns.rest.common.ResponseData;
 import com.stylefeng.guns.rest.common.ResponseUtil;
-import com.stylefeng.guns.rest.common.constants.RetCodeConstants;
-import com.stylefeng.guns.rest.exception.CommonResponse;
+import com.stylefeng.guns.rest.common.constants.RedisConstants;
 import com.stylefeng.guns.rest.modular.form.AddOrderForm;
 import com.stylefeng.guns.rest.modular.form.OrderPageInfo;
 import com.stylefeng.guns.rest.order.IOrderSerice;
@@ -43,30 +42,42 @@ public class OrderController {
     @Autowired
     private RedisUtils redisUtils;
 
-    @ApiOperation(value = "根据订单状态获取订单接口", notes = "前提Auth，获取用户订单未乘坐服务", response = NoTakeBusResponse.class)
+    @ApiOperation(value = "获取未乘坐订单接口", notes = "前提Auth，获取用户订单未乘坐服务", response = NoTakeBusResponse.class)
     @GetMapping("getNoTakeOrders")
     public ResponseData getNoTakeOrdersById(OrderPageInfo pageInfo, HttpServletRequest req) {
-        NoTakeBusRequest request = new NoTakeBusRequest();
         String token = CurrentUser.getToken(req);
+        Object obj = redisUtils.get("getNoTakeOrdersById"+token);
+        if (obj != null) {
+            log.warn("getNoTakeOrdersById->redis:" + obj.toString());
+            return new ResponseUtil().setData(obj);
+        }
         String userId = Convert.toStr(redisUtils.get(token));
+        NoTakeBusRequest request = new NoTakeBusRequest();
         request.setUserId(Integer.parseInt(userId));
         request.setCurrentPage(pageInfo.getCurrentPage());
         request.setPageSize(pageInfo.getPageSize());
         NoTakeBusResponse response = orderSerice.getNoTakeOrdersById(request);
+        redisUtils.set("getNoTakeOrdersById"+token, response, RedisConstants.NO_TAKE_OREDERS_EXPIRE.getTime());
         log.warn("getNoTakeOrdersById:" + response.toString());
         return new ResponseUtil().setData(response);
     }
 
-    @ApiOperation(value = "根据订单状态获取订单接口", notes = "前提Auth，获取用户订单未支付服务", response = NoPayResponse.class)
+    @ApiOperation(value = "获取未支付订单接口", notes = "前提Auth，获取用户订单未支付服务", response = NoPayResponse.class)
     @GetMapping("getNoPayOrders")
     public ResponseData getNoPayOrdersById(OrderPageInfo pageInfo, HttpServletRequest req) {
-        NoPayRequest request = new NoPayRequest();
         String token = CurrentUser.getToken(req);
+        Object obj = redisUtils.get("getNoPayOrdersById"+token);
+        if (obj != null) {
+            log.warn("getNoPayOrdersById->redis:" + obj.toString());
+            return new ResponseUtil().setData(obj);
+        }
         String userId = Convert.toStr(redisUtils.get(token));
+        NoPayRequest request = new NoPayRequest();
         request.setUserId(Integer.parseInt(userId));
         request.setCurrentPage(pageInfo.getCurrentPage());
         request.setPageSize(pageInfo.getPageSize());
         NoPayResponse response = orderSerice.getNoPayOrdersById(request);
+        redisUtils.set("getNoTakeOrdersById"+token, response, RedisConstants.NO_PAY_ORDERS_EXPIRE.getTime());
         log.warn("getNoPayOrdersById:" + response.toString());
         return new ResponseUtil().setData(response);
     }
@@ -77,14 +88,20 @@ public class OrderController {
     })
     @GetMapping("getEvaluateOrders")
     public ResponseData getEvaluateOrdersById(OrderPageInfo pageInfo, String evaluateStauts, HttpServletRequest req) {
-        EvaluateRequest request = new EvaluateRequest();
         String token = CurrentUser.getToken(req);
+        Object obj = redisUtils.get("getEvaluateOrdersById"+token);
+        if (obj != null) {
+            log.warn("getEvaluateOrdersById->redis:" + obj.toString());
+            return new ResponseUtil().setData(obj);
+        }
         String userId = Convert.toStr(redisUtils.get(token));
+        EvaluateRequest request = new EvaluateRequest();
         request.setUserId(Integer.parseInt(userId));
         request.setCurrentPage(pageInfo.getCurrentPage());
         request.setPageSize(pageInfo.getPageSize());
         request.setEvaluateStatus(evaluateStauts);
         EvaluateResponse response = orderSerice.getEvaluateOrdersById(request);
+        redisUtils.set("getEvaluateOrdersById"+token, response, RedisConstants.EVALUATE_ORDERS_EXPIRE.getTime());
         log.warn("getEvaluateOrders:" + response.toString());
         return new ResponseUtil().setData(response);
     }
@@ -113,9 +130,16 @@ public class OrderController {
     })
     @GetMapping("getOrder")
     public ResponseData selectOrderById(String orderUuid, HttpServletRequest req) {
+        String token = CurrentUser.getToken(req);
+        Object obj = redisUtils.get("selectOrderById"+token);
+        if (obj != null) {
+            log.warn("selectOrderById->redis:" + obj.toString());
+            return new ResponseUtil().setData(obj);
+        }
         OrderRequest request = new OrderRequest();
         request.setUuid(orderUuid);
         OrderResponse response = orderSerice.selectOrderById(request);
+        redisUtils.set("selectOrderById"+token, response, RedisConstants.SELECT_ORDER_EXPIRE.getTime());
         log.warn("selectOrderById:" + response.toString());
         return new ResponseUtil().setData(response);
     }
@@ -127,6 +151,17 @@ public class OrderController {
     })
     @PostMapping("updateOrderStatus")
     public ResponseData updateOrderStatus(String orderId, String orderStatus, HttpServletRequest req) {
+        String token = CurrentUser.getToken(req);
+        Object obj = redisUtils.get("selectOrderById"+token);
+        Object obj1 = redisUtils.get("getNoTakeOrdersById"+token);
+        Object obj2 = redisUtils.get("getNoPayOrdersById"+token);
+        Object obj3 = redisUtils.get("getEvaluateOrdersById"+token);
+        if (obj != null || obj1 != null || obj2 != null || obj3 != null) {
+            redisUtils.del("selectOrderById"+token);
+            redisUtils.del("getNoTakeOrdersById"+token);
+            redisUtils.del("getNoPayOrdersById"+token);
+            redisUtils.del("getEvaluateOrdersById"+token);
+        }
         OrderRequest request = new OrderRequest();
         request.setUuid(orderId);
         request.setOrderStatus(orderStatus);

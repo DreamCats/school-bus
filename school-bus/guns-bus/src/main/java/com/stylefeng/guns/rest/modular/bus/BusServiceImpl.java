@@ -14,6 +14,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.stylefeng.guns.core.util.DateUtil;
 import com.stylefeng.guns.rest.bus.IBusService;
 import com.stylefeng.guns.rest.bus.dto.*;
+import com.stylefeng.guns.rest.common.RedisUtils;
 import com.stylefeng.guns.rest.common.constants.RetCodeConstants;
 import com.stylefeng.guns.rest.common.persistence.dao.BusMapper;
 import com.stylefeng.guns.rest.common.persistence.dao.CountMapper;
@@ -43,6 +44,8 @@ public class BusServiceImpl implements IBusService {
     private BusConverter busConverter;
     @Autowired
     private CountConverter countConverter;
+    @Autowired
+    private RedisUtils redisUtils;
 
     @Override
     public PageBusResponse getBus(PageBusRequest request) {
@@ -180,6 +183,11 @@ public class BusServiceImpl implements IBusService {
      */
     @Scheduled(cron = "0 0/30 7-21 * * ?") // 每天上午7点到晚上21点，每隔30分钟执行一次
     private void schedulChangeBusStatus() {
+        // 删缓存
+        Object obj = redisUtils.get("getCount");
+        if (obj != null) {
+            redisUtils.del("getCount");
+        }
         // 获取
         String currTime = DateUtil.getHours();
         log.warn("schedulChangeBusStatus->目前时间：" + currTime);
@@ -228,6 +236,11 @@ public class BusServiceImpl implements IBusService {
      */
     @Scheduled(cron = "0 0 1 * * ?") // 每天凌晨1点执行
     private void addCounts() {
+        // 删缓存
+        Object obj = redisUtils.get("getCount");
+        if (obj != null) {
+            redisUtils.del("getCount");
+        }
         // 获取日期
         String day = DateUtil.getDay();
         // 肯定是先获取所有的场次

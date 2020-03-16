@@ -10,16 +10,22 @@ package com.stylefeng.guns.rest.modular.bus;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.stylefeng.guns.rest.bus.IBusService;
 import com.stylefeng.guns.rest.bus.dto.*;
+import com.stylefeng.guns.rest.common.CurrentUser;
+import com.stylefeng.guns.rest.common.RedisUtils;
 import com.stylefeng.guns.rest.common.ResponseData;
 import com.stylefeng.guns.rest.common.ResponseUtil;
+import com.stylefeng.guns.rest.common.constants.RedisConstants;
 import com.stylefeng.guns.rest.modular.form.CountPageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
 
 @Slf4j
 @Api(value = "班车服务", description = "班车服务相关接口")
@@ -29,16 +35,26 @@ public class BusController {
 
     @Reference
     private IBusService busService;
+    @Autowired
+    private RedisUtils redisUtils;
 
 
     @ApiOperation(value = "获取车次列表", notes = "获取车次列表", response = PageCountResponse.class)
     @GetMapping("getCount")
-    public ResponseData getCount(CountPageInfo pageInfo) {
+    public ResponseData getCount(CountPageInfo pageInfo, HttpServletRequest req) {
+        // 本来想用本地缓存的，试试redis吧
+        String token = CurrentUser.getToken(req);
+        Object obj = redisUtils.get("getCount");
+        if (obj != null) {
+            log.warn("getCountDetailById->redis:" + obj.toString());
+            new ResponseUtil().setData(obj);
+        }
         PageCountRequest request = new PageCountRequest();
         request.setCurrentPage(pageInfo.getCurrentPage());
         request.setPageSize(pageInfo.getPageSize());
         request.setBusStatus(pageInfo.getBusStatus());
         PageCountResponse response = busService.getCount(request);
+        redisUtils.set("getCount", response, RedisConstants.COUNTS_EXPIRE.getTime());
         log.warn("getCount:" + response.toString());
         return new ResponseUtil().setData(response);
     }
@@ -46,10 +62,18 @@ public class BusController {
     @ApiOperation(value = "获取车次详情", notes = "获取车次详情", response = CountDetailResponse.class)
     @ApiImplicitParam(name = "countId", value = "场次id,CountSimpleDto中的uuid",required = true, dataType = "String", paramType = "query")
     @GetMapping("getCountDetail")
-    public ResponseData getCountDetailById(String countId) {
+    public ResponseData getCountDetailById(String countId, HttpServletRequest req) {
+        // id 从本队缓存中取
+        String token = CurrentUser.getToken(req);
+        Object obj = redisUtils.get("getCountDetailById"+token);
+        if (obj != null) {
+            log.warn("getCountDetailById->redis:" + obj.toString());
+            new ResponseUtil().setData(obj);
+        }
         CountDetailRequest request = new CountDetailRequest();
         request.setCountId(Integer.parseInt(countId));
         CountDetailResponse response = busService.getCountDetailById(request);
+        redisUtils.set("getCountDetailById"+token, response, RedisConstants.COUNT_DETAIL_EXPIRE.getTime());
         log.warn("getCountDetailById:" + response.toString());
         return new ResponseUtil().setData(response);
     }

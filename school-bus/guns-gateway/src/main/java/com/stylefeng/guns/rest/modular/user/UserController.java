@@ -80,7 +80,7 @@ public class UserController {
         // 从本地缓存中取
         String token = CurrentUser.getToken(req);
         Object obj = redisUtils.get("getUserById"+token);
-        if (redisUtils.get("getUserById"+token) != null) {
+        if (obj != null) {
             log.warn("getUserById->redis:" + obj.toString());
             return new ResponseUtil<>().setData(obj);
         }
