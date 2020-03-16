@@ -10,6 +10,7 @@ package com.stylefeng.guns.rest.modular.user;
 import cn.hutool.core.convert.Convert;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.stylefeng.guns.rest.common.*;
+import com.stylefeng.guns.rest.common.constants.RedisConstants;
 import com.stylefeng.guns.rest.common.constants.RetCodeConstants;
 import com.stylefeng.guns.rest.exception.CommonResponse;
 import com.stylefeng.guns.rest.modular.form.UserRegstierForm;
@@ -78,16 +79,16 @@ public class UserController {
     public ResponseData getUserById(HttpServletRequest req) {
         // 从本地缓存中取
         String token = CurrentUser.getToken(req);
-        String userId = Convert.toStr(redisUtils.get(token));
-        if (userId == null) {
-            CommonResponse response = new CommonResponse();
-            response.setCode(RetCodeConstants.TOKEN_VALID_FAILED.getCode());
-            response.setMsg(RetCodeConstants.TOKEN_VALID_FAILED.getMessage()+",请重新登陆...");
-            return new ResponseUtil<>().setData(response);
+        Object obj = redisUtils.get("getUserById"+token);
+        if (redisUtils.get("getUserById"+token) != null) {
+            log.warn("getUserById->redis:" + obj.toString());
+            return new ResponseUtil<>().setData(obj);
         }
+        String userId = Convert.toStr(redisUtils.get(token));
         UserRequest request = new UserRequest();
         request.setId(Integer.parseInt(userId));
         UserResponse response = userAPI.getUserById(request);
+        redisUtils.set("getUserById"+token, response, RedisConstants.USER_INFO_EXPIRE.getTime());
         log.info("getUserById", response.toString());
         return new ResponseUtil<>().setData(response);
     }
@@ -97,6 +98,10 @@ public class UserController {
     public ResponseData updateUserInfo(UserUpdateForm form, HttpServletRequest req) {
         // id 从本队缓存中取
         String token = CurrentUser.getToken(req);
+        Object obj = redisUtils.get("getUserById"+token);
+        if (obj != null) {
+            redisUtils.del("getUserById"+token);
+        }
         String userId = Convert.toStr(redisUtils.get(token));
         UserUpdateInfoRequest request = new UserUpdateInfoRequest();
         request.setUserSex(form.getUserSex());

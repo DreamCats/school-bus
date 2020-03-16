@@ -57,6 +57,7 @@ public class OrderServiceImpl implements IOrderSerice {
                 .eq("order_status", "1")// 1：已经支付
                 .ge("sc.begin_date", day) // 比如，
                 .ge("sc.begin_time", hours)
+                .orderByAsc("sc.begin_time")
                 .orderByDesc("so.order_time");
 //        orderIPage = orderMapper.selectPage(orderIPage, queryWrapper);
         try {
@@ -99,6 +100,7 @@ public class OrderServiceImpl implements IOrderSerice {
                 .and(o -> o.eq("sc.begin_date", day).lt("sc.begin_time", hours)
                                 .or().lt("sc.begin_date", day))
                 .eq("evaluate_status", request.getEvaluateStatus())
+                .orderByDesc("sc.begin_time")
                 .orderByDesc("so.order_time");
         try {
             orderIPage = orderMapper.selectEvaluateOrders(orderIPage, queryWrapper);
@@ -134,7 +136,8 @@ public class OrderServiceImpl implements IOrderSerice {
                 .eq("order_status", "0")
                 .ge("sc.begin_date", day) // 比如，
                 .ge("sc.begin_time", hours)
-                .orderByDesc("sc.begin_time"); // 未支付
+                .orderByDesc("sc.begin_time")
+                .orderByDesc("so.order_time"); // 未支付
         try {
             noPayDtoIPage = orderMapper.selectNoPayOrders(noPayDtoIPage, queryWrapper);
             response.setCurrentPage(noPayDtoIPage.getCurrent());
