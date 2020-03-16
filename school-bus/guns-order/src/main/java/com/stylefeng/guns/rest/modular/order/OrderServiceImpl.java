@@ -162,20 +162,20 @@ public class OrderServiceImpl implements IOrderSerice {
         // 判断座位，如果重复，直接退出，否则更新场次的座位信息
         AddOrderResponse response = new AddOrderResponse();
         try {
-            boolean selectedSeats = busService.selectedSeats(request.getSeatsIds(), request.getCountId());
-            if (selectedSeats) {
-                // b:true 说明重复
-                response.setCode(RetCodeConstants.SELECTED_SEATS.getCode());
-                response.setMsg(RetCodeConstants.SELECTED_SEATS.getMessage());
-                return response;
-            }
-            // 更新场次的座位信息，并更新场次的座位是否已满
-            boolean updateSeats = busService.updateSeats(request.getSeatsIds(), request.getCountId());
-            if (!updateSeats) {
-                response.setCode(RetCodeConstants.DB_EXCEPTION.getCode());
-                response.setMsg(RetCodeConstants.DB_EXCEPTION.getMessage());
-                return response;
-            }
+//            boolean selectedSeats = busService.selectedSeats(request.getSeatsIds(), request.getCountId());
+//            if (selectedSeats) {
+//                // b:true 说明重复
+//                response.setCode(RetCodeConstants.SELECTED_SEATS.getCode());
+//                response.setMsg(RetCodeConstants.SELECTED_SEATS.getMessage());
+//                return response;
+//            }
+//            // 更新场次的座位信息，并更新场次的座位是否已满
+//            boolean updateSeats = busService.updateSeats(request.getSeatsIds(), request.getCountId());
+//            if (!updateSeats) {
+//                response.setCode(RetCodeConstants.DB_EXCEPTION.getCode());
+//                response.setMsg(RetCodeConstants.DB_EXCEPTION.getMessage());
+//                return response;
+//            }
             // 添加订单了， 这里问题就来了，如果订单添加失败， 上面的更新场次的座位信息就要回滚
             // 如果上述更新座位信息放在添加订单之后呢？， 若更新座位异常，那么添加订单就要回滚，卧槽，事物就来了
             // 好像听说dubbo和springboot的事物发生冲突

@@ -9,11 +9,14 @@ package com.stylefeng.guns.rest.modular.order;
 
 import cn.hutool.core.convert.Convert;
 import com.alibaba.dubbo.config.annotation.Reference;
+import com.stylefeng.guns.rest.bus.IBusService;
 import com.stylefeng.guns.rest.common.CurrentUser;
 import com.stylefeng.guns.rest.common.RedisUtils;
 import com.stylefeng.guns.rest.common.ResponseData;
 import com.stylefeng.guns.rest.common.ResponseUtil;
 import com.stylefeng.guns.rest.common.constants.RedisConstants;
+import com.stylefeng.guns.rest.common.constants.RetCodeConstants;
+import com.stylefeng.guns.rest.exception.CommonResponse;
 import com.stylefeng.guns.rest.modular.form.AddOrderForm;
 import com.stylefeng.guns.rest.modular.form.OrderPageInfo;
 import com.stylefeng.guns.rest.order.IOrderSerice;
@@ -39,6 +42,8 @@ public class OrderController {
 
     @Reference(check = false)
     private IOrderSerice orderSerice;
+    @Reference(check = false)
+    private IBusService busService;
     @Autowired
     private RedisUtils redisUtils;
 
@@ -77,7 +82,7 @@ public class OrderController {
         request.setCurrentPage(pageInfo.getCurrentPage());
         request.setPageSize(pageInfo.getPageSize());
         NoPayResponse response = orderSerice.getNoPayOrdersById(request);
-        redisUtils.set("getNoTakeOrdersById"+token, response, RedisConstants.NO_PAY_ORDERS_EXPIRE.getTime());
+//        redisUtils.set("getNoPayOrdersById"+token, response, RedisConstants.NO_PAY_ORDERS_EXPIRE.getTime());
         log.warn("getNoPayOrdersById:" + response.toString());
         return new ResponseUtil().setData(response);
     }
@@ -119,7 +124,37 @@ public class OrderController {
         request.setSeatsIds(form.getSeatsIds());
         request.setCountPrice(form.getCountPrice());
         request.setBusStatus(form.getBusStatus());
+        // 判断座位是否重复
+        boolean selectedSeats = busService.selectedSeats(request.getSeatsIds(), request.getCountId());
+        if (selectedSeats) {
+            CommonResponse response = new CommonResponse();
+            response.setCode(RetCodeConstants.SELECTED_SEATS.getCode());
+            response.setMsg(RetCodeConstants.SELECTED_SEATS.getMessage());
+            return new ResponseUtil().setData(response);
+        }
+        // 更新座位
+        //更新场次的座位信息，并更新场次的座位是否已满
+        boolean updateSeats = busService.updateSeats(request.getSeatsIds(), request.getCountId());
+        if (!updateSeats) {
+            // 更新失败
+            CommonResponse response = new CommonResponse();
+            response.setCode(RetCodeConstants.DB_EXCEPTION.getCode());
+            response.setMsg(RetCodeConstants.DB_EXCEPTION.getMessage());
+            return new ResponseUtil().setData(response);
+        }
+        // 缓存失效
+        Object obj = redisUtils.get("getCountDetailById" + request.getCountId());
+        if (obj != null) {
+            // 说明有缓存,清理掉
+            redisUtils.del("getCountDetailById" + request.getCountId());
+        }
         AddOrderResponse response = orderSerice.addOrder(request);
+        // 待支付缓存失效
+        obj = redisUtils.get("getNoPayOrdersById" + token);
+        if (obj != null) {
+            // 说明有缓存，清理掉
+            redisUtils.del("getNoPayOrdersById" + token);
+        }
         log.warn("addOrder:" + response.toString());
         return new ResponseUtil().setData(response);
     }

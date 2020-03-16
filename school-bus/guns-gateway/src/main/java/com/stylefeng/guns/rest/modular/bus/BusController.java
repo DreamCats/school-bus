@@ -46,7 +46,7 @@ public class BusController {
         String token = CurrentUser.getToken(req);
         Object obj = redisUtils.get("getCount");
         if (obj != null) {
-            log.warn("getCountDetailById->redis:" + obj.toString());
+            log.warn("getCount->redis:" + obj.toString());
             new ResponseUtil().setData(obj);
         }
         PageCountRequest request = new PageCountRequest();
@@ -65,7 +65,7 @@ public class BusController {
     public ResponseData getCountDetailById(String countId, HttpServletRequest req) {
         // id 从本队缓存中取
         String token = CurrentUser.getToken(req);
-        Object obj = redisUtils.get("getCountDetailById"+token);
+        Object obj = redisUtils.get("getCountDetailById"+countId);
         if (obj != null) {
             log.warn("getCountDetailById->redis:" + obj.toString());
             new ResponseUtil().setData(obj);
@@ -73,7 +73,7 @@ public class BusController {
         CountDetailRequest request = new CountDetailRequest();
         request.setCountId(Integer.parseInt(countId));
         CountDetailResponse response = busService.getCountDetailById(request);
-        redisUtils.set("getCountDetailById"+token, response, RedisConstants.COUNT_DETAIL_EXPIRE.getTime());
+        redisUtils.set("getCountDetailById"+countId, response, RedisConstants.COUNT_DETAIL_EXPIRE.getTime());
         log.warn("getCountDetailById:" + response.toString());
         return new ResponseUtil().setData(response);
     }
