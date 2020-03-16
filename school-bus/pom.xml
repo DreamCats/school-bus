@@ -43,7 +43,7 @@
         <ehcache.core.version>2.6.11</ehcache.core.version>
         <mysql-connector-java.version>8.0.11</mysql-connector-java.version>
         <jwt.version>0.9.0</jwt.version>
-        <hutool.version>4.1.1</hutool.version>
+        <hutool.version>4.6.1</hutool.version>
         <!--my-->
         <dubbo-spring.version>0.2.0</dubbo-spring.version>
         <lombok.version>1.18.8</lombok.version>
