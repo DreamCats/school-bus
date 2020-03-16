@@ -7,6 +7,7 @@
 
 package com.stylefeng.guns.rest.modular.bus;
 
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -126,12 +127,28 @@ public class BusServiceImpl implements IBusService {
     }
 
     @Override
-    public boolean selectedSeats(String seats, Integer coundId) {
+    public boolean repeatSeats(String seats, Integer coundId) {
         // 查查数据库， 找到座位字段
         boolean b = false; // false:不重复，true：重复
         try {
             Count count = countMapper.selectById(coundId);
-            b = repeatSeats(seats, count.getSelectedSeats());
+            // 比如，selectedSeats 是1,2
+            // dbSeats：""，
+            // dbSeats："1,2,3"，
+            // dbSeats: "4,5"
+            // 前端传来的selectedSeats， 前端判断是否为空，要不然后端也判断一下得了
+            if (seats.equals("")) {
+                return true;
+            }
+            if (count.getSelectedSeats().equals("")) {
+                return false;
+            }
+            String[] ss = seats.split(",");
+            String[] cs = count.getSelectedSeats().split(",");
+            HashSet<String> hashSet = new HashSet<>(Arrays.asList(cs)); // 这步存在并发问题 值得优化的地方
+            for (String s : ss) {
+                if (hashSet.contains(s)) return true;
+            }
         } catch (Exception e) {
             e.printStackTrace();
             log.error("selectedSeats", e);
@@ -141,12 +158,15 @@ public class BusServiceImpl implements IBusService {
     }
 
     @Override
-    public boolean updateSeats(String seats, Integer coundId) {
+    public boolean addSeats(String seats, Integer coundId) {
         // 直接找场次的座位
         try {
             Count count = countMapper.selectById(coundId);
             String selectedSeats = count.getSelectedSeats();
-            String newSelectedSeats = selectedSeats + "," + seats; // 这里可以优化，字符串拼接，这样的方式爆内存
+            String newSelectedSeats = seats;
+            if (!StrUtil.isEmpty(selectedSeats)) {
+                newSelectedSeats = selectedSeats + "," + newSelectedSeats; // 这里可以优化，字符串拼接，这样的方式爆内存
+            }
             count.setSelectedSeats(newSelectedSeats);
             countMapper.updateById(count);
         } catch (Exception e) {
@@ -157,26 +177,36 @@ public class BusServiceImpl implements IBusService {
         return true;
     }
 
-    private boolean repeatSeats(String selectedSeats, String currDbSeats) {
-        // 比如，selectedSeats 是1,2
-        // dbSeats：""，
-        // dbSeats："1,2,3"，
-        // dbSeats: "4,5"
-        // 前端传来的selectedSeats， 前端判断是否为空，要不然后端也判断一下得了
-        if (selectedSeats.equals("")) {
-            return true;
-        }
-        if (currDbSeats.equals("")) {
+    @Override
+    public boolean filterRepeatSeats(String seats, Integer coundId) {
+        try {
+            Count count = countMapper.selectById(coundId);
+            String[] ss = seats.split(",");
+            String[] cs = count.getSelectedSeats().split(",");
+            HashSet<String> hashSet = new HashSet<>(Arrays.asList(cs)); // 这步存在并发问题 值得优化的地方
+            for (String s : ss) {
+                if (hashSet.contains(s)) {
+                    hashSet.remove(s);
+                }
+            }
+            if (hashSet.isEmpty()) {
+                count.setSelectedSeats("");
+            }
+            StringBuffer sb = new StringBuffer();
+            for (String s : hashSet) {
+                sb.append(s);
+                sb.append(",");
+            }
+            count.setSelectedSeats(sb.toString());
+            countMapper.updateById(count);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("filterRepeatSeats:", e);
             return false;
         }
-        String[] ss = selectedSeats.split(",");
-        String[] cs = currDbSeats.split(",");
-        HashSet<String> hashSet = new HashSet<>(Arrays.asList(cs)); // 这步存在并发问题 值得优化的地方
-        for (String s : ss) {
-            if (hashSet.contains(s)) return true;
-        }
-        return false;
+        return true;
     }
+
 
     /**
      * 私有，谁也无法访问

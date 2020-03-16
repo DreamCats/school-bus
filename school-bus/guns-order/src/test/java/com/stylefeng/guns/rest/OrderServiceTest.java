@@ -8,7 +8,7 @@
 package com.stylefeng.guns.rest;
 
 import com.alibaba.dubbo.config.annotation.Reference;
-import com.stylefeng.guns.rest.order.IOrderSerice;
+import com.stylefeng.guns.rest.order.IOrderService;
 import com.stylefeng.guns.rest.order.dto.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,7 +20,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class OrderServiceTest {
 
     @Reference
-    private IOrderSerice orderSerice;
+    private IOrderService orderSerice;
 
     @Test
     public void getNoTakeOrdersById() {

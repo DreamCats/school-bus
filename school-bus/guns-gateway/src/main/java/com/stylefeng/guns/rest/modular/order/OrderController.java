@@ -19,7 +19,7 @@ import com.stylefeng.guns.rest.common.constants.RetCodeConstants;
 import com.stylefeng.guns.rest.exception.CommonResponse;
 import com.stylefeng.guns.rest.modular.form.AddOrderForm;
 import com.stylefeng.guns.rest.modular.form.OrderPageInfo;
-import com.stylefeng.guns.rest.order.IOrderSerice;
+import com.stylefeng.guns.rest.order.IOrderService;
 import com.stylefeng.guns.rest.order.dto.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -41,7 +41,7 @@ import javax.servlet.http.HttpServletRequest;
 public class OrderController {
 
     @Reference(check = false)
-    private IOrderSerice orderSerice;
+    private IOrderService orderService;
     @Reference(check = false)
     private IBusService busService;
     @Autowired
@@ -61,7 +61,7 @@ public class OrderController {
         request.setUserId(Integer.parseInt(userId));
         request.setCurrentPage(pageInfo.getCurrentPage());
         request.setPageSize(pageInfo.getPageSize());
-        NoTakeBusResponse response = orderSerice.getNoTakeOrdersById(request);
+        NoTakeBusResponse response = orderService.getNoTakeOrdersById(request);
         redisUtils.set(RedisConstants.NO_TAKE_OREDERS_EXPIRE.getKey()+userId, response, RedisConstants.NO_TAKE_OREDERS_EXPIRE.getTime());
         log.warn("getNoTakeOrdersById:" + response.toString());
         return new ResponseUtil().setData(response);
@@ -81,7 +81,7 @@ public class OrderController {
         request.setUserId(Integer.parseInt(userId));
         request.setCurrentPage(pageInfo.getCurrentPage());
         request.setPageSize(pageInfo.getPageSize());
-        NoPayResponse response = orderSerice.getNoPayOrdersById(request);
+        NoPayResponse response = orderService.getNoPayOrdersById(request);
 //        redisUtils.set(RedisConstants.NO_PAY_ORDERS_EXPIRE.getKey()+userId, response, RedisConstants.NO_PAY_ORDERS_EXPIRE.getTime());
         log.warn("getNoPayOrdersById:" + response.toString());
         return new ResponseUtil().setData(response);
@@ -105,7 +105,7 @@ public class OrderController {
         request.setCurrentPage(pageInfo.getCurrentPage());
         request.setPageSize(pageInfo.getPageSize());
         request.setEvaluateStatus(evaluateStauts);
-        EvaluateResponse response = orderSerice.getEvaluateOrdersById(request);
+        EvaluateResponse response = orderService.getEvaluateOrdersById(request);
         redisUtils.set(RedisConstants.EVALUATE_ORDERS_EXPIRE.getKey()+userId, response, RedisConstants.EVALUATE_ORDERS_EXPIRE.getTime());
         log.warn("getEvaluateOrders:" + response.toString());
         return new ResponseUtil().setData(response);
@@ -125,7 +125,7 @@ public class OrderController {
         request.setCountPrice(form.getCountPrice());
         request.setBusStatus(form.getBusStatus());
         // 判断座位是否重复
-        boolean selectedSeats = busService.selectedSeats(request.getSeatsIds(), request.getCountId());
+        boolean selectedSeats = busService.repeatSeats(request.getSeatsIds(), request.getCountId());
         if (selectedSeats) {
             CommonResponse response = new CommonResponse();
             response.setCode(RetCodeConstants.SELECTED_SEATS.getCode());
@@ -134,7 +134,7 @@ public class OrderController {
         }
         // 更新座位
         //更新场次的座位信息，并更新场次的座位是否已满
-        boolean updateSeats = busService.updateSeats(request.getSeatsIds(), request.getCountId());
+        boolean updateSeats = busService.addSeats(request.getSeatsIds(), request.getCountId());
         if (!updateSeats) {
             // 更新失败
             CommonResponse response = new CommonResponse();
@@ -148,7 +148,7 @@ public class OrderController {
             // 说明有缓存,清理掉
             redisUtils.del(RedisConstants.COUNT_DETAIL_EXPIRE.getKey() + request.getCountId());
         }
-        AddOrderResponse response = orderSerice.addOrder(request);
+        AddOrderResponse response = orderService.addOrder(request);
         // 待支付缓存失效
         obj = redisUtils.get(RedisConstants.NO_PAY_ORDERS_EXPIRE.getKey() + userId);
         if (obj != null) {
@@ -173,7 +173,7 @@ public class OrderController {
         }
         OrderRequest request = new OrderRequest();
         request.setUuid(orderUuid);
-        OrderResponse response = orderSerice.selectOrderById(request);
+        OrderResponse response = orderService.selectOrderById(request);
         redisUtils.set(RedisConstants.SELECT_ORDER_EXPIRE.getKey()+orderUuid, response, RedisConstants.SELECT_ORDER_EXPIRE.getTime());
         log.warn("selectOrderById:" + response.toString());
         return new ResponseUtil().setData(response);
@@ -201,7 +201,20 @@ public class OrderController {
         OrderRequest request = new OrderRequest();
         request.setUuid(orderId);
         request.setOrderStatus(orderStatus);
-        OrderResponse response = orderSerice.updateOrderStatus(request);
+        OrderResponse response = orderService.updateOrderStatus(request);
+        if (response.getOrderDto().getOrderStatus().equals("2")) {
+            // 还原座位/更新座位
+            boolean b = busService.filterRepeatSeats(response.getOrderDto().getSeatsIds(), response.getOrderDto().getCountId());
+            if (!b) {
+                // 更新座位失败
+                response.setCode(RetCodeConstants.DB_EXCEPTION.getCode());
+                response.setMsg(RetCodeConstants.DB_EXCEPTION.getMessage());
+                return new ResponseUtil().setData(response);
+            }
+            // 删除座位缓存
+            redisUtils.del(RedisConstants.COUNT_DETAIL_EXPIRE.getKey()
+                    + response.getOrderDto().getCountId());
+        }
         log.warn("updateOrderStatus:" + response.toString());
         return new ResponseUtil().setData(response);
     }

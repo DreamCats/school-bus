@@ -8,7 +8,7 @@ package com.stylefeng.guns.rest.order;
 
 import com.stylefeng.guns.rest.order.dto.*;
 
-public interface IOrderSerice {
+public interface IOrderService {
 
     /**
      * 获取未乘坐订单

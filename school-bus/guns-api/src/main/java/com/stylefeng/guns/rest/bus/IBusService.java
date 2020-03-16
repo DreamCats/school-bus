@@ -38,7 +38,7 @@ public interface IBusService {
      * @param coundId
      * @return
      */
-    boolean selectedSeats(String seats, Integer coundId);
+    boolean repeatSeats(String seats, Integer coundId);
 
     /**
      * 更新座位信息
@@ -46,5 +46,13 @@ public interface IBusService {
      * @param coundId
      * @return
      */
-    boolean updateSeats(String seats, Integer coundId);
+    boolean addSeats(String seats, Integer coundId);
+
+    /**
+     * 还原场次座位，去掉coundId中已出现seats的座位
+     * @param seats
+     * @param coundId
+     * @return
+     */
+    boolean filterRepeatSeats(String seats, Integer coundId);
 }

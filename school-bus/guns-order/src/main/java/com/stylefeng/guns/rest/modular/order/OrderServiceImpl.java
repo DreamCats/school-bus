@@ -19,7 +19,7 @@ import com.stylefeng.guns.rest.common.persistence.dao.OrderMapper;
 import com.stylefeng.guns.rest.common.persistence.model.Order;
 import com.stylefeng.guns.rest.modular.order.converter.OrderConvertver;
 import com.stylefeng.guns.rest.myutils.UUIDUtils;
-import com.stylefeng.guns.rest.order.IOrderSerice;
+import com.stylefeng.guns.rest.order.IOrderService;
 import com.stylefeng.guns.rest.order.dto.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,7 @@ import java.math.RoundingMode;
 @Slf4j
 @Component
 @Service
-public class OrderServiceImpl implements IOrderSerice {
+public class OrderServiceImpl implements IOrderService {
 
     @Autowired
     private OrderMapper orderMapper;
