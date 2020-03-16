@@ -79,16 +79,16 @@ public class UserController {
     public ResponseData getUserById(HttpServletRequest req) {
         // 从本地缓存中取
         String token = CurrentUser.getToken(req);
-        Object obj = redisUtils.get("getUserById"+token);
+        String userId = Convert.toStr(redisUtils.get(token));
+        Object obj = redisUtils.get(RedisConstants.USER_INFO_EXPIRE.getKey()+userId);
         if (obj != null) {
             log.warn("getUserById->redis:" + obj.toString());
             return new ResponseUtil<>().setData(obj);
         }
-        String userId = Convert.toStr(redisUtils.get(token));
         UserRequest request = new UserRequest();
         request.setId(Integer.parseInt(userId));
         UserResponse response = userAPI.getUserById(request);
-        redisUtils.set("getUserById"+token, response, RedisConstants.USER_INFO_EXPIRE.getTime());
+        redisUtils.set(RedisConstants.USER_INFO_EXPIRE.getKey()+userId, response, RedisConstants.USER_INFO_EXPIRE.getTime());
         log.info("getUserById", response.toString());
         return new ResponseUtil<>().setData(response);
     }
@@ -98,11 +98,11 @@ public class UserController {
     public ResponseData updateUserInfo(UserUpdateForm form, HttpServletRequest req) {
         // id 从本队缓存中取
         String token = CurrentUser.getToken(req);
-        Object obj = redisUtils.get("getUserById"+token);
-        if (obj != null) {
-            redisUtils.del("getUserById"+token);
-        }
         String userId = Convert.toStr(redisUtils.get(token));
+        Object obj = redisUtils.get(RedisConstants.USER_INFO_EXPIRE.getKey()+userId);
+        if (obj != null) {
+            redisUtils.del(RedisConstants.USER_INFO_EXPIRE.getKey()+userId);
+        }
         UserUpdateInfoRequest request = new UserUpdateInfoRequest();
         request.setUserSex(form.getUserSex());
         request.setNickName(form.getNickName());

@@ -51,18 +51,18 @@ public class OrderController {
     @GetMapping("getNoTakeOrders")
     public ResponseData getNoTakeOrdersById(OrderPageInfo pageInfo, HttpServletRequest req) {
         String token = CurrentUser.getToken(req);
-        Object obj = redisUtils.get("getNoTakeOrdersById"+token);
+        String userId = Convert.toStr(redisUtils.get(token));
+        Object obj = redisUtils.get(RedisConstants.NO_TAKE_OREDERS_EXPIRE.getKey()+userId);
         if (obj != null) {
             log.warn("getNoTakeOrdersById->redis:" + obj.toString());
             return new ResponseUtil().setData(obj);
         }
-        String userId = Convert.toStr(redisUtils.get(token));
         NoTakeBusRequest request = new NoTakeBusRequest();
         request.setUserId(Integer.parseInt(userId));
         request.setCurrentPage(pageInfo.getCurrentPage());
         request.setPageSize(pageInfo.getPageSize());
         NoTakeBusResponse response = orderSerice.getNoTakeOrdersById(request);
-        redisUtils.set("getNoTakeOrdersById"+token, response, RedisConstants.NO_TAKE_OREDERS_EXPIRE.getTime());
+        redisUtils.set(RedisConstants.NO_TAKE_OREDERS_EXPIRE.getKey()+userId, response, RedisConstants.NO_TAKE_OREDERS_EXPIRE.getTime());
         log.warn("getNoTakeOrdersById:" + response.toString());
         return new ResponseUtil().setData(response);
     }
@@ -71,18 +71,18 @@ public class OrderController {
     @GetMapping("getNoPayOrders")
     public ResponseData getNoPayOrdersById(OrderPageInfo pageInfo, HttpServletRequest req) {
         String token = CurrentUser.getToken(req);
-        Object obj = redisUtils.get("getNoPayOrdersById"+token);
+        String userId = Convert.toStr(redisUtils.get(token));
+        Object obj = redisUtils.get(RedisConstants.NO_PAY_ORDERS_EXPIRE.getKey()+userId);
         if (obj != null) {
             log.warn("getNoPayOrdersById->redis:" + obj.toString());
             return new ResponseUtil().setData(obj);
         }
-        String userId = Convert.toStr(redisUtils.get(token));
         NoPayRequest request = new NoPayRequest();
         request.setUserId(Integer.parseInt(userId));
         request.setCurrentPage(pageInfo.getCurrentPage());
         request.setPageSize(pageInfo.getPageSize());
         NoPayResponse response = orderSerice.getNoPayOrdersById(request);
-//        redisUtils.set("getNoPayOrdersById"+token, response, RedisConstants.NO_PAY_ORDERS_EXPIRE.getTime());
+//        redisUtils.set(RedisConstants.NO_PAY_ORDERS_EXPIRE.getKey()+userId, response, RedisConstants.NO_PAY_ORDERS_EXPIRE.getTime());
         log.warn("getNoPayOrdersById:" + response.toString());
         return new ResponseUtil().setData(response);
     }
@@ -94,19 +94,19 @@ public class OrderController {
     @GetMapping("getEvaluateOrders")
     public ResponseData getEvaluateOrdersById(OrderPageInfo pageInfo, String evaluateStauts, HttpServletRequest req) {
         String token = CurrentUser.getToken(req);
-        Object obj = redisUtils.get("getEvaluateOrdersById"+token);
+        String userId = Convert.toStr(redisUtils.get(token));
+        Object obj = redisUtils.get(RedisConstants.EVALUATE_ORDERS_EXPIRE.getKey()+userId);
         if (obj != null) {
             log.warn("getEvaluateOrdersById->redis:" + obj.toString());
             return new ResponseUtil().setData(obj);
         }
-        String userId = Convert.toStr(redisUtils.get(token));
         EvaluateRequest request = new EvaluateRequest();
         request.setUserId(Integer.parseInt(userId));
         request.setCurrentPage(pageInfo.getCurrentPage());
         request.setPageSize(pageInfo.getPageSize());
         request.setEvaluateStatus(evaluateStauts);
         EvaluateResponse response = orderSerice.getEvaluateOrdersById(request);
-        redisUtils.set("getEvaluateOrdersById"+token, response, RedisConstants.EVALUATE_ORDERS_EXPIRE.getTime());
+        redisUtils.set(RedisConstants.EVALUATE_ORDERS_EXPIRE.getKey()+userId, response, RedisConstants.EVALUATE_ORDERS_EXPIRE.getTime());
         log.warn("getEvaluateOrders:" + response.toString());
         return new ResponseUtil().setData(response);
     }
@@ -143,17 +143,17 @@ public class OrderController {
             return new ResponseUtil().setData(response);
         }
         // 缓存失效
-        Object obj = redisUtils.get("getCountDetailById" + request.getCountId());
+        Object obj = redisUtils.get(RedisConstants.COUNT_DETAIL_EXPIRE.getKey() + request.getCountId());
         if (obj != null) {
             // 说明有缓存,清理掉
-            redisUtils.del("getCountDetailById" + request.getCountId());
+            redisUtils.del(RedisConstants.COUNT_DETAIL_EXPIRE.getKey() + request.getCountId());
         }
         AddOrderResponse response = orderSerice.addOrder(request);
         // 待支付缓存失效
-        obj = redisUtils.get("getNoPayOrdersById" + token);
+        obj = redisUtils.get(RedisConstants.NO_PAY_ORDERS_EXPIRE.getKey() + userId);
         if (obj != null) {
             // 说明有缓存，清理掉
-            redisUtils.del("getNoPayOrdersById" + token);
+            redisUtils.del(RedisConstants.NO_PAY_ORDERS_EXPIRE.getKey() + userId);
         }
         log.warn("addOrder:" + response.toString());
         return new ResponseUtil().setData(response);
@@ -166,7 +166,7 @@ public class OrderController {
     @GetMapping("getOrder")
     public ResponseData selectOrderById(String orderUuid, HttpServletRequest req) {
         String token = CurrentUser.getToken(req);
-        Object obj = redisUtils.get("selectOrderById"+token);
+        Object obj = redisUtils.get(RedisConstants.SELECT_ORDER_EXPIRE.getKey()+orderUuid);
         if (obj != null) {
             log.warn("selectOrderById->redis:" + obj.toString());
             return new ResponseUtil().setData(obj);
@@ -174,7 +174,7 @@ public class OrderController {
         OrderRequest request = new OrderRequest();
         request.setUuid(orderUuid);
         OrderResponse response = orderSerice.selectOrderById(request);
-        redisUtils.set("selectOrderById"+token, response, RedisConstants.SELECT_ORDER_EXPIRE.getTime());
+        redisUtils.set(RedisConstants.SELECT_ORDER_EXPIRE.getKey()+orderUuid, response, RedisConstants.SELECT_ORDER_EXPIRE.getTime());
         log.warn("selectOrderById:" + response.toString());
         return new ResponseUtil().setData(response);
     }
@@ -187,15 +187,16 @@ public class OrderController {
     @PostMapping("updateOrderStatus")
     public ResponseData updateOrderStatus(String orderId, String orderStatus, HttpServletRequest req) {
         String token = CurrentUser.getToken(req);
-        Object obj = redisUtils.get("selectOrderById"+token);
-        Object obj1 = redisUtils.get("getNoTakeOrdersById"+token);
-        Object obj2 = redisUtils.get("getNoPayOrdersById"+token);
-        Object obj3 = redisUtils.get("getEvaluateOrdersById"+token);
+        String userId = Convert.toStr(redisUtils.get(token));
+        Object obj = redisUtils.get(RedisConstants.SELECT_ORDER_EXPIRE.getKey()+orderId);
+        Object obj1 = redisUtils.get(RedisConstants.NO_TAKE_OREDERS_EXPIRE.getKey()+userId);
+        Object obj2 = redisUtils.get(RedisConstants.NO_PAY_ORDERS_EXPIRE.getKey()+userId);
+        Object obj3 = redisUtils.get(RedisConstants.EVALUATE_ORDERS_EXPIRE.getKey()+userId);
         if (obj != null || obj1 != null || obj2 != null || obj3 != null) {
-            redisUtils.del("selectOrderById"+token);
-            redisUtils.del("getNoTakeOrdersById"+token);
-            redisUtils.del("getNoPayOrdersById"+token);
-            redisUtils.del("getEvaluateOrdersById"+token);
+            redisUtils.del(RedisConstants.SELECT_ORDER_EXPIRE.getKey()+orderId);
+            redisUtils.del(RedisConstants.NO_TAKE_OREDERS_EXPIRE.getKey()+userId);
+            redisUtils.del(RedisConstants.NO_PAY_ORDERS_EXPIRE.getKey()+userId);
+            redisUtils.del(RedisConstants.EVALUATE_ORDERS_EXPIRE.getKey()+userId);
         }
         OrderRequest request = new OrderRequest();
         request.setUuid(orderId);

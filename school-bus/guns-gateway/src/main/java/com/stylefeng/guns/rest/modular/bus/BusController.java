@@ -44,7 +44,7 @@ public class BusController {
     public ResponseData getCount(CountPageInfo pageInfo, HttpServletRequest req) {
         // 本来想用本地缓存的，试试redis吧
         String token = CurrentUser.getToken(req);
-        Object obj = redisUtils.get("getCount");
+        Object obj = redisUtils.get(RedisConstants.COUNTS_EXPIRE.getKey());
         if (obj != null) {
             log.warn("getCount->redis:" + obj.toString());
             new ResponseUtil().setData(obj);
@@ -54,7 +54,7 @@ public class BusController {
         request.setPageSize(pageInfo.getPageSize());
         request.setBusStatus(pageInfo.getBusStatus());
         PageCountResponse response = busService.getCount(request);
-        redisUtils.set("getCount", response, RedisConstants.COUNTS_EXPIRE.getTime());
+        redisUtils.set(RedisConstants.COUNTS_EXPIRE.getKey(), response, RedisConstants.COUNTS_EXPIRE.getTime());
         log.warn("getCount:" + response.toString());
         return new ResponseUtil().setData(response);
     }
@@ -65,7 +65,7 @@ public class BusController {
     public ResponseData getCountDetailById(String countId, HttpServletRequest req) {
         // id 从本队缓存中取
         String token = CurrentUser.getToken(req);
-        Object obj = redisUtils.get("getCountDetailById"+countId);
+        Object obj = redisUtils.get(RedisConstants.COUNT_DETAIL_EXPIRE.getKey()+countId);
         if (obj != null) {
             log.warn("getCountDetailById->redis:" + obj.toString());
             new ResponseUtil().setData(obj);
@@ -73,7 +73,7 @@ public class BusController {
         CountDetailRequest request = new CountDetailRequest();
         request.setCountId(Integer.parseInt(countId));
         CountDetailResponse response = busService.getCountDetailById(request);
-        redisUtils.set("getCountDetailById"+countId, response, RedisConstants.COUNT_DETAIL_EXPIRE.getTime());
+        redisUtils.set(RedisConstants.COUNT_DETAIL_EXPIRE.getKey()+countId, response, RedisConstants.COUNT_DETAIL_EXPIRE.getTime());
         log.warn("getCountDetailById:" + response.toString());
         return new ResponseUtil().setData(response);
     }
