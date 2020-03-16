@@ -45,7 +45,7 @@ public class UserController {
         UserCheckRequest req = new UserCheckRequest();
         req.setUsername(username);
         UserCheckResponse res = userAPI.checkUsername(req);
-        log.info("checkUsername", res);
+        log.info("checkUsername", res.toString());
         return new ResponseUtil().setData(res);
     }
 
@@ -65,7 +65,7 @@ public class UserController {
         request.setEmail(form.getEmail());
         // 不想写那么多了
         UserRegisterResponse res = userAPI.regsiter(request);
-        log.info("register", res);
+        log.info("register", res.toString());
         return new ResponseUtil<>().setData(res);
     }
 
@@ -80,7 +80,7 @@ public class UserController {
         UserRequest request = new UserRequest();
         request.setId(Integer.parseInt(userId));
         UserResponse response = userAPI.getUserById(request);
-        log.info("getUserById", response);
+        log.info("getUserById", response.toString());
         return new ResponseUtil<>().setData(response);
     }
 
@@ -104,7 +104,7 @@ public class UserController {
         request.setPayPassword(form.getPayPassword());
         request.setId(Integer.parseInt(userId));
         UserResponse response = userAPI.updateUserInfo(request);
-        log.info("updateUserInfo", response);
+        log.info("updateUserInfo", response.toString());
         return new ResponseUtil<>().setData(response);
     }
 
@@ -125,7 +125,7 @@ public class UserController {
         CommonResponse response = new CommonResponse();
         response.setCode(RetCodeConstants.SUCCESS.getCode());
         response.setMsg(RetCodeConstants.SUCCESS.getMessage());
-        log.info("logout", response);
+        log.info("logout", response.toString());
         return new ResponseUtil<>().setData(response);
     }
 }

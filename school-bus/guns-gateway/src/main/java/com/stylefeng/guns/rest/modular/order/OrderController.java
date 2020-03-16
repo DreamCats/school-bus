@@ -51,7 +51,7 @@ public class OrderController {
         request.setCurrentPage(pageInfo.getCurrentPage());
         request.setPageSize(pageInfo.getPageSize());
         NoTakeBusResponse response = orderSerice.getNoTakeOrdersById(request);
-        log.info("getNoTakeOrdersById", response);
+        log.warn("getNoTakeOrdersById:" + response.toString());
         return new ResponseUtil().setData(response);
     }
 
@@ -70,7 +70,7 @@ public class OrderController {
         request.setCurrentPage(pageInfo.getCurrentPage());
         request.setPageSize(pageInfo.getPageSize());
         NoPayResponse response = orderSerice.getNoPayOrdersById(request);
-        log.info("getNoPayOrdersById", response);
+        log.warn("getNoPayOrdersById:" + response.toString());
         return new ResponseUtil().setData(response);
     }
 
@@ -93,7 +93,7 @@ public class OrderController {
         request.setPageSize(pageInfo.getPageSize());
         request.setEvaluateStatus(evaluateStauts);
         EvaluateResponse response = orderSerice.getEvaluateOrdersById(request);
-        log.info("getEvaluateOrders", response);
+        log.warn("getEvaluateOrders:" + response.toString());
         return new ResponseUtil().setData(response);
     }
 
@@ -116,7 +116,7 @@ public class OrderController {
         request.setCountPrice(form.getCountPrice());
         request.setBusStatus(form.getBusStatus());
         AddOrderResponse response = orderSerice.addOrder(request);
-        log.info("addOrder", response);
+        log.warn("addOrder:" + response.toString());
         return new ResponseUtil().setData(response);
     }
 
@@ -137,7 +137,7 @@ public class OrderController {
         OrderRequest request = new OrderRequest();
         request.setUuid(orderUuid);
         OrderResponse response = orderSerice.selectOrderById(request);
-        log.info("selectOrderById", response);
+        log.warn("selectOrderById:" + response.toString());
         return new ResponseUtil().setData(response);
     }
 
@@ -160,7 +160,7 @@ public class OrderController {
         request.setUuid(orderId);
         request.setOrderStatus(orderStatus);
         OrderResponse response = orderSerice.updateOrderStatus(request);
-        log.info("updateOrderStatus", response);
+        log.warn("updateOrderStatus:" + response.toString());
         return new ResponseUtil().setData(response);
     }
 

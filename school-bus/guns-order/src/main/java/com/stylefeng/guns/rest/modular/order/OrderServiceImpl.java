@@ -56,7 +56,8 @@ public class OrderServiceImpl implements IOrderSerice {
                 .eq("user_id", request.getUserId())
                 .eq("order_status", "1")// 1：已经支付
                 .ge("sc.begin_date", day) // 比如，
-                .ge("sc.begin_time", hours);
+                .ge("sc.begin_time", hours)
+                .orderByDesc("so.order_time");
 //        orderIPage = orderMapper.selectPage(orderIPage, queryWrapper);
         try {
             orderIPage = orderMapper.selectNoTakeOrders(orderIPage, queryWrapper);
@@ -97,7 +98,8 @@ public class OrderServiceImpl implements IOrderSerice {
                 .eq("order_status", "1")
                 .and(o -> o.eq("sc.begin_date", day).lt("sc.begin_time", hours)
                                 .or().lt("sc.begin_date", day))
-                .eq("evaluate_status", request.getEvaluateStatus());
+                .eq("evaluate_status", request.getEvaluateStatus())
+                .orderByDesc("so.order_time");
         try {
             orderIPage = orderMapper.selectEvaluateOrders(orderIPage, queryWrapper);
             response.setCurrentPage(orderIPage.getCurrent());
@@ -124,7 +126,8 @@ public class OrderServiceImpl implements IOrderSerice {
         QueryWrapper<NoPayDto> queryWrapper = new QueryWrapper<>();
         queryWrapper
                 .eq("user_id", request.getUserId())
-                .and(o -> o.eq("order_status", "0")); // 未支付
+                .eq("order_status", "0")
+                .orderByDesc("so.order_time"); // 未支付
         try {
             noPayDtoIPage = orderMapper.selectNoPayOrders(noPayDtoIPage, queryWrapper);
             response.setCurrentPage(noPayDtoIPage.getCurrent());

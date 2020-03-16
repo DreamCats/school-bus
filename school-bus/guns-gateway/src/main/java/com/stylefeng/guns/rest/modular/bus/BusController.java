@@ -39,7 +39,7 @@ public class BusController {
         request.setPageSize(pageInfo.getPageSize());
         request.setBusStatus(pageInfo.getBusStatus());
         PageCountResponse response = busService.getCount(request);
-        log.info("getCount", response);
+        log.warn("getCount:" + response.toString());
         return new ResponseUtil().setData(response);
     }
 
@@ -50,7 +50,7 @@ public class BusController {
         CountDetailRequest request = new CountDetailRequest();
         request.setCountId(Integer.parseInt(countId));
         CountDetailResponse response = busService.getCountDetailById(request);
-        log.info("getCountDetailById", response);
+        log.warn("getCountDetailById:" + response.toString());
         return new ResponseUtil().setData(response);
     }
 }
