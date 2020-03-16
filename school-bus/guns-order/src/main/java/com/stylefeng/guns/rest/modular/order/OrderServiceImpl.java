@@ -124,10 +124,17 @@ public class OrderServiceImpl implements IOrderSerice {
         NoPayResponse response = new NoPayResponse();
         IPage<NoPayDto> noPayDtoIPage = new Page<>(request.getCurrentPage(), request.getPageSize());
         QueryWrapper<NoPayDto> queryWrapper = new QueryWrapper<>();
+        // 获取系统年月日
+        String day = DateUtil.getDay();
+        String hours = DateUtil.getHours();
+        System.out.println("当前日期:" + day);
+        System.out.println("当前时间:" + hours);
         queryWrapper
                 .eq("user_id", request.getUserId())
                 .eq("order_status", "0")
-                .orderByDesc("so.order_time"); // 未支付
+                .ge("sc.begin_date", day) // 比如，
+                .ge("sc.begin_time", hours)
+                .orderByDesc("sc.begin_time"); // 未支付
         try {
             noPayDtoIPage = orderMapper.selectNoPayOrders(noPayDtoIPage, queryWrapper);
             response.setCurrentPage(noPayDtoIPage.getCurrent());
