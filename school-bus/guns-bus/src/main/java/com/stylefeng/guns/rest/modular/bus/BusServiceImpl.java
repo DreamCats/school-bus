@@ -265,12 +265,12 @@ public class BusServiceImpl implements IBusService {
      * 私有， 目的是每天添加一些场次
      * 没有后台管理
      */
-    @Scheduled(cron = "0 5 0 * * ?") // 每天凌晨1点执行
+    @Scheduled(cron = "0 1 0 * * ? ") // 每天凌晨1点执行
     private void addCounts() {
         // 删缓存
-        Object obj = redisUtils.get("getCount");
+        Object obj = redisUtils.get(RedisConstants.COUNTS_EXPIRE.getKey());
         if (obj != null) {
-            redisUtils.del("getCount");
+            redisUtils.del(RedisConstants.COUNTS_EXPIRE.getKey());
         }
         // 获取日期
         String day = DateUtil.getDay();
@@ -290,4 +290,9 @@ public class BusServiceImpl implements IBusService {
             countMapper.insert(count);
         }
     }
+
+//    @Scheduled(cron = "0 1 1 * * ? ") // 每天凌晨1点执行
+//    private void test() {
+//        log.warn("test定时器");
+//    }
 }
