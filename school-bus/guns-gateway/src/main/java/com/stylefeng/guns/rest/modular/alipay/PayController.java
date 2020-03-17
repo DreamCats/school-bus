@@ -21,6 +21,7 @@ import com.stylefeng.guns.rest.modular.form.PayForm;
 import com.stylefeng.guns.rest.user.IUserService;
 import com.stylefeng.guns.rest.user.dto.UserRequest;
 import com.stylefeng.guns.rest.user.dto.UserResponse;
+import com.stylefeng.guns.rest.user.dto.UserUpdateInfoRequest;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -74,9 +75,16 @@ public class PayController {
             payResponse.setMsg(RetCodeConstants.MONEY_ERROR.getMessage());
             return new ResponseUtil().setData(payResponse);
         }
+        // 余额写入数据库
+        UserUpdateInfoRequest request = new UserUpdateInfoRequest();
+        request.setMoney(round.doubleValue());
+        userService.updateUserInfo(request); // 暂时先不接受返回信息
         // ok了
+        // 感觉不仅仅这么少， 虽然少了邮箱手机验证码各种验证
         payResponse.setCode(RetCodeConstants.SUCCESS.getCode());
         payResponse.setMsg(RetCodeConstants.SUCCESS.getMessage());
+        // ok的话， 删缓存
+        redisUtils.del(RedisConstants.USER_INFO_EXPIRE.getKey() + userId);
         return new ResponseUtil().setData(payResponse);
     }
 }
