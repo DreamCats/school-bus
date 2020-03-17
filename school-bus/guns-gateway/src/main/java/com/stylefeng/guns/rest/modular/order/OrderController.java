@@ -9,6 +9,7 @@ package com.stylefeng.guns.rest.modular.order;
 
 import cn.hutool.core.convert.Convert;
 import com.alibaba.dubbo.config.annotation.Reference;
+import com.stylefeng.guns.core.util.DateUtil;
 import com.stylefeng.guns.rest.bus.IBusService;
 import com.stylefeng.guns.rest.common.CurrentUser;
 import com.stylefeng.guns.rest.common.RedisUtils;
@@ -53,14 +54,27 @@ public class OrderController {
         String token = CurrentUser.getToken(req);
         String userId = Convert.toStr(redisUtils.get(token));
         Object obj = redisUtils.get(RedisConstants.NO_TAKE_OREDERS_EXPIRE.getKey()+userId);
-        if (obj != null) {
-            log.warn("getNoTakeOrdersById->redis:" + obj.toString());
-            return new ResponseUtil().setData(obj);
-        }
         NoTakeBusRequest request = new NoTakeBusRequest();
         request.setUserId(Integer.parseInt(userId));
         request.setCurrentPage(pageInfo.getCurrentPage());
         request.setPageSize(pageInfo.getPageSize());
+        if (obj != null) {
+            // 判断发车时间
+            NoTakeBusResponse response = (NoTakeBusResponse) obj;
+            for (NoTakeDto noTakeDto : response.getNoTakeDtos()) {
+                String beginTime = noTakeDto.getBeginTime();
+                if (beginTime.compareTo(DateUtil.getHours()) <= -1) {
+                    // 尝试这一种方案
+                    // 删缓存
+                    redisUtils.del(RedisConstants.NO_TAKE_OREDERS_EXPIRE.getKey()+userId);
+                    response = orderService.getNoTakeOrdersById(request);
+                    redisUtils.set(RedisConstants.NO_TAKE_OREDERS_EXPIRE.getKey()+userId, response, RedisConstants.NO_TAKE_OREDERS_EXPIRE.getTime());
+                    return new ResponseUtil().setData(response);
+                }
+            }
+            log.warn("getNoTakeOrdersById->redis:" + obj.toString());
+            return new ResponseUtil().setData(obj);
+        }
         NoTakeBusResponse response = orderService.getNoTakeOrdersById(request);
         redisUtils.set(RedisConstants.NO_TAKE_OREDERS_EXPIRE.getKey()+userId, response, RedisConstants.NO_TAKE_OREDERS_EXPIRE.getTime());
         log.warn("getNoTakeOrdersById:" + response.toString());
@@ -218,5 +232,4 @@ public class OrderController {
         log.warn("updateOrderStatus:" + response.toString());
         return new ResponseUtil().setData(response);
     }
-
 }

@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -94,6 +95,30 @@ public class BusServiceTest {
             // 插入
             countMapper.insert(count);
         }
+    }
+
+    @Test
+    public void getCountsRedis() {
+        // 获取对象
+        PageCountRequest request = new PageCountRequest();
+        request.setCurrentPage(1);
+        request.setPageSize(4);
+        request.setBusStatus("0");
+        PageCountResponse response = busService.getCount(request);
+        List<CountSimpleDto> simpleDtos = response.getCountSimpleDtos();
+        List<CountSimpleDto> cacheSimpleDtos = new ArrayList<>(); // 注意并发
+        // 获取当前系统发车时间
+        String hours = DateUtil.getHours();
+        System.out.println("当前系统时间："+hours);
+        for (CountSimpleDto simpleDto : simpleDtos) {
+            String beginTime = simpleDto.getBeginTime();
+            System.out.println("发车时间:" + beginTime);
+            System.out.println(beginTime.compareTo("21:00"));
+            if (beginTime.compareTo("21:00") > -1) {
+                cacheSimpleDtos.add(simpleDto);
+            }
+        }
+        System.out.println(cacheSimpleDtos);
 
     }
 }
