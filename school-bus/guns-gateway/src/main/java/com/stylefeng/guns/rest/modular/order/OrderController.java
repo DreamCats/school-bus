@@ -48,6 +48,12 @@ public class OrderController {
     @Autowired
     private RedisUtils redisUtils;
 
+    /**
+     * 获取未乘坐订单接口
+     * @param pageInfo：去相关类查看参数
+     * @param req：目的是获取token
+     * @return
+     */
     @ApiOperation(value = "获取未乘坐订单接口", notes = "前提Auth，获取用户订单未乘坐服务", response = NoTakeBusResponse.class)
     @GetMapping("getNoTakeOrders")
     public ResponseData getNoTakeOrdersById(OrderPageInfo pageInfo, HttpServletRequest req) {
@@ -81,6 +87,12 @@ public class OrderController {
         return new ResponseUtil().setData(response);
     }
 
+    /**
+     * 获取未支付订单接口
+     * @param pageInfo：去相关类查看参数
+     * @param req：目的是获取token
+     * @return
+     */
     @ApiOperation(value = "获取未支付订单接口", notes = "前提Auth，获取用户订单未支付服务", response = NoPayResponse.class)
     @GetMapping("getNoPayOrders")
     public ResponseData getNoPayOrdersById(OrderPageInfo pageInfo, HttpServletRequest req) {
@@ -101,6 +113,13 @@ public class OrderController {
         return new ResponseUtil().setData(response);
     }
 
+    /**
+     * 根据评价状态获取用户订单接口
+     * @param pageInfo：查看相关参数
+     * @param evaluateStauts：评价状态：0->未评价 1->已评价
+     * @param req：目的是获取token
+     * @return
+     */
     @ApiOperation(value = "根据评价状态获取用户订单接口", notes = "前提Auth，根据评价状态获取订单服务", response = EvaluateResponse.class)
     @ApiImplicitParams({
             @ApiImplicitParam(name = "evaluateStauts", value = "评价状态：0->未评价 1->已评价", example = "0", required = true, dataType = "String")
@@ -125,6 +144,12 @@ public class OrderController {
         return new ResponseUtil().setData(response);
     }
 
+    /**
+     * 添加订单接口
+     * @param form：查看相关参数
+     * @param req：目的是获取token
+     * @return
+     */
     @ApiOperation(value = "添加订单接口", notes = "添加订单接口信息", response = AddOrderResponse.class)
     @PostMapping("addOrder")
     public ResponseData addOrder(AddOrderForm form, HttpServletRequest req) {
@@ -173,6 +198,12 @@ public class OrderController {
         return new ResponseUtil().setData(response);
     }
 
+    /**
+     * 根据订单id获取详情订单
+     * @param orderUuid：orderId
+     * @param req：目的获取token
+     * @return
+     */
     @ApiOperation(value = "根据订单id获取详情订单", notes = "前提Auth，根据订单id获取详情订单", response = OrderResponse.class)
     @ApiImplicitParams({
             @ApiImplicitParam(name = "orderUuid", value = "订单id", example = "1", required = true, dataType = "String")
@@ -193,6 +224,13 @@ public class OrderController {
         return new ResponseUtil().setData(response);
     }
 
+    /**
+     * 更改订单状态
+     * @param orderId
+     * @param orderStatus：状态：0-待支付,1-已支付,2-已关闭
+     * @param req：目的是获取token
+     * @return
+     */
     @ApiOperation(value = "更改订单状态", notes = "前提Auth，更改订单状态", response = OrderResponse.class)
     @ApiImplicitParams({
             @ApiImplicitParam(name = "orderId", value = "订单id", example = "1", required = true, dataType = "String"),
