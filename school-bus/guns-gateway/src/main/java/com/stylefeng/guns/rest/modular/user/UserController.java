@@ -40,6 +40,11 @@ public class UserController {
     @Autowired
     private RedisUtils redisUtils;
 
+    /**
+     * 检查用户名接口
+     * @param username
+     * @return
+     */
     @ApiOperation(value = "检查用户名接口", notes = "给定用户名，查询是否存在", response = UserCheckResponse.class)
     @ApiImplicitParam(name = "username", value = "用户名", required = true, dataType = "String", paramType = "query")
     @GetMapping("check")
@@ -54,6 +59,12 @@ public class UserController {
         return new ResponseUtil().setData(res);
     }
 
+    /**
+     * 注册接口
+     * @param form
+     * @param bindingResult
+     * @return
+     */
     @ApiOperation(value = "注册接口", notes = "用户注册相关信息", response = UserRegisterResponse.class)
     @PostMapping("register")
     public ResponseData register(@Validated UserRegstierForm form, BindingResult bindingResult) {
@@ -74,6 +85,11 @@ public class UserController {
         return new ResponseUtil<>().setData(res);
     }
 
+    /**
+     * 获取用户信息接口
+     * @param req
+     * @return
+     */
     @ApiOperation(value = "获取用户信息接口", notes = "获取用户相关信息，前提请获取用户token放在headers中", response = UserResponse.class)
     @GetMapping("getUserInfo")
     public ResponseData getUserById(HttpServletRequest req) {
@@ -93,6 +109,12 @@ public class UserController {
         return new ResponseUtil<>().setData(response);
     }
 
+    /**
+     * 更新接口
+     * @param form
+     * @param req
+     * @return
+     */
     @ApiOperation(value = "更新接口", notes = "更新用户相关信息", response = UserResponse.class)
     @PostMapping("updateInfo")
     public ResponseData updateUserInfo(UserUpdateForm form, HttpServletRequest req) {
@@ -116,6 +138,11 @@ public class UserController {
         return new ResponseUtil<>().setData(response);
     }
 
+    /**
+     * 登出接口
+     * @param req
+     * @return
+     */
     @ApiOperation(value = "登出接口", notes = "用户登出，暂时是前端删除token", response = CommonResponse.class)
     @GetMapping("logout")
     public ResponseData logout(HttpServletRequest req) {
