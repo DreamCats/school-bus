@@ -45,6 +45,12 @@ public class PayController {
     @Reference(check = false)
     private IUserService userService;
 
+    /**
+     * 支付接口
+     * @param payForm：去相关类查看参数
+     * @param req：目的是获取token
+     * @return
+     */
     @ApiOperation(value = "支付接口", notes = "前提Auth，获取支付服务", response = PayResponse.class)
     @PostMapping("")
     public ResponseData pay(PayForm payForm , HttpServletRequest req) {
