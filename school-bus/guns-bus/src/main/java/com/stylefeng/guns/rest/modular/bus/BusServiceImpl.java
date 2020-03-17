@@ -264,7 +264,7 @@ public class BusServiceImpl implements IBusService {
      * 私有， 目的是每天添加一些场次
      * 没有后台管理
      */
-    @Scheduled(cron = "0 0 1 * * ?") // 每天凌晨1点执行
+    @Scheduled(cron = "0 5 0 * * ?") // 每天凌晨1点执行
     private void addCounts() {
         // 删缓存
         Object obj = redisUtils.get("getCount");

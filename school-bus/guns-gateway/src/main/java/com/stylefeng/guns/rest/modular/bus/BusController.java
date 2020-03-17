@@ -41,13 +41,12 @@ public class BusController {
 
     @ApiOperation(value = "获取车次列表", notes = "获取车次列表", response = PageCountResponse.class)
     @GetMapping("getCount")
-    public ResponseData getCount(CountPageInfo pageInfo, HttpServletRequest req) {
+    public ResponseData getCount(CountPageInfo pageInfo) {
         // 本来想用本地缓存的，试试redis吧
-        String token = CurrentUser.getToken(req);
         Object obj = redisUtils.get(RedisConstants.COUNTS_EXPIRE.getKey());
         if (obj != null) {
             log.warn("getCount->redis:" + obj.toString());
-            new ResponseUtil().setData(obj);
+            return new ResponseUtil().setData(obj);
         }
         PageCountRequest request = new PageCountRequest();
         request.setCurrentPage(pageInfo.getCurrentPage());
@@ -62,13 +61,12 @@ public class BusController {
     @ApiOperation(value = "获取车次详情", notes = "获取车次详情", response = CountDetailResponse.class)
     @ApiImplicitParam(name = "countId", value = "场次id,CountSimpleDto中的uuid",required = true, dataType = "String", paramType = "query")
     @GetMapping("getCountDetail")
-    public ResponseData getCountDetailById(String countId, HttpServletRequest req) {
+    public ResponseData getCountDetailById(String countId) {
         // id 从本队缓存中取
-        String token = CurrentUser.getToken(req);
         Object obj = redisUtils.get(RedisConstants.COUNT_DETAIL_EXPIRE.getKey()+countId);
         if (obj != null) {
             log.warn("getCountDetailById->redis:" + obj.toString());
-            new ResponseUtil().setData(obj);
+            return new ResponseUtil().setData(obj);
         }
         CountDetailRequest request = new CountDetailRequest();
         request.setCountId(Integer.parseInt(countId));
