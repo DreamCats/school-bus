@@ -35,7 +35,9 @@ public enum RetCodeConstants {
 
     USERVERIFY_INFOR_INVALID            ("003200", "用户注册验证验证信息不合法"),
 
-    SELECTED_SEATS                      ("004000", "座位已被选择，请重新选择座位");
+    SELECTED_SEATS                      ("004000", "座位已被选择，请重新选择座位"),
+    PAY_PASSWORD_ERROR                  ("004001", "支付密码错误"),
+    MONEY_ERROR                         ("004002", "用户余额不足，请充值");
 
     private String code;
     private String message;
