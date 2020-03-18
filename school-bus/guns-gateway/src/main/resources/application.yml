@@ -8,7 +8,7 @@ jwt:
   expiration: 604800      #7天 单位:秒
   auth-path: auth         #认证请求的路径
   md5-key: randomKey      #md5加密混淆key
-  ignore-url: /user/register,/user/check,/swagger,/v2,/webjars,/seats,/bus,/file,/druid
+  ignore-url: /user/register,/user/check,/swagger,/v2,/webjars,/seats,/bus,/file,/druid,/pay
 server:
   port: 8087 #项目端口
 
@@ -47,6 +47,12 @@ dubbo:
     protocol: zookeeper
     address: 39.108.93.119:2181
 
+
+apache:
+  rocketmq:
+    producer:
+      producerGroup: gateway
+    namesrvAddr: 39.108.93.119:9876
 
 swagger:
   enable: true
