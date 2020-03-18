@@ -16,8 +16,8 @@ import com.stylefeng.guns.core.util.DateUtil;
 import com.stylefeng.guns.rest.bus.IBusService;
 import com.stylefeng.guns.rest.bus.dto.*;
 import com.stylefeng.guns.rest.common.RedisUtils;
-import com.stylefeng.guns.rest.common.constants.RedisConstants;
-import com.stylefeng.guns.rest.common.constants.RetCodeConstants;
+import com.stylefeng.guns.core.constants.RedisConstants;
+import com.stylefeng.guns.core.constants.SbCode;
 import com.stylefeng.guns.rest.common.persistence.dao.BusMapper;
 import com.stylefeng.guns.rest.common.persistence.dao.CountMapper;
 import com.stylefeng.guns.rest.common.persistence.model.Bus;
@@ -26,7 +26,6 @@ import com.stylefeng.guns.rest.modular.bus.converter.BusConverter;
 import com.stylefeng.guns.rest.modular.bus.converter.CountConverter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
@@ -60,12 +59,12 @@ public class BusServiceImpl implements IBusService {
             response.setPages(busIPage.getPages());
             response.setTotal(busIPage.getTotal());
             response.setBusDtos(busConverter.bus2List(busIPage.getRecords()));
-            response.setCode(RetCodeConstants.SUCCESS.getCode());
-            response.setMsg(RetCodeConstants.SUCCESS.getMessage());
+            response.setCode(SbCode.SUCCESS.getCode());
+            response.setMsg(SbCode.SUCCESS.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
-            response.setCode(RetCodeConstants.DB_EXCEPTION.getCode());
-            response.setMsg(RetCodeConstants.DB_EXCEPTION.getMessage());
+            response.setCode(SbCode.DB_EXCEPTION.getCode());
+            response.setMsg(SbCode.DB_EXCEPTION.getMessage());
             log.error("getBus:" , e);
             return response;
         }
@@ -95,12 +94,12 @@ public class BusServiceImpl implements IBusService {
             response.setPages(countIPage.getPages());
             response.setTotal(countIPage.getTotal());
             response.setCountSimpleDtos(countIPage.getRecords());
-            response.setCode(RetCodeConstants.SUCCESS.getCode());
-            response.setMsg(RetCodeConstants.SUCCESS.getMessage());
+            response.setCode(SbCode.SUCCESS.getCode());
+            response.setMsg(SbCode.SUCCESS.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
-            response.setCode(RetCodeConstants.DB_EXCEPTION.getCode());
-            response.setMsg(RetCodeConstants.DB_EXCEPTION.getMessage());
+            response.setCode(SbCode.DB_EXCEPTION.getCode());
+            response.setMsg(SbCode.DB_EXCEPTION.getMessage());
             log.error("getCount:", e);
             return response;
         }
@@ -115,13 +114,13 @@ public class BusServiceImpl implements IBusService {
             wrapper.eq("sc.uuid", request.getCountId());
             CountDetailDto countDetailDto = countMapper.selectCountDetailById(wrapper);
             response.setCountDetailDto(countDetailDto);
-            response.setCode(RetCodeConstants.SUCCESS.getCode());
-            response.setMsg(RetCodeConstants.SUCCESS.getMessage());
+            response.setCode(SbCode.SUCCESS.getCode());
+            response.setMsg(SbCode.SUCCESS.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
             log.error("getCountDetail", e);
-            response.setCode(RetCodeConstants.DB_EXCEPTION.getCode());
-            response.setMsg(RetCodeConstants.DB_EXCEPTION.getMessage());
+            response.setCode(SbCode.DB_EXCEPTION.getCode());
+            response.setMsg(SbCode.DB_EXCEPTION.getMessage());
             return response;
         }
         return response;

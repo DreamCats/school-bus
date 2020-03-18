@@ -1,12 +1,9 @@
 package com.stylefeng.guns.rest.modular.auth.filter;
 
-import cn.hutool.core.util.StrUtil;
 import com.stylefeng.guns.core.util.RenderUtil;
-import com.stylefeng.guns.rest.common.CurrentUser;
 import com.stylefeng.guns.rest.common.RedisUtils;
 import com.stylefeng.guns.rest.common.ResponseUtil;
-import com.stylefeng.guns.rest.common.constants.RetCodeConstants;
-import com.stylefeng.guns.rest.common.exception.BizExceptionEnum;
+import com.stylefeng.guns.core.constants.SbCode;
 import com.stylefeng.guns.rest.config.properties.JwtProperties;
 import com.stylefeng.guns.rest.exception.CommonResponse;
 import com.stylefeng.guns.rest.modular.auth.util.JwtTokenUtil;
@@ -67,8 +64,8 @@ public class AuthFilter extends OncePerRequestFilter {
             authToken = requestHeader.substring(7);
             if (redisUtils.get(authToken) == null) {
                 CommonResponse response1 = new CommonResponse();
-                response1.setCode(RetCodeConstants.TOKEN_VALID_FAILED.getCode());
-                response1.setMsg(RetCodeConstants.TOKEN_VALID_FAILED.getMessage());
+                response1.setCode(SbCode.TOKEN_VALID_FAILED.getCode());
+                response1.setMsg(SbCode.TOKEN_VALID_FAILED.getMessage());
                 RenderUtil.renderJson(response, new ResponseUtil<>().setData(response1));
                 return; // 你虽然携带了， 但是我redis的不存在，说明你传的是过期的
             }
@@ -86,8 +83,8 @@ public class AuthFilter extends OncePerRequestFilter {
                 if (flag) {
 //                    RenderUtil.renderJson(response, new ErrorTip(BizExceptionEnum.TOKEN_EXPIRED.getCode(), BizExceptionEnum.TOKEN_EXPIRED.getMessage()));
                     CommonResponse response1 = new CommonResponse();
-                    response1.setCode(RetCodeConstants.TOKEN_VALID_FAILED.getCode());
-                    response1.setMsg(RetCodeConstants.TOKEN_VALID_FAILED.getMessage());
+                    response1.setCode(SbCode.TOKEN_VALID_FAILED.getCode());
+                    response1.setMsg(SbCode.TOKEN_VALID_FAILED.getMessage());
                     RenderUtil.renderJson(response, new ResponseUtil<>().setData(response1));
                     return;
                 }
@@ -95,8 +92,8 @@ public class AuthFilter extends OncePerRequestFilter {
                 //有异常就是token解析失败
 //                RenderUtil.renderJson(response, new ErrorTip(BizExceptionEnum.TOKEN_ERROR.getCode(), BizExceptionEnum.TOKEN_ERROR.getMessage()));
                 CommonResponse response1 = new CommonResponse();
-                response1.setCode(RetCodeConstants.TOKEN_VALID_FAILED.getCode());
-                response1.setMsg(RetCodeConstants.TOKEN_VALID_FAILED.getMessage());
+                response1.setCode(SbCode.TOKEN_VALID_FAILED.getCode());
+                response1.setMsg(SbCode.TOKEN_VALID_FAILED.getMessage());
                 RenderUtil.renderJson(response, new ResponseUtil<>().setData(response1));
                 return;
             }
@@ -104,8 +101,8 @@ public class AuthFilter extends OncePerRequestFilter {
             //header没有带Bearer字段
 //            RenderUtil.renderJson(response, new ErrorTip(BizExceptionEnum.TOKEN_ERROR.getCode(), BizExceptionEnum.TOKEN_ERROR.getMessage()));
             CommonResponse response1 = new CommonResponse();
-            response1.setCode(RetCodeConstants.TOKEN_VALID_FAILED.getCode());
-            response1.setMsg(RetCodeConstants.TOKEN_VALID_FAILED.getMessage());
+            response1.setCode(SbCode.TOKEN_VALID_FAILED.getCode());
+            response1.setMsg(SbCode.TOKEN_VALID_FAILED.getMessage());
             RenderUtil.renderJson(response, new ResponseUtil<>().setData(response1));
             return;
         }

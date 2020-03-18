@@ -5,7 +5,7 @@ import com.stylefeng.guns.rest.common.CommonBindingResult;
 import com.stylefeng.guns.rest.common.RedisUtils;
 import com.stylefeng.guns.rest.common.ResponseData;
 import com.stylefeng.guns.rest.common.ResponseUtil;
-import com.stylefeng.guns.rest.common.constants.RedisConstants;
+import com.stylefeng.guns.core.constants.RedisConstants;
 import com.stylefeng.guns.rest.modular.auth.controller.dto.AuthRequest;
 import com.stylefeng.guns.rest.modular.auth.util.JwtTokenUtil;
 import com.stylefeng.guns.rest.user.IUserService;

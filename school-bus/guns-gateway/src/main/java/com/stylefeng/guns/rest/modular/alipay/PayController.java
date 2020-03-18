@@ -15,8 +15,8 @@ import com.stylefeng.guns.rest.common.CurrentUser;
 import com.stylefeng.guns.rest.common.RedisUtils;
 import com.stylefeng.guns.rest.common.ResponseData;
 import com.stylefeng.guns.rest.common.ResponseUtil;
-import com.stylefeng.guns.rest.common.constants.RedisConstants;
-import com.stylefeng.guns.rest.common.constants.RetCodeConstants;
+import com.stylefeng.guns.core.constants.RedisConstants;
+import com.stylefeng.guns.core.constants.SbCode;
 import com.stylefeng.guns.rest.config.RocketProducer;
 import com.stylefeng.guns.rest.modular.form.PayForm;
 import com.stylefeng.guns.rest.user.IUserService;
@@ -73,16 +73,16 @@ public class PayController {
         }
         PayResponse payResponse = new PayResponse();
         if (!userResponse.getUserDto().getPayPassword().equals(payForm.getPayPassword())) {
-            payResponse.setCode(RetCodeConstants.PAY_PASSWORD_ERROR.getCode());
-            payResponse.setMsg(RetCodeConstants.PAY_PASSWORD_ERROR.getMessage());
+            payResponse.setCode(SbCode.PAY_PASSWORD_ERROR.getCode());
+            payResponse.setMsg(SbCode.PAY_PASSWORD_ERROR.getMessage());
             return new ResponseUtil().setData(payResponse);
         }
         // 判断余额足不足
         Double totalMoney = NumberUtil.sub(userResponse.getUserDto().getMoney(), payForm.getTotalMoney());
         BigDecimal round = NumberUtil.round(totalMoney, 2);
         if (round.doubleValue() < 0) {
-            payResponse.setCode(RetCodeConstants.MONEY_ERROR.getCode());
-            payResponse.setMsg(RetCodeConstants.MONEY_ERROR.getMessage());
+            payResponse.setCode(SbCode.MONEY_ERROR.getCode());
+            payResponse.setMsg(SbCode.MONEY_ERROR.getMessage());
             return new ResponseUtil().setData(payResponse);
         }
         // 余额写入数据库
@@ -92,8 +92,8 @@ public class PayController {
         userService.updateUserInfo(request); // 暂时先不接受返回信息
         // ok了
         // 感觉不仅仅这么少， 虽然少了邮箱手机验证码各种验证
-        payResponse.setCode(RetCodeConstants.SUCCESS.getCode());
-        payResponse.setMsg(RetCodeConstants.SUCCESS.getMessage());
+        payResponse.setCode(SbCode.SUCCESS.getCode());
+        payResponse.setMsg(SbCode.SUCCESS.getMessage());
         // ok的话， 删缓存
         redisUtils.del(RedisConstants.USER_INFO_EXPIRE.getKey() + userId);
         return new ResponseUtil().setData(payResponse);

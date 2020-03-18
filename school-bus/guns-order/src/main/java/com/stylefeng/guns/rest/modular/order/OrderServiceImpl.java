@@ -14,7 +14,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.stylefeng.guns.core.util.DateUtil;
 import com.stylefeng.guns.rest.bus.IBusService;
-import com.stylefeng.guns.rest.common.constants.RetCodeConstants;
+import com.stylefeng.guns.core.constants.SbCode;
 import com.stylefeng.guns.rest.common.persistence.dao.OrderMapper;
 import com.stylefeng.guns.rest.common.persistence.model.Order;
 import com.stylefeng.guns.rest.modular.order.converter.OrderConvertver;
@@ -67,13 +67,13 @@ public class OrderServiceImpl implements IOrderService {
             response.setPageSize(orderIPage.getSize());
             response.setTotal(orderIPage.getTotal());
             response.setNoTakeDtos(orderIPage.getRecords());
-            response.setCode(RetCodeConstants.SUCCESS.getCode());
-            response.setMsg(RetCodeConstants.SUCCESS.getMessage());
+            response.setCode(SbCode.SUCCESS.getCode());
+            response.setMsg(SbCode.SUCCESS.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
             log.error("getNoTakeOrdersById:",e);
-            response.setCode(RetCodeConstants.DB_EXCEPTION.getCode());
-            response.setMsg(RetCodeConstants.DB_EXCEPTION.getMessage());
+            response.setCode(SbCode.DB_EXCEPTION.getCode());
+            response.setMsg(SbCode.DB_EXCEPTION.getMessage());
             return response;
         }
         return response;
@@ -109,13 +109,13 @@ public class OrderServiceImpl implements IOrderService {
             response.setPageSize(orderIPage.getSize());
             response.setTotal(orderIPage.getTotal());
             response.setEvaluateDtos(orderIPage.getRecords());
-            response.setCode(RetCodeConstants.SUCCESS.getCode());
-            response.setMsg(RetCodeConstants.SUCCESS.getMessage());
+            response.setCode(SbCode.SUCCESS.getCode());
+            response.setMsg(SbCode.SUCCESS.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
             log.error("getEvaluateOrdersById:",e);
-            response.setCode(RetCodeConstants.DB_EXCEPTION.getCode());
-            response.setMsg(RetCodeConstants.DB_EXCEPTION.getMessage());
+            response.setCode(SbCode.DB_EXCEPTION.getCode());
+            response.setMsg(SbCode.DB_EXCEPTION.getMessage());
             return response;
         }
         return response;
@@ -145,13 +145,13 @@ public class OrderServiceImpl implements IOrderService {
             response.setPageSize(noPayDtoIPage.getSize());
             response.setTotal(noPayDtoIPage.getTotal());
             response.setNoPayDtos(noPayDtoIPage.getRecords());
-            response.setCode(RetCodeConstants.SUCCESS.getCode());
-            response.setMsg(RetCodeConstants.SUCCESS.getMessage());
+            response.setCode(SbCode.SUCCESS.getCode());
+            response.setMsg(SbCode.SUCCESS.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
             log.error("getNoPayOrdersById:",e);
-            response.setCode(RetCodeConstants.DB_EXCEPTION.getCode());
-            response.setMsg(RetCodeConstants.DB_EXCEPTION.getMessage());
+            response.setCode(SbCode.DB_EXCEPTION.getCode());
+            response.setMsg(SbCode.DB_EXCEPTION.getMessage());
             return response;
         }
         return response;
@@ -196,14 +196,14 @@ public class OrderServiceImpl implements IOrderService {
             QueryWrapper<OrderDto> wrapper = new QueryWrapper<>();
             wrapper.eq("so.uuid", order.getUuid());
             OrderDto orderDto = orderMapper.selectOrderById(wrapper);
-            response.setCode(RetCodeConstants.SUCCESS.getCode());
-            response.setMsg(RetCodeConstants.SUCCESS.getMessage());
+            response.setCode(SbCode.SUCCESS.getCode());
+            response.setMsg(SbCode.SUCCESS.getMessage());
             response.setOrderDto(orderDto);
         } catch (Exception e) {
             e.printStackTrace();
             log.error("addOrder");
-            response.setCode(RetCodeConstants.DB_EXCEPTION.getCode());
-            response.setMsg(RetCodeConstants.DB_EXCEPTION.getMessage());
+            response.setCode(SbCode.DB_EXCEPTION.getCode());
+            response.setMsg(SbCode.DB_EXCEPTION.getMessage());
             return response;
         }
         return response;
@@ -217,13 +217,13 @@ public class OrderServiceImpl implements IOrderService {
             wrapper.eq("so.uuid", request.getUuid());
             OrderDto orderDto = orderMapper.selectOrderById(wrapper);
             response.setOrderDto(orderDto);
-            response.setCode(RetCodeConstants.SUCCESS.getCode());
-            response.setMsg(RetCodeConstants.SUCCESS.getMessage());
+            response.setCode(SbCode.SUCCESS.getCode());
+            response.setMsg(SbCode.SUCCESS.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
             log.error("selectOrderById", e);
-            response.setCode(RetCodeConstants.DB_EXCEPTION.getCode());
-            response.setMsg(RetCodeConstants.DB_EXCEPTION.getMessage());
+            response.setCode(SbCode.DB_EXCEPTION.getCode());
+            response.setMsg(SbCode.DB_EXCEPTION.getMessage());
             return response;
         }
         return response;
@@ -239,13 +239,13 @@ public class OrderServiceImpl implements IOrderService {
             wrapper.eq("so.uuid", request.getUuid());
             OrderDto orderDto = orderMapper.selectOrderById(wrapper);
             response.setOrderDto(orderDto);
-            response.setCode(RetCodeConstants.SUCCESS.getCode());
-            response.setMsg(RetCodeConstants.SUCCESS.getMessage());
+            response.setCode(SbCode.SUCCESS.getCode());
+            response.setMsg(SbCode.SUCCESS.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
             log.error("updateOrderStatus", e);
-            response.setCode(RetCodeConstants.DB_EXCEPTION.getCode());
-            response.setMsg(RetCodeConstants.DB_EXCEPTION.getMessage());
+            response.setCode(SbCode.DB_EXCEPTION.getCode());
+            response.setMsg(SbCode.DB_EXCEPTION.getMessage());
             return response;
         }
         return response;

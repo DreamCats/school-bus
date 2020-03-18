@@ -10,11 +10,10 @@ package com.stylefeng.guns.rest.modular.bus;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.stylefeng.guns.rest.bus.IBusService;
 import com.stylefeng.guns.rest.bus.dto.*;
-import com.stylefeng.guns.rest.common.CurrentUser;
 import com.stylefeng.guns.rest.common.RedisUtils;
 import com.stylefeng.guns.rest.common.ResponseData;
 import com.stylefeng.guns.rest.common.ResponseUtil;
-import com.stylefeng.guns.rest.common.constants.RedisConstants;
+import com.stylefeng.guns.core.constants.RedisConstants;
 import com.stylefeng.guns.rest.modular.form.CountPageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -24,8 +23,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.servlet.http.HttpServletRequest;
 
 @Slf4j
 @Api(value = "班车服务", description = "班车服务相关接口")

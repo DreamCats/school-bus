@@ -10,7 +10,7 @@ package com.stylefeng.guns.rest.modular.user;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.stylefeng.guns.core.util.MD5Util;
-import com.stylefeng.guns.rest.common.constants.RetCodeConstants;
+import com.stylefeng.guns.core.constants.SbCode;
 import com.stylefeng.guns.rest.common.persistence.dao.UserMapper;
 import com.stylefeng.guns.rest.common.persistence.model.User;
 import com.stylefeng.guns.rest.modular.user.converter.UserConverter;
@@ -45,12 +45,12 @@ public class UserServiceImpl implements IUserService {
             User user = userMapper.selectOne(queryWrapper);
             if (user != null) {
                 res.setCheckUsername(0);
-                res.setCode(RetCodeConstants.SUCCESS.getCode());
-                res.setMsg(RetCodeConstants.SUCCESS.getMessage());
+                res.setCode(SbCode.SUCCESS.getCode());
+                res.setMsg(SbCode.SUCCESS.getMessage());
             } else {
                 res.setCheckUsername(1);
-                res.setCode(RetCodeConstants.USERNAME_ALREADY_EXISTS.getCode());
-                res.setMsg(RetCodeConstants.USERNAME_ALREADY_EXISTS.getMessage());
+                res.setCode(SbCode.USERNAME_ALREADY_EXISTS.getCode());
+                res.setMsg(SbCode.USERNAME_ALREADY_EXISTS.getMessage());
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -75,12 +75,12 @@ public class UserServiceImpl implements IUserService {
         try {
             userMapper.insert(user);
             res.setRegister(true);
-            res.setCode(RetCodeConstants.SUCCESS.getCode());
-            res.setMsg(RetCodeConstants.SUCCESS.getMessage());
+            res.setCode(SbCode.SUCCESS.getCode());
+            res.setMsg(SbCode.SUCCESS.getMessage());
         } catch (Exception e) {
             res.setRegister(false);
-            res.setCode(RetCodeConstants.USER_REGISTER_VERIFY_FAILED.getCode());
-            res.setMsg(RetCodeConstants.USER_REGISTER_VERIFY_FAILED.getMessage());
+            res.setCode(SbCode.USER_REGISTER_VERIFY_FAILED.getCode());
+            res.setMsg(SbCode.USER_REGISTER_VERIFY_FAILED.getMessage());
             log.info("regsiter:", e);
             return res;
         }
@@ -96,8 +96,8 @@ public class UserServiceImpl implements IUserService {
     public UserLoginResponse login(UserLoginRequst request) {
         UserLoginResponse res = new UserLoginResponse();
         res.setUserId(0);
-        res.setCode(RetCodeConstants.USERORPASSWORD_ERRROR.getCode());
-        res.setMsg(RetCodeConstants.USERORPASSWORD_ERRROR.getMessage());
+        res.setCode(SbCode.USERORPASSWORD_ERRROR.getCode());
+        res.setMsg(SbCode.USERORPASSWORD_ERRROR.getMessage());
         try {
             QueryWrapper<User> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("user_name", request.getUsername());
@@ -106,8 +106,8 @@ public class UserServiceImpl implements IUserService {
                 String md5Password = MD5Util.encrypt(request.getPassword());
                 if (user.getUserPwd().equals(md5Password)) {
                     res.setUserId(user.getUuid());
-                    res.setCode(RetCodeConstants.SUCCESS.getCode());
-                    res.setMsg(RetCodeConstants.SUCCESS.getMessage());
+                    res.setCode(SbCode.SUCCESS.getCode());
+                    res.setMsg(SbCode.SUCCESS.getMessage());
                 }
             }
         } catch (Exception e) {
@@ -132,12 +132,12 @@ public class UserServiceImpl implements IUserService {
             UserDto userDto = userConverter.User2Res(user);
             System.out.println(userDto);
             response.setUserDto(userDto);
-            response.setCode(RetCodeConstants.SUCCESS.getCode());
-            response.setMsg(RetCodeConstants.SUCCESS.getMessage());
+            response.setCode(SbCode.SUCCESS.getCode());
+            response.setMsg(SbCode.SUCCESS.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
-            response.setCode(RetCodeConstants.DB_EXCEPTION.getCode());
-            response.setMsg(RetCodeConstants.DB_EXCEPTION.getMessage());
+            response.setCode(SbCode.DB_EXCEPTION.getCode());
+            response.setMsg(SbCode.DB_EXCEPTION.getMessage());
             log.error("getUserById", e);
             return response;
         }
@@ -160,18 +160,18 @@ public class UserServiceImpl implements IUserService {
             Integer integer = userMapper.updateById(user);
 
             if (integer == 0) {
-                response.setCode(RetCodeConstants.USER_INFOR_INVALID.getCode());
-                response.setMsg(RetCodeConstants.USER_INFOR_INVALID.getMessage());
+                response.setCode(SbCode.USER_INFOR_INVALID.getCode());
+                response.setMsg(SbCode.USER_INFOR_INVALID.getMessage());
             } else {
                 User user1 = userMapper.selectById(user.getUuid());
                 response.setUserDto(userConverter.User2Res(user1));
-                response.setCode(RetCodeConstants.SUCCESS.getCode());
-                response.setMsg(RetCodeConstants.SUCCESS.getMessage());
+                response.setCode(SbCode.SUCCESS.getCode());
+                response.setMsg(SbCode.SUCCESS.getMessage());
             }
         } catch (Exception e) {
             e.printStackTrace();
-            response.setCode(RetCodeConstants.DB_EXCEPTION.getCode());
-            response.setMsg(RetCodeConstants.DB_EXCEPTION.getMessage());
+            response.setCode(SbCode.DB_EXCEPTION.getCode());
+            response.setMsg(SbCode.DB_EXCEPTION.getMessage());
             log.error("updateUserInfo", e);
             return response;
         }

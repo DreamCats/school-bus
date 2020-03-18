@@ -15,8 +15,8 @@ import com.stylefeng.guns.rest.common.CurrentUser;
 import com.stylefeng.guns.rest.common.RedisUtils;
 import com.stylefeng.guns.rest.common.ResponseData;
 import com.stylefeng.guns.rest.common.ResponseUtil;
-import com.stylefeng.guns.rest.common.constants.RedisConstants;
-import com.stylefeng.guns.rest.common.constants.RetCodeConstants;
+import com.stylefeng.guns.core.constants.RedisConstants;
+import com.stylefeng.guns.core.constants.SbCode;
 import com.stylefeng.guns.rest.exception.CommonResponse;
 import com.stylefeng.guns.rest.modular.form.AddOrderForm;
 import com.stylefeng.guns.rest.modular.form.OrderPageInfo;
@@ -167,8 +167,8 @@ public class OrderController {
         boolean selectedSeats = busService.repeatSeats(request.getSeatsIds(), request.getCountId());
         if (selectedSeats) {
             CommonResponse response = new CommonResponse();
-            response.setCode(RetCodeConstants.SELECTED_SEATS.getCode());
-            response.setMsg(RetCodeConstants.SELECTED_SEATS.getMessage());
+            response.setCode(SbCode.SELECTED_SEATS.getCode());
+            response.setMsg(SbCode.SELECTED_SEATS.getMessage());
             return new ResponseUtil().setData(response);
         }
         // 更新座位
@@ -177,8 +177,8 @@ public class OrderController {
         if (!updateSeats) {
             // 更新失败
             CommonResponse response = new CommonResponse();
-            response.setCode(RetCodeConstants.DB_EXCEPTION.getCode());
-            response.setMsg(RetCodeConstants.DB_EXCEPTION.getMessage());
+            response.setCode(SbCode.DB_EXCEPTION.getCode());
+            response.setMsg(SbCode.DB_EXCEPTION.getMessage());
             return new ResponseUtil().setData(response);
         }
         // 缓存失效
@@ -259,8 +259,8 @@ public class OrderController {
             boolean b = busService.filterRepeatSeats(response.getOrderDto().getSeatsIds(), response.getOrderDto().getCountId());
             if (!b) {
                 // 更新座位失败
-                response.setCode(RetCodeConstants.DB_EXCEPTION.getCode());
-                response.setMsg(RetCodeConstants.DB_EXCEPTION.getMessage());
+                response.setCode(SbCode.DB_EXCEPTION.getCode());
+                response.setMsg(SbCode.DB_EXCEPTION.getMessage());
                 return new ResponseUtil().setData(response);
             }
             // 删除座位缓存

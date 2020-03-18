@@ -5,7 +5,7 @@
  * @create: 2020/03/16 16:49
  */
 
-package com.stylefeng.guns.rest.common.constants;
+package com.stylefeng.guns.core.constants;
 
 
 public enum RedisConstants {

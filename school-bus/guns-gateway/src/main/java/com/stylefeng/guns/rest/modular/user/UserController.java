@@ -10,8 +10,8 @@ package com.stylefeng.guns.rest.modular.user;
 import cn.hutool.core.convert.Convert;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.stylefeng.guns.rest.common.*;
-import com.stylefeng.guns.rest.common.constants.RedisConstants;
-import com.stylefeng.guns.rest.common.constants.RetCodeConstants;
+import com.stylefeng.guns.core.constants.RedisConstants;
+import com.stylefeng.guns.core.constants.SbCode;
 import com.stylefeng.guns.rest.exception.CommonResponse;
 import com.stylefeng.guns.rest.modular.form.UserRegstierForm;
 import com.stylefeng.guns.rest.modular.form.UserUpdateForm;
@@ -70,8 +70,8 @@ public class UserController {
     public ResponseData register(@Validated UserRegstierForm form, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             CommonResponse response = new CommonResponse();
-            response.setCode(RetCodeConstants.REQUISITE_PARAMETER_NOT_EXIST.getCode());
-            response.setCode(RetCodeConstants.REQUISITE_PARAMETER_NOT_EXIST.getMessage());
+            response.setCode(SbCode.REQUISITE_PARAMETER_NOT_EXIST.getCode());
+            response.setCode(SbCode.REQUISITE_PARAMETER_NOT_EXIST.getMessage());
             return new ResponseUtil<>().setData(response);
         }
         UserRegisterRequest request = new UserRegisterRequest();
@@ -160,8 +160,8 @@ public class UserController {
         String token = CurrentUser.getToken(req);
         redisUtils.del(token);
         CommonResponse response = new CommonResponse();
-        response.setCode(RetCodeConstants.SUCCESS.getCode());
-        response.setMsg(RetCodeConstants.SUCCESS.getMessage());
+        response.setCode(SbCode.SUCCESS.getCode());
+        response.setMsg(SbCode.SUCCESS.getMessage());
         log.info("logout", response.toString());
         return new ResponseUtil<>().setData(response);
     }

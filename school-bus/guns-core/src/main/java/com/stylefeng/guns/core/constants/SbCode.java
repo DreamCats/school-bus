@@ -5,9 +5,9 @@
  * @create: 2020/02/24 16:41
  */
 
-package com.stylefeng.guns.rest.common.constants;
+package com.stylefeng.guns.core.constants;
 
-public enum RetCodeConstants {
+public enum SbCode {
     // 系统公用
     SUCCESS("000000", "成功"),
     USERORPASSWORD_ERRROR("003001", "用户名或密码不正确"),
@@ -41,7 +41,7 @@ public enum RetCodeConstants {
     private String code;
     private String message;
 
-    RetCodeConstants(String code, String message) {
+    SbCode(String code, String message) {
         this.code = code;
         this.message = message;
     }
@@ -83,7 +83,7 @@ public enum RetCodeConstants {
     }
 
     public static String getMessage(String code) {
-        for (RetCodeConstants s : RetCodeConstants.values()) {
+        for (SbCode s : SbCode.values()) {
             if (null == code)
                 break;
             if (s.code.equals(code)) {
