@@ -212,8 +212,8 @@ public class BusServiceImpl implements IBusService {
     /**
      * 私有，谁也无法访问
      */
-    @Scheduled(cron = "0 0/30 7-21 * * ?") // 每天上午7点到晚上21点，每隔30分钟执行一次
-    private void schedulChangeBusStatus() {
+//    @Scheduled(cron = "0 0/30 7-21 * * ?") // 每天上午7点到晚上21点，每隔30分钟执行一次
+    public void schedulChangeBusStatus() {
         // 删缓存
         Object obj = redisUtils.get(RedisConstants.COUNTS_EXPIRE.getKey());
         if (obj != null) {
@@ -265,8 +265,8 @@ public class BusServiceImpl implements IBusService {
      * 私有， 目的是每天添加一些场次
      * 没有后台管理
      */
-    @Scheduled(cron = "0 1 0 * * ? ") // 每天凌晨1点执行
-    private void addCounts() {
+//    @Scheduled(cron = "0 1 0 * * ? ") // 每天凌晨1点执行
+    public void addCounts() {
         // 删缓存
         Object obj = redisUtils.get(RedisConstants.COUNTS_EXPIRE.getKey());
         if (obj != null) {
@@ -291,8 +291,8 @@ public class BusServiceImpl implements IBusService {
         }
     }
 
-//    @Scheduled(cron = "0 1 1 * * ? ") // 每天凌晨1点执行
-//    private void test() {
-//        log.warn("test定时器");
-//    }
+//    @Scheduled(cron = "5 * * * * ? ")
+    public void scheduledTest() {
+        log.warn("test定时器");
+    }
 }

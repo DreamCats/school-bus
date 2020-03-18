@@ -7,6 +7,7 @@
 package com.stylefeng.guns.rest.bus;
 
 import com.stylefeng.guns.rest.bus.dto.*;
+import org.springframework.scheduling.annotation.Scheduled;
 
 public interface IBusService {
 
@@ -55,4 +56,19 @@ public interface IBusService {
      * @return
      */
     boolean filterRepeatSeats(String seats, Integer coundId);
+
+    /**
+     * 每天上午7点到晚上21点，每隔30分钟执行一次
+     */
+    void schedulChangeBusStatus();
+
+    /**
+     * 每天凌晨0点1分执行
+     */
+    void addCounts();
+
+    /**
+     * 每5s执行一次
+     */
+    void scheduledTest();
 }

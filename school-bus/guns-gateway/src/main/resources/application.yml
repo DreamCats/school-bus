@@ -51,7 +51,7 @@ dubbo:
 apache:
   rocketmq:
     producer:
-      producerGroup: gateway
+      producerGroup: school-bus
     namesrvAddr: 39.108.93.119:9876
 
 swagger:
