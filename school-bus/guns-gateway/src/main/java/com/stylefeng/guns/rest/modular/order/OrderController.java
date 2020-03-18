@@ -36,7 +36,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 
 @Slf4j
-@Api(value = "班车服务", description = "班车服务相关接口")
+@Api(value = "订单服务", description = "订单服务相关接口")
 @RestController
 @RequestMapping("/order/")
 public class OrderController {

@@ -32,7 +32,7 @@ public class BusSchedule {
     /**
      * 每天凌晨0点1分执行
      */
-    @Scheduled(cron = "0 1 0 * * ? ")
+    @Scheduled(cron = "0 2 0 * * ? ")
     private void addCounts(){
         log.warn("addCounts执行");
         busService.addCounts();
@@ -41,7 +41,7 @@ public class BusSchedule {
     /**
      * 每5s执行一次
      */
-    @Scheduled(cron = "5 * * * * ? ")
+//    @Scheduled(cron = "5 * * * * ? ")
     private void scheduledTest(){
         busService.scheduledTest();
     }

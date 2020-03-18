@@ -36,6 +36,17 @@ spring:
         stat-view-servlet:
           login-username: admin
           login-password: 123
+  redis:
+    database: 0
+    host: 39.108.93.119
+    port: 6179
+    password: 123
+    timeout: 5000ms
+    jedis:
+      pool:
+        max-active: 8
+        max-wait: -1
+        max-idle: 8
 logging:
   level.root: info
   level.com.stylefeng: debug
