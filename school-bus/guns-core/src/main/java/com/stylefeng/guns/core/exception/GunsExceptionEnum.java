@@ -1,13 +1,6 @@
 package com.stylefeng.guns.core.exception;
 
-/**
- * Guns异常枚举
- *
- * @author fengshuonan
- * @Date 2017/12/28 下午10:33
- */
 public enum GunsExceptionEnum implements ServiceExceptionEnum {
-
     /**
      * 其他
      */

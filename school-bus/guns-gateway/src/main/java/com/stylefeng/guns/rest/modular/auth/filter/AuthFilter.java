@@ -1,7 +1,6 @@
 package com.stylefeng.guns.rest.modular.auth.filter;
 
 import cn.hutool.core.util.StrUtil;
-import com.stylefeng.guns.core.base.tips.ErrorTip;
 import com.stylefeng.guns.core.util.RenderUtil;
 import com.stylefeng.guns.rest.common.CurrentUser;
 import com.stylefeng.guns.rest.common.RedisUtils;

@@ -1,13 +1,13 @@
+/**
+ * @program school-bus
+ * @description: GunsException
+ * @author: mf
+ * @create: 2020/03/18 23:32
+ */
+
 package com.stylefeng.guns.core.exception;
 
-/**
- * 封装guns的异常
- *
- * @author fengshuonan
- * @Date 2017/12/28 下午10:32
- */
-public class GunsException extends RuntimeException {
-
+public class GunsException extends RuntimeException{
     private Integer code;
 
     private String message;
