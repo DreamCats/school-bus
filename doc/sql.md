@@ -23,21 +23,28 @@
 | update_time |  TIMESTAMP  |      更新时间       |
 
 ```sql
-DROP TABLE IF EXISTS sb_user;
-CREATE TABLE sb_user(
-   uuid INT PRIMARY KEY AUTO_INCREMENT COMMENT '主键编号',
-   user_name VARCHAR(50) NOT NULL DEFAULT '' UNIQUE COMMENT '用户账号',
-   user_pwd VARCHAR(50) NOT NULL DEFAULT '' COMMENT '用户密码',
-   nick_name VARCHAR(50) NOT NULL DEFAULT '' COMMENT '用户昵称',
-   user_sex INT COMMENT '用户性别 0-男，1-女',
-   email VARCHAR(50) NOT NULL DEFAULT '' COMMENT '用户邮箱',
-   user_phone VARCHAR(50) NOT NULL DEFAULT '' COMMENT '用户手机号',
-   begin_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-   update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间'
-) COMMENT '用户表' ENGINE = INNODB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
-insert into sb_user(user_name,user_pwd,nick_name,user_sex,email,user_phone) values('admin','0192023a7bbd73250516f069df18b500','隔壁泰山',0,'admin@qq.com','13888888888');
-insert into sb_user(user_name,user_pwd,nick_name,user_sex,email,user_phone) values('jiangzh','5e2de6bd1c9b50f6e27d4e55da43b917','阿里郎',0,'jiangzh@qq.com','13866666666');
+DROP TABLE IF EXISTS `sb_user`;
+CREATE TABLE `sb_user` (
+  `uuid` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键编号',
+  `user_name` varchar(50) NOT NULL DEFAULT '' COMMENT '用户账号',
+  `user_pwd` varchar(50) NOT NULL DEFAULT '' COMMENT '用户密码',
+  `nick_name` varchar(50) NOT NULL DEFAULT '' COMMENT '用户昵称',
+  `user_sex` int(11) DEFAULT NULL COMMENT '用户性别 0-男，1-女',
+  `email` varchar(50) NOT NULL DEFAULT '' COMMENT '用户邮箱',
+  `user_phone` varchar(50) NOT NULL DEFAULT '' COMMENT '用户手机号',
+  `begin_time` datetime NOT NULL COMMENT '创建时间',
+  `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `money` double NOT NULL COMMENT '用户余额',
+  `pay_password` varchar(100) CHARACTER SET utf8mb4 NOT NULL COMMENT '支付密码',
+  PRIMARY KEY (`uuid`),
+  UNIQUE KEY `user_name` (`user_name`)
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='用户表';
+
+INSERT INTO `sb_user` (`uuid`, `user_name`, `user_pwd`, `nick_name`, `user_sex`, `email`, `user_phone`, `begin_time`, `update_time`, `money`, `pay_password`) VALUES ('2', 'admin', '0192023a7bbd73250516f069df18b500', '隔壁泰山', '0', 'admin@qq.com', '13888888888', '2020-02-25 20:35:51', '2020-02-25 20:35:51', '0', ''),
+('3', 'jiangzh', '5e2de6bd1c9b50f6e27d4e55da43b917', '阿里郎', '0', 'jiangzh@qq.com', '13866666666', '2020-02-25 20:35:51', '2020-02-25 20:35:51', '0', ''),
+('4', 'mai', '202cb962ac59075b964b07152d234b70', '你是风儿，他是草', '0', '1595947@qq.com', '18438747362', '2020-02-26 16:10:39', '2020-03-20 00:53:34', '199900', '123456'),
+('18', 'feng', '202cb962ac59075b964b07152d234b70', '买', '1', '123@qq.com', '123', '2020-02-28 19:58:45', '2020-03-15 16:00:52', '2', '123456');
 ```
 
 ## 班车服务
@@ -92,7 +99,8 @@ insert into sb_bus(limit_number,driver_name,drive_phone,seats_number, begin_time
 |  seat_status   | VARCHAR |                    0:未满；1:已满                    |
 
 ```sql
-DROP TABLE IF EXISTS sb_count;
+
+
 CREATE TABLE `sb_count` (
   `uuid` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键编号',
   `bus_id` int(11) NOT NULL COMMENT '班车id',
@@ -102,25 +110,45 @@ CREATE TABLE `sb_count` (
   `price` double NOT NULL COMMENT '价格',
   `selected_seats` varchar(50) NOT NULL DEFAULT '' COMMENT '已选座位',
   `seat_status` varchar(50) NOT NULL DEFAULT '' COMMENT '0:未满；1:已满',
+  `begin_date` varchar(100) CHARACTER SET utf8mb4 NOT NULL COMMENT 'mm-dd格式',
   PRIMARY KEY (`uuid`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='场次表';
+) ENGINE=InnoDB AUTO_INCREMENT=103 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='场次表';
 
-insert into sb_count(bus_id,begin_time,end_time,bus_status,price,selected_seats,seat_status) values(1,'08:00','09:00','0',4.00,'', '0');
-insert into sb_count(bus_id,begin_time,end_time,bus_status,price,selected_seats,seat_status) values(2,'08:30','09:30','0',4.00,'', '0');
-insert into sb_count(bus_id,begin_time,end_time,bus_status,price,selected_seats,seat_status) values(3,'09:00','10:00','0',4.00, '', '0');
-insert into sb_count(bus_id,begin_time,end_time,bus_status,price,selected_seats,seat_status) values(4,'09:30','10:30','0',4.00, '', '0');
-insert into sb_count(bus_id,begin_time,end_time,bus_status,price,selected_seats,seat_status) values(1,'09:30','10:30','1',4.00, '', '0');
-insert into sb_count(bus_id,begin_time,end_time,bus_status,price,selected_seats,seat_status) values(2,'10:00','11:30','1',4.00, '', '0');
-insert into sb_count(bus_id,begin_time,end_time,bus_status,price,selected_seats,seat_status) values(5,'08:00','09:00','1',4.00, '', '0');
-insert into sb_count(bus_id,begin_time,end_time,bus_status,price,selected_seats,seat_status) values(6,'09:30','10:30','1',4.00, '', '0');
-insert into sb_count(bus_id,begin_time,end_time,bus_status,price,selected_seats,seat_status) values(3,'14:00','15:00','1',4.00, '', '0');
-insert into sb_count(bus_id,begin_time,end_time,bus_status,price,selected_seats,seat_status) values(4,'15:30','16:30','1',4.00, '', '0');
-insert into sb_count(bus_id,begin_time,end_time,bus_status,price,selected_seats,seat_status) values(7,'17:00','18:00','1',4.00, '', '0');
-insert into sb_count(bus_id,begin_time,end_time,bus_status,price,selected_seats,seat_status) values(5,'14:00','15:00','0',4.00, '', '0');
-insert into sb_count(bus_id,begin_time,end_time,bus_status,price,selected_seats,seat_status) values(6,'15:30','16:30','0',4.00, '', '0');
-insert into sb_count(bus_id,begin_time,end_time,bus_status,price,selected_seats,seat_status) values(8,'17:00','18:00','0',4.00, '', '0');
-insert into sb_count(bus_id,begin_time,end_time,bus_status,price,selected_seats,seat_status) values(7,'20:00','21:00','0',4.00, '', '0');
-insert into sb_count(bus_id,begin_time,end_time,bus_status,price,selected_seats,seat_status) values(8,'20:00','21:00','1',4.00, '', '0');
+INSERT INTO `sb_count` (`uuid`, `bus_id`, `begin_time`, `end_time`, `bus_status`, `price`, `selected_seats`, `seat_status`, `begin_date`) VALUES ('1', '1', '08:00', '09:00', '1', '4', '', '0', '2020-03-09'),
+('2', '2', '08:30', '09:30', '1', '4', '', '0', '2020-03-16'),
+('3', '3', '09:00', '10:00', '1', '4', '', '0', '2020-03-09'),
+('4', '4', '09:30', '10:30', '1', '4', '', '0', '2020-03-09'),
+('5', '1', '09:30', '10:30', '0', '4', '', '0', '2020-03-09'),
+('6', '2', '10:00', '11:00', '0', '4', '', '0', '2020-03-09'),
+('7', '5', '08:00', '09:00', '0', '4', '', '0', '2020-03-09'),
+('8', '6', '09:30', '10:30', '0', '4', '', '0', '2020-03-09'),
+('9', '3', '14:00', '15:00', '0', '4', '', '0', '2020-03-09'),
+('10', '4', '15:30', '16:30', '0', '4', '', '0', '2020-03-09'),
+('11', '7', '17:00', '18:00', '0', '4', '', '0', '2020-03-09'),
+('12', '5', '14:00', '15:00', '1', '4', '', '0', '2020-03-09'),
+('13', '6', '15:30', '16:30', '1', '4', '', '0', '2020-03-09'),
+('14', '8', '17:00', '18:00', '1', '4', '', '0', '2020-03-09'),
+('15', '7', '20:00', '21:00', '1', '4', '', '0', '2020-03-09'),
+('16', '8', '20:00', '21:00', '0', '4', '', '0', '2020-03-09'),
+('17', '8', '24:00', '24:30', '0', '4', '', '0', '2020-03-09'),
+('86', '1', '08:00', '09:00', '1', '4', '', '0', '2020-03-20'),
+('87', '2', '08:30', '09:30', '1', '4', '', '0', '2020-03-20'),
+('88', '3', '09:00', '10:00', '1', '4', '', '0', '2020-03-20'),
+('89', '4', '09:30', '10:30', '1', '4', '', '0', '2020-03-20'),
+('90', '1', '09:30', '10:30', '0', '4', '', '0', '2020-03-20'),
+('91', '2', '10:00', '11:00', '0', '4', '', '0', '2020-03-20'),
+('92', '5', '08:00', '09:00', '0', '4', '', '0', '2020-03-20'),
+('93', '6', '09:30', '10:30', '0', '4', '', '0', '2020-03-20'),
+('94', '3', '14:00', '15:00', '0', '4', '', '0', '2020-03-20'),
+('95', '4', '15:30', '16:30', '0', '4', '', '0', '2020-03-20'),
+('96', '7', '17:00', '18:00', '0', '4', '', '0', '2020-03-20'),
+('97', '5', '14:00', '15:00', '1', '4', '', '0', '2020-03-20'),
+('98', '6', '15:30', '16:30', '1', '4', '', '0', '2020-03-20'),
+('99', '8', '17:00', '18:00', '1', '4', '', '0', '2020-03-20'),
+('100', '7', '20:00', '21:00', '1', '4', '', '0', '2020-03-20'),
+('101', '8', '20:00', '21:00', '0', '4', '', '0', '2020-03-20'),
+('102', '8', '24:00', '24:30', '0', '4', '', '0', '2020-03-20');
+
 ```
 
 ## 订单服务
@@ -142,24 +170,35 @@ insert into sb_count(bus_id,begin_time,end_time,bus_status,price,selected_seats,
 |     comment     |  VARCHAR  |              评论              |
 
 ```sql
-DROP TABLE IF EXISTS sb_order;
+
+
 CREATE TABLE `sb_order` (
-  `uuid` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键编号',
+  `uuid` varchar(100) CHARACTER SET utf8mb4 NOT NULL COMMENT '主键编号',
   `count_id` int(11) NOT NULL COMMENT '场次id',
   `bus_status` varchar(50) NOT NULL DEFAULT '' COMMENT '0:沙河->清水河；1:清水河->沙河',
   `seats_ids` varchar(50) NOT NULL DEFAULT '' COMMENT '已售座位编号',
-  `count_price` double NOT NULL  COMMENT '场次预售价格',
+  `count_price` double NOT NULL COMMENT '场次预售价格',
   `order_price` double NOT NULL COMMENT '订单总金额',
-  `order_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
-  `order_user` int(11) NOT NULL COMMENT '下单人',
+  `order_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `user_id` int(11) NOT NULL COMMENT '下单人id',
   `order_status` varchar(50) NOT NULL DEFAULT '' COMMENT '0-待支付,1-已支付,2-已关闭',
   `evaluate_status` varchar(50) NOT NULL DEFAULT '' COMMENT '0:未评价；1:已评价',
   `comment` varchar(255) NOT NULL DEFAULT '' COMMENT '评论',
+  `order_user` varchar(100) CHARACTER SET utf8mb4 NOT NULL COMMENT '下单人',
   PRIMARY KEY (`uuid`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='订单表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='订单表';
 
-insert into sb_order(count_id,bus_status,seats_ids,count_price,order_price,order_time,order_user,order_status, evaluate_status,comment) values(1,'0','1',4.00,4.00, NOW(),4, '0', '0', '');
-insert into sb_order(count_id,bus_status,seats_ids,count_price,order_price,order_time,order_user,order_status, evaluate_status,comment) values(1,'0','1',4.00,4.00, NOW(),4, '1', '1', 'aaa');
-insert into sb_order(count_id,bus_status,seats_ids,count_price,order_price,order_time,order_user,order_status, evaluate_status,comment) values(1,'0','1',4.00,4.00, NOW(),4, '2', '0', '');
+INSERT INTO `sb_order` (`uuid`, `count_id`, `bus_status`, `seats_ids`, `count_price`, `order_price`, `order_time`, `user_id`, `order_status`, `evaluate_status`, `comment`, `order_user`) VALUES ('19f649e', '80', '0', '2', '4', '4', '2020-03-19 09:41:24', '4', '1', '0', '', '4'),
+('2955f1f', '83', '0', '2', '4', '4', '2020-03-19 18:19:44', '4', '2', '0', '', '4'),
+('3307d98', '80', '0', '1', '4', '4', '2020-03-19 13:38:50', '4', '2', '0', '', '4'),
+('435bcc2', '83', '0', '10', '4', '4', '2020-03-19 18:14:11', '4', '1', '0', '', '4'),
+('683cf38', '68', '0', '15', '4', '4', '2020-03-18 16:17:33', '4', '1', '0', '', '4'),
+('7805fa9', '83', '0', '6', '4', '4', '2020-03-19 18:21:25', '4', '2', '0', '', '4'),
+('8b99107', '69', '0', '1', '4', '4', '2020-03-19 00:25:38', '4', '1', '0', '', '4'),
+('8feca50', '65', '0', '4', '4', '4', '2020-03-18 16:00:55', '4', '1', '0', '', '4'),
+('b7a3232', '65', '0', '8', '4', '4', '2020-03-18 16:11:54', '4', '1', '0', '', '4'),
+('d3f3f93', '65', '0', '9', '4', '4', '2020-03-18 16:17:11', '4', '2', '0', '', '4'),
+('f1a2e3e', '65', '0', '20', '4', '4', '2020-03-18 15:53:34', '4', '1', '0', '', '4');
+
 ```
 
