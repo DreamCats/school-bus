@@ -9,6 +9,7 @@ package com.stylefeng.guns.rest.modular.order;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.alibaba.dubbo.config.annotation.Service;
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -18,11 +19,18 @@ import com.stylefeng.guns.core.constants.SbCode;
 import com.stylefeng.guns.rest.common.persistence.dao.OrderMapper;
 import com.stylefeng.guns.rest.common.persistence.model.Order;
 import com.stylefeng.guns.rest.modular.order.converter.OrderConvertver;
+import com.stylefeng.guns.rest.mq.MQDto;
 import com.stylefeng.guns.rest.myutils.UUIDUtils;
 import com.stylefeng.guns.rest.order.IOrderService;
 import com.stylefeng.guns.rest.order.dto.*;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.rocketmq.client.exception.MQBrokerException;
+import org.apache.rocketmq.client.exception.MQClientException;
+import org.apache.rocketmq.common.message.Message;
+import org.apache.rocketmq.remoting.exception.RemotingException;
+import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -33,6 +41,12 @@ import java.math.RoundingMode;
 @Service
 public class OrderServiceImpl implements IOrderService {
 
+    @Value("${mq.order.topic}")
+    private String topic;
+
+    @Value("${mq.order.tag.cancel}")
+    private String tag;
+
     @Autowired
     private OrderMapper orderMapper;
 
@@ -42,6 +56,15 @@ public class OrderServiceImpl implements IOrderService {
     @Reference
     private IBusService busService;
 
+    @Autowired
+    private RocketMQTemplate rocketMQTemplate;
+
+
+    /**
+     * 返回未乘坐列表
+     * @param request
+     * @return
+     */
     @Override
     public NoTakeBusResponse getNoTakeOrdersById(NoTakeBusRequest request) {
         NoTakeBusResponse response = new NoTakeBusResponse();
@@ -81,6 +104,7 @@ public class OrderServiceImpl implements IOrderService {
 
     /**
      * 该业务可以和上一个业务合并
+     * 返回未评价和评价的列表
      * @param request
      * @return
      */
@@ -121,6 +145,11 @@ public class OrderServiceImpl implements IOrderService {
         return response;
     }
 
+    /**
+     * 返回未支付列表
+     * @param request
+     * @return
+     */
     @Override
     public NoPayResponse getNoPayOrdersById(NoPayRequest request) {
         NoPayResponse response = new NoPayResponse();
@@ -157,58 +186,87 @@ public class OrderServiceImpl implements IOrderService {
         return response;
     }
 
+    /**
+     * 添加订单，这里比较重要
+     * @param request
+     * @return
+     */
     @Override
     public AddOrderResponse addOrder(AddOrderRequest request) {
         // 判断座位，如果重复，直接退出，否则更新场次的座位信息
         AddOrderResponse response = new AddOrderResponse();
+        // 全局orderId
+        String orderId = UUIDUtils.getUUID();
+        // 1。 判断座位，如果重复，直接退出，否则下一步
+        // 2。 更新座位，如果没有异常，这是写操作
+        // 3。 计算总金额，如果没有异常
+        // 4。 添加订单，如果异常，这是写操作
         try {
-//            boolean selectedSeats = busService.selectedSeats(request.getSeatsIds(), request.getCountId());
-//            if (selectedSeats) {
-//                // b:true 说明重复
-//                response.setCode(RetCodeConstants.SELECTED_SEATS.getCode());
-//                response.setMsg(RetCodeConstants.SELECTED_SEATS.getMessage());
-//                return response;
-//            }
-//            // 更新场次的座位信息，并更新场次的座位是否已满
-//            boolean updateSeats = busService.updateSeats(request.getSeatsIds(), request.getCountId());
-//            if (!updateSeats) {
-//                response.setCode(RetCodeConstants.DB_EXCEPTION.getCode());
-//                response.setMsg(RetCodeConstants.DB_EXCEPTION.getMessage());
-//                return response;
-//            }
-            // 添加订单了， 这里问题就来了，如果订单添加失败， 上面的更新场次的座位信息就要回滚
-            // 如果上述更新座位信息放在添加订单之后呢？， 若更新座位异常，那么添加订单就要回滚，卧槽，事物就来了
-            // 好像听说dubbo和springboot的事物发生冲突
+            // 1。 判断座位，如果重复，直接退出，否则下一步
+            boolean repeatSeats = busService.repeatSeats(request.getSeatsIds(), request.getCountId());
+            if (repeatSeats) {
+                // b:true 说明重复
+                response.setCode(SbCode.SELECTED_SEATS.getCode());
+                response.setMsg(SbCode.SELECTED_SEATS.getMessage());
+                return response;
+            }
+//            // 2。 更新座位，如果没有异常，这是写操作
+            boolean updateSeats = busService.addSeats(request.getSeatsIds(), request.getCountId());
+            if (!updateSeats) {
+                response.setCode(SbCode.DB_EXCEPTION.getCode());
+                response.setMsg(SbCode.DB_EXCEPTION.getMessage());
+                return response;
+            }
 
-            // 计算价格了
+            // 3。 计算总金额，如果没有异常
             String seatIds = request.getSeatsIds();
             Integer seatNumber = seatIds.split(",").length;
             Double countPrice = request.getCountPrice();
             Double totalPrice = getTotalPrice(seatNumber, countPrice);
+
+            // 4。 添加订单，如果异常，这是写操作
             Order order = orderConvertver.res2Order(request);
             order.setOrderPrice(totalPrice);
             order.setEvaluateStatus("0"); // 未评价
             order.setOrderStatus("0"); // 未支付
-
             // 引入唯一id
-            order.setUuid(UUIDUtils.getUUID());
+            order.setUuid(orderId);
             int insert = orderMapper.insert(order);// 插入 不判断了
-            QueryWrapper<OrderDto> wrapper = new QueryWrapper<>();
-            wrapper.eq("so.uuid", order.getUuid());
-            OrderDto orderDto = orderMapper.selectOrderById(wrapper);
+            // 这里就不读了，耗时
+//            QueryWrapper<OrderDto> wrapper = new QueryWrapper<>();
+//            wrapper.eq("so.uuid", order.getUuid());
+//            OrderDto orderDto = orderMapper.selectOrderById(wrapper);
             response.setCode(SbCode.SUCCESS.getCode());
             response.setMsg(SbCode.SUCCESS.getMessage());
-            response.setOrderDto(orderDto);
+//            response.setOrderDto(orderDto);
+            return response;
         } catch (Exception e) {
-            e.printStackTrace();
-            log.error("addOrder");
+            // 以上操作如果程序都不发生异常的话， 是不会执行这里的代码的
+            // 也就是说不会发送回退消息的。
+            // 目的是在高并发的情况下，程序内部发生异常，依然高可用
+//            e.printStackTrace();
+            log.error("addOrder", e);
+            // 发消息，将座位退回，将订单退回
+            MQDto mqDto = new MQDto();
+            mqDto.setOrderId(orderId);
+            mqDto.setCountId(request.getCountId());
+            mqDto.setSeatsIds(request.getSeatsIds());
+            try {
+                sendCancelOrder(topic,tag,orderId, JSON.toJSONString(mqDto));
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             response.setCode(SbCode.DB_EXCEPTION.getCode());
             response.setMsg(SbCode.DB_EXCEPTION.getMessage());
             return response;
         }
-        return response;
     }
 
+    /**
+     * 通过订单id返回订单详情
+     * @param request
+     * @return
+     */
     @Override
     public OrderResponse selectOrderById(OrderRequest request) {
         OrderResponse response = new OrderResponse();
@@ -229,6 +287,11 @@ public class OrderServiceImpl implements IOrderService {
         return response;
     }
 
+    /**
+     * 更新订单状态 0-待支付,1-已支付,2-已关闭
+     * @param request
+     * @return
+     */
     @Override
     public OrderResponse updateOrderStatus(OrderRequest request) {
         OrderResponse response = new OrderResponse();
@@ -251,6 +314,12 @@ public class OrderServiceImpl implements IOrderService {
         return response;
     }
 
+    /**
+     * 计算总价格
+     * @param seatNumbers：座位数量
+     * @param countPrice：场次价格
+     * @return
+     */
     private double getTotalPrice(Integer seatNumbers, double countPrice) {
         BigDecimal seatNumbersDeci = new BigDecimal(seatNumbers);
         BigDecimal countPriceDeci = new BigDecimal(countPrice);
@@ -258,5 +327,18 @@ public class OrderServiceImpl implements IOrderService {
         // 四舍五入，取小数点后一位
         BigDecimal bigDecimal = result.setScale(2, RoundingMode.HALF_UP);
         return bigDecimal.doubleValue();
+    }
+
+    /**
+     * 发送订单回退消息
+     * @param topic
+     * @param tag
+     * @param keys
+     * @param body
+     * @throws Exception
+     */
+    private void sendCancelOrder(String topic, String tag, String keys, String body) throws Exception{
+        Message message = new Message(topic,tag,keys,body.getBytes());
+        rocketMQTemplate.getProducer().send(message);
     }
 }

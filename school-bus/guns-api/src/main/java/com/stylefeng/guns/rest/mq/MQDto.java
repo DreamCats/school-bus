@@ -13,7 +13,7 @@ import java.io.Serializable;
 
 @Data
 public class MQDto implements Serializable {
-    private Integer orderId; // 订单id
+    private String orderId; // 订单id
     private Integer countId; // 场次id
     private Integer userId; // 用户id
     private Double totalMoney; // 总金额

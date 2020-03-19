@@ -164,34 +164,33 @@ public class OrderController {
         request.setCountPrice(form.getCountPrice());
         request.setBusStatus(form.getBusStatus());
         // 判断座位是否重复
-        boolean selectedSeats = busService.repeatSeats(request.getSeatsIds(), request.getCountId());
-        if (selectedSeats) {
-            CommonResponse response = new CommonResponse();
-            response.setCode(SbCode.SELECTED_SEATS.getCode());
-            response.setMsg(SbCode.SELECTED_SEATS.getMessage());
-            return new ResponseUtil().setData(response);
-        }
+//        boolean selectedSeats = busService.repeatSeats(request.getSeatsIds(), request.getCountId());
+//        if (selectedSeats) {
+//            CommonResponse response = new CommonResponse();
+//            response.setCode(SbCode.SELECTED_SEATS.getCode());
+//            response.setMsg(SbCode.SELECTED_SEATS.getMessage());
+//            return new ResponseUtil().setData(response);
+//        }
         // 更新座位
         //更新场次的座位信息，并更新场次的座位是否已满
-        boolean updateSeats = busService.addSeats(request.getSeatsIds(), request.getCountId());
-        if (!updateSeats) {
-            // 更新失败
-            CommonResponse response = new CommonResponse();
-            response.setCode(SbCode.DB_EXCEPTION.getCode());
-            response.setMsg(SbCode.DB_EXCEPTION.getMessage());
-            return new ResponseUtil().setData(response);
-        }
-        // 缓存失效
+//        boolean updateSeats = busService.addSeats(request.getSeatsIds(), request.getCountId());
+//        if (!updateSeats) {
+//            // 更新失败
+//            CommonResponse response = new CommonResponse();
+//            response.setCode(SbCode.DB_EXCEPTION.getCode());
+//            response.setMsg(SbCode.DB_EXCEPTION.getMessage());
+//            return new ResponseUtil().setData(response);
+//        }
+
+        AddOrderResponse response = orderService.addOrder(request);
+        // 座位缓存失效
         Object obj = redisUtils.get(RedisConstants.COUNT_DETAIL_EXPIRE.getKey() + request.getCountId());
         if (obj != null) {
-            // 说明有缓存,清理掉
             redisUtils.del(RedisConstants.COUNT_DETAIL_EXPIRE.getKey() + request.getCountId());
         }
-        AddOrderResponse response = orderService.addOrder(request);
         // 待支付缓存失效
         obj = redisUtils.get(RedisConstants.NO_PAY_ORDERS_EXPIRE.getKey() + userId);
         if (obj != null) {
-            // 说明有缓存，清理掉
             redisUtils.del(RedisConstants.NO_PAY_ORDERS_EXPIRE.getKey() + userId);
         }
         log.warn("addOrder:" + response.toString());

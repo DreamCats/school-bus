@@ -56,13 +56,15 @@ dubbo:
 rocketmq:
   name-server: 39.108.93.119:9876
   producer:
-    group: orderProducerGroup
+    group: orderProducerGroup # 生产消息的组
 
 mq:
   order:
     consumer:
       group:
         name: orderTopic_cancel_group
-  topic: orderTopic
-  tag:
-    cancel: order_cancel
+
+
+    topic: orderTopic # 话题：订单话题
+    tag: # 过滤标签：回退标签
+      cancel: order_cancel

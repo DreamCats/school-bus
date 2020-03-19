@@ -61,3 +61,17 @@ dubbo:
     address: 39.108.93.119:2181
   protocol:
     port: 20881
+
+rocketmq:
+  name-server: 39.108.93.119:9876
+  producer:
+    group: orderProducerGroup
+
+mq:
+  order:
+    consumer:
+      group:
+        name: orderTopic_cancel_group
+  topic: orderTopic
+  tag:
+    cancel: order_cancel
