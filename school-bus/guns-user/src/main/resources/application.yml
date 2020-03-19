@@ -65,8 +65,17 @@ dubbo:
   protocol:
     port: 20880
 
-apache:
-  rocketmq:
+
+rocketmq:
+  name-server: 39.108.93.119:9876
+  producer:
+    group: orderProducerGroup
+
+mq:
+  order:
     consumer:
-      pushConsumer: school-bus
-    namesrvAddr: 39.108.93.119:9876
+      group:
+        name: orderTopic_cancel_group
+  topic: orderTopic
+  tag:
+    cancel: order_cancel

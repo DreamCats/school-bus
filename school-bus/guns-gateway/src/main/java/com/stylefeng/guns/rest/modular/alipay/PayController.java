@@ -17,7 +17,6 @@ import com.stylefeng.guns.rest.common.ResponseData;
 import com.stylefeng.guns.rest.common.ResponseUtil;
 import com.stylefeng.guns.core.constants.RedisConstants;
 import com.stylefeng.guns.core.constants.SbCode;
-import com.stylefeng.guns.rest.config.RocketProducer;
 import com.stylefeng.guns.rest.modular.form.PayForm;
 import com.stylefeng.guns.rest.user.IUserService;
 import com.stylefeng.guns.rest.user.dto.UserRequest;
@@ -27,7 +26,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -47,8 +45,6 @@ public class PayController {
     @Reference(check = false)
     private IUserService userService;
 
-    @Autowired
-    private RocketProducer producer;
     /**
      * 支付接口
      * @param payForm：去相关类查看参数
@@ -97,10 +93,5 @@ public class PayController {
         // ok的话， 删缓存
         redisUtils.del(RedisConstants.USER_INFO_EXPIRE.getKey() + userId);
         return new ResponseUtil().setData(payResponse);
-    }
-
-    @GetMapping("test")
-    public void testMQ() throws Exception{
-        String send = producer.send("gateway", "pay", "userId", "我是rocketmq...");
     }
 }
