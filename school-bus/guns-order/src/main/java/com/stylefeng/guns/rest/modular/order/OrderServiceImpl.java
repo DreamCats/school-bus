@@ -213,7 +213,7 @@ public class OrderServiceImpl implements IOrderService {
                 response.setMsg(SbCode.SELECTED_SEATS.getMessage());
                 return response;
             }
-            CastException.cast(SbCode.SYSTEM_ERROR);
+//            CastException.cast(SbCode.SYSTEM_ERROR);
             // 2。 更新座位，如果没有异常，这是写操作
             // 用tags来过滤消息
             tag = MqTags.ORDER_ADD_SEATS_CANCLE.getTag();
@@ -232,15 +232,16 @@ public class OrderServiceImpl implements IOrderService {
             Double countPrice = request.getCountPrice();
             Double totalPrice = getTotalPrice(seatNumber, countPrice);
 
+//            CastException.cast(SbCode.SYSTEM_ERROR);
             // 4。 添加订单，如果异常，这是写操作
-            tag = MqTags.ORDER_ADD_CANCLE.getTag();
             Order order = orderConvertver.res2Order(request);
             order.setOrderPrice(totalPrice);
             order.setEvaluateStatus("0"); // 未评价
             order.setOrderStatus("0"); // 未支付
-            // 引入唯一id
-            order.setUuid(orderId);
+            order.setUuid(orderId); // 唯一id
+            tag = MqTags.ORDER_ADD_CANCLE.getTag();
             int insert = orderMapper.insert(order);// 插入 不判断了
+            CastException.cast(SbCode.SYSTEM_ERROR);
             // 这里就不读了，耗时
 //            QueryWrapper<OrderDto> wrapper = new QueryWrapper<>();
 //            wrapper.eq("so.uuid", order.getUuid());
@@ -254,7 +255,7 @@ public class OrderServiceImpl implements IOrderService {
             // 也就是说不会发送回退消息的。
             // 目的是在高并发的情况下，程序内部发生异常，依然高可用
 //            e.printStackTrace();
-            log.error("addOrder", e);
+            log.error("addOrder");
             // 发消息，将座位退回，将订单退回
             MQDto mqDto = new MQDto();
             mqDto.setOrderId(orderId);
@@ -322,6 +323,25 @@ public class OrderServiceImpl implements IOrderService {
             return response;
         }
         return response;
+    }
+
+    /**
+     * 根据订单id删除订单
+     * @param OrderId
+     * @return
+     */
+    @Override
+    public boolean deleteOrderById(String OrderId) {
+        try {
+            QueryWrapper<Order> wrapper = new QueryWrapper<>();
+            wrapper.eq("uuid", OrderId);
+            orderMapper.delete(wrapper);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("deleteOrderById:", e);
+            return false;
+        }
+        return true;
     }
 
     /**

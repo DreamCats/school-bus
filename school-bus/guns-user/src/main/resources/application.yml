@@ -76,6 +76,5 @@ mq:
     consumer:
       group:
         name: orderTopic_cancel_group
-  topic: orderTopic
-  tag:
-    cancel: order_cancel
+    topic: orderTopic
+

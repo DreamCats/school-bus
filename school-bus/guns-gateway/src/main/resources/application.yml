@@ -48,11 +48,6 @@ dubbo:
     address: 39.108.93.119:2181
 
 
-apache:
-  rocketmq:
-    producer:
-      producerGroup: school-bus
-    namesrvAddr: 39.108.93.119:9876
 
 swagger:
   enable: true

@@ -51,4 +51,11 @@ public interface IOrderService {
      * @return
      */
     OrderResponse updateOrderStatus(OrderRequest request);
+
+    /**
+     * 根据订单Id删除订单
+     * @param OrderId
+     * @return
+     */
+    boolean deleteOrderById(String OrderId);
 }

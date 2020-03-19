@@ -46,7 +46,7 @@ logging:
 
 dubbo:
   application:
-    name: guns-user
+    name: guns-order
   registry:
     protocol: zookeeper
     address: 39.108.93.119:2181
@@ -63,8 +63,5 @@ mq:
     consumer:
       group:
         name: orderTopic_cancel_group
-
-
     topic: orderTopic # 话题：订单话题
-    tag: # 过滤标签：回退标签
-      cancel: order_cancel
+
