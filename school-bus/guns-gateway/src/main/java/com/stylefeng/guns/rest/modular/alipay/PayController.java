@@ -8,20 +8,16 @@
 package com.stylefeng.guns.rest.modular.alipay;
 
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.util.NumberUtil;
 import com.alibaba.dubbo.config.annotation.Reference;
+import com.stylefeng.guns.rest.alipay.IPayService;
+import com.stylefeng.guns.rest.alipay.dto.PayRequset;
 import com.stylefeng.guns.rest.alipay.dto.PayResponse;
 import com.stylefeng.guns.rest.common.CurrentUser;
 import com.stylefeng.guns.rest.common.RedisUtils;
 import com.stylefeng.guns.rest.common.ResponseData;
 import com.stylefeng.guns.rest.common.ResponseUtil;
 import com.stylefeng.guns.core.constants.RedisConstants;
-import com.stylefeng.guns.core.constants.SbCode;
 import com.stylefeng.guns.rest.modular.form.PayForm;
-import com.stylefeng.guns.rest.user.IUserService;
-import com.stylefeng.guns.rest.user.dto.UserRequest;
-import com.stylefeng.guns.rest.user.dto.UserResponse;
-import com.stylefeng.guns.rest.user.dto.UserUpdateInfoRequest;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +27,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import java.math.BigDecimal;
 
 @Slf4j
 @Api(value = "支付服务", description = "支付服务相关接口")
@@ -42,8 +37,8 @@ public class PayController {
     @Autowired
     private RedisUtils redisUtils;
 
-    @Reference(check = false)
-    private IUserService userService;
+    @Reference
+    private IPayService payService;
 
     /**
      * 支付接口
@@ -56,42 +51,14 @@ public class PayController {
     public ResponseData pay(PayForm payForm , HttpServletRequest req) {
         String token = CurrentUser.getToken(req);
         String userId = Convert.toStr(redisUtils.get(token));
-        // 1. 先判断密码对不对撒
-        // 先获取用户信息，可以先从redis看看
-        Object obj = redisUtils.get(RedisConstants.USER_INFO_EXPIRE.getKey() + userId);
-        UserResponse userResponse = new UserResponse();
-        if (obj != null) {
-            userResponse = (UserResponse) obj;
-        } else {
-            UserRequest request = new UserRequest();
-            request.setId(Integer.parseInt(userId));
-            userResponse = userService.getUserById(request);
-        }
-        PayResponse payResponse = new PayResponse();
-        if (!userResponse.getUserDto().getPayPassword().equals(payForm.getPayPassword())) {
-            payResponse.setCode(SbCode.PAY_PASSWORD_ERROR.getCode());
-            payResponse.setMsg(SbCode.PAY_PASSWORD_ERROR.getMessage());
-            return new ResponseUtil().setData(payResponse);
-        }
-        // 判断余额足不足
-        Double totalMoney = NumberUtil.sub(userResponse.getUserDto().getMoney(), payForm.getTotalMoney());
-        BigDecimal round = NumberUtil.round(totalMoney, 2);
-        if (round.doubleValue() < 0) {
-            payResponse.setCode(SbCode.MONEY_ERROR.getCode());
-            payResponse.setMsg(SbCode.MONEY_ERROR.getMessage());
-            return new ResponseUtil().setData(payResponse);
-        }
-        // 余额写入数据库
-        UserUpdateInfoRequest request = new UserUpdateInfoRequest();
-        request.setId(Integer.parseInt(userId));
-        request.setMoney(round.doubleValue());
-        userService.updateUserInfo(request); // 暂时先不接受返回信息
-        // ok了
-        // 感觉不仅仅这么少， 虽然少了邮箱手机验证码各种验证
-        payResponse.setCode(SbCode.SUCCESS.getCode());
-        payResponse.setMsg(SbCode.SUCCESS.getMessage());
+        PayRequset requset = new PayRequset();
+        requset.setUserId(Integer.parseInt(userId));
+        requset.setPayPassword(payForm.getPayPassword());
+        requset.setTotalMoney(payForm.getTotalMoney());
+        PayResponse response = payService.pay(requset);
+        log.warn("pay:" + response.toString());
         // ok的话， 删缓存
         redisUtils.del(RedisConstants.USER_INFO_EXPIRE.getKey() + userId);
-        return new ResponseUtil().setData(payResponse);
+        return new ResponseUtil().setData(response);
     }
 }

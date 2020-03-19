@@ -7,6 +7,7 @@
 
 package com.stylefeng.guns.rest;
 
+
 import com.stylefeng.guns.rest.modular.user.RedisUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;

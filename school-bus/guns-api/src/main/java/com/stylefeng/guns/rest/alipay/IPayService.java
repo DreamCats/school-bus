@@ -6,5 +6,15 @@
  */
 package com.stylefeng.guns.rest.alipay;
 
+import com.stylefeng.guns.rest.alipay.dto.PayRequset;
+import com.stylefeng.guns.rest.alipay.dto.PayResponse;
+
 public interface IPayService {
+
+    /**
+     * 支付业务逻辑
+     * @param requset
+     * @return
+     */
+    PayResponse pay(PayRequset requset);
 }

@@ -16,6 +16,6 @@ public class MQDto implements Serializable {
     private String orderId; // 订单id
     private Integer countId; // 场次id
     private Integer userId; // 用户id
-    private Double totalMoney; // 总金额
+    private Double userMoney; // 用户钱
     private String seatsIds; // 座位id
 }

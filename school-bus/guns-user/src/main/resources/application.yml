@@ -72,9 +72,9 @@ rocketmq:
     group: orderProducerGroup
 
 mq:
-  order:
+  pay:
     consumer:
       group:
-        name: orderTopic_cancel_group
-    topic: orderTopic
+        name: payTopic_cancel_group
+    topic: payTopic
 

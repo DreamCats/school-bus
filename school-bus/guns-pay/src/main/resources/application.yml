@@ -58,7 +58,7 @@ logging:
 
 dubbo:
   application:
-    name: guns-user
+    name: guns-pay
   registry:
     protocol: zookeeper
     address: 39.108.93.119:2181
@@ -72,9 +72,9 @@ rocketmq:
     group: payProducerGroup
 
 mq:
-  order:
+  pay:
     consumer:
       group:
-        name: orderTopic_cancel_group
-    topic: orderTopic
+        name: payTopic_cancel_group
+    topic: payTopic
 

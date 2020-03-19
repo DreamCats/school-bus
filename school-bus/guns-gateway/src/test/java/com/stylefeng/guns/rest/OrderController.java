@@ -8,6 +8,9 @@
 package com.stylefeng.guns.rest;
 
 import com.alibaba.dubbo.config.annotation.Reference;
+import com.stylefeng.guns.rest.alipay.IPayService;
+import com.stylefeng.guns.rest.alipay.dto.PayRequset;
+import com.stylefeng.guns.rest.alipay.dto.PayResponse;
 import com.stylefeng.guns.rest.order.IOrderService;
 import com.stylefeng.guns.rest.order.dto.AddOrderRequest;
 import com.stylefeng.guns.rest.order.dto.AddOrderResponse;
@@ -23,6 +26,9 @@ public class OrderController {
     @Reference
     private IOrderService orderSerice;
 
+    @Reference
+    private IPayService payService;
+
     @Test
     public void addOrder() {
         AddOrderRequest request = new AddOrderRequest();
@@ -33,6 +39,16 @@ public class OrderController {
         request.setOrderUser("feng");
         request.setSeatsIds("3,4"); // 座位
         AddOrderResponse response = orderSerice.addOrder(request);
+        System.out.println(response);
+    }
+
+    @Test
+    public void pay() {
+        PayRequset requset = new PayRequset();
+        requset.setUserId(4);
+        requset.setPayPassword("123456");
+        requset.setTotalMoney(100.00);
+        PayResponse response = payService.pay(requset);
         System.out.println(response);
     }
 }

@@ -6,6 +6,7 @@
  */
 package com.stylefeng.guns.rest.modular.user.converter;
 
+
 import com.stylefeng.guns.rest.common.convert.DateMapper;
 import com.stylefeng.guns.rest.common.persistence.model.User;
 import com.stylefeng.guns.rest.user.dto.UserDto;
@@ -14,7 +15,6 @@ import com.stylefeng.guns.rest.user.dto.UserUpdateInfoRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
-
 
 @Mapper(componentModel = "spring", uses = DateMapper.class)
 public interface UserConverter {
