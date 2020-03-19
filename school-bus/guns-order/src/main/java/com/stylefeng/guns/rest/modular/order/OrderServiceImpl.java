@@ -13,6 +13,8 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.stylefeng.guns.core.constants.MqTags;
+import com.stylefeng.guns.core.exception.CastException;
 import com.stylefeng.guns.core.util.DateUtil;
 import com.stylefeng.guns.rest.bus.IBusService;
 import com.stylefeng.guns.core.constants.SbCode;
@@ -44,7 +46,7 @@ public class OrderServiceImpl implements IOrderService {
     @Value("${mq.order.topic}")
     private String topic;
 
-    @Value("${mq.order.tag.cancel}")
+//    @Value("${mq.order.tag.cancel}")
     private String tag;
 
     @Autowired
@@ -203,6 +205,7 @@ public class OrderServiceImpl implements IOrderService {
         // 4。 添加订单，如果异常，这是写操作
         try {
             // 1。 判断座位，如果重复，直接退出，否则下一步
+            tag = MqTags.ORDER_SEATS_CANCEL.getTag();
             boolean repeatSeats = busService.repeatSeats(request.getSeatsIds(), request.getCountId());
             if (repeatSeats) {
                 // b:true 说明重复
@@ -210,21 +213,27 @@ public class OrderServiceImpl implements IOrderService {
                 response.setMsg(SbCode.SELECTED_SEATS.getMessage());
                 return response;
             }
-//            // 2。 更新座位，如果没有异常，这是写操作
-            boolean updateSeats = busService.addSeats(request.getSeatsIds(), request.getCountId());
-            if (!updateSeats) {
+            CastException.cast(SbCode.SYSTEM_ERROR);
+            // 2。 更新座位，如果没有异常，这是写操作
+            // 用tags来过滤消息
+            tag = MqTags.ORDER_ADD_SEATS_CANCLE.getTag();
+            boolean addSeats = busService.addSeats(request.getSeatsIds(), request.getCountId());
+            if (!addSeats) {
                 response.setCode(SbCode.DB_EXCEPTION.getCode());
                 response.setMsg(SbCode.DB_EXCEPTION.getMessage());
                 return response;
             }
-
+            // 模拟系统异常
+//            CastException.cast(SbCode.SYSTEM_ERROR);
             // 3。 计算总金额，如果没有异常
+            tag = MqTags.ORDER_CALC_MONEY_CANCLE.getTag();
             String seatIds = request.getSeatsIds();
             Integer seatNumber = seatIds.split(",").length;
             Double countPrice = request.getCountPrice();
             Double totalPrice = getTotalPrice(seatNumber, countPrice);
 
             // 4。 添加订单，如果异常，这是写操作
+            tag = MqTags.ORDER_ADD_CANCLE.getTag();
             Order order = orderConvertver.res2Order(request);
             order.setOrderPrice(totalPrice);
             order.setEvaluateStatus("0"); // 未评价
@@ -253,6 +262,7 @@ public class OrderServiceImpl implements IOrderService {
             mqDto.setSeatsIds(request.getSeatsIds());
             try {
                 sendCancelOrder(topic,tag,orderId, JSON.toJSONString(mqDto));
+                log.warn("消息发送成功..." + mqDto);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
