@@ -51,7 +51,7 @@ dubbo:
     protocol: zookeeper
     address: 39.108.93.119:2181
   protocol:
-    port: 20882
+    port: 20883
 
 rocketmq:
   name-server: 39.108.93.119:9876

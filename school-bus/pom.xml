@@ -15,6 +15,7 @@
         <module>guns-user</module>
         <module>guns-bus</module>
         <module>guns-order</module>
+        <module>guns-pay</module>
     </modules>
 
     <parent>
