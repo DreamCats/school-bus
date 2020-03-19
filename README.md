@@ -90,18 +90,17 @@
 | 订单服务 | 8083 |
 | 支付服务 | 8084 |
 
+### Gateway
+
+| 服务名称 | 端口 |
+| :------: | :--: |
+| GateWay  | 8087 |
+
 ### Dubbo端口
+
 | 服务名称 | 端口  |
 | :------: | :---: |
 | 用户服务 | 20881 |
 | 班车服务 | 20882 |
 | 订单服务 | 20883 |
 | 支付服务 | 20884 |
-## 参考项目
-
-- [springboot-seckill](https://github.com/zaiyunduan123/springboot-seckill) 基于SpringBoot + MySQL + Redis + RabbitMQ + Guava开发的高并发商品限时秒杀系统
-- [MeetingFilm](https://github.com/daydreamdev/MeetingFilm) 基于微服务架构的在线电影购票平台 
-- [dbblog](https://github.com/llldddbbb/dbblog) 基于SpringBoot2.x+Vue2.x+ElementUI+Iview+Elasticsearch+RabbitMQ+Redis+Shiro的多模块前后端分离的博客项目
-- [mall](<https://github.com/macrozheng/mall>) mall项目是一套电商系统，包括前台商城系统及后台管理系统，基于SpringBoot+MyBatis实现
-- [mall-swarm](https://github.com/macrozheng/mall-swarm)mall-swarm是一套微服务商城系统，采用了 Spring Cloud Greenwich、Spring Boot 2、MyBatis、Docker、Elasticsearch等核心技术，同时提供了基于Vue的管理后台方便快速搭建系统
-
