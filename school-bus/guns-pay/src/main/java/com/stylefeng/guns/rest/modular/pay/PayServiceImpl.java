@@ -18,10 +18,18 @@ import com.stylefeng.guns.core.constants.RedisConstants;
 import com.stylefeng.guns.core.constants.SbCode;
 import com.stylefeng.guns.core.exception.CastException;
 import com.stylefeng.guns.rest.alipay.IPayService;
+import com.stylefeng.guns.rest.alipay.dto.PayBackRequest;
 import com.stylefeng.guns.rest.alipay.dto.PayRequset;
 import com.stylefeng.guns.rest.alipay.dto.PayResponse;
+import com.stylefeng.guns.rest.bus.IBusService;
+import com.stylefeng.guns.rest.bus.dto.CountDetailDto;
+import com.stylefeng.guns.rest.bus.dto.CountDetailRequest;
+import com.stylefeng.guns.rest.bus.dto.CountDetailResponse;
 import com.stylefeng.guns.rest.mq.MQDto;
+import com.stylefeng.guns.rest.order.IOrderService;
+import com.stylefeng.guns.rest.order.dto.OrderRequest;
 import com.stylefeng.guns.rest.user.IUserService;
+import com.stylefeng.guns.rest.user.dto.UserDto;
 import com.stylefeng.guns.rest.user.dto.UserRequest;
 import com.stylefeng.guns.rest.user.dto.UserResponse;
 import com.stylefeng.guns.rest.user.dto.UserUpdateInfoRequest;
@@ -47,6 +55,12 @@ public class PayServiceImpl implements IPayService {
 
     @Reference(check = false)
     private IUserService userService;
+
+    @Reference(check = false)
+    private IBusService busService;
+
+    @Reference(check = false)
+    private IOrderService orderService;
 
     @Autowired
     private RedisUtils redisUtils;
@@ -121,6 +135,49 @@ public class PayServiceImpl implements IPayService {
             return payResponse;
         }
 
+    }
+
+    /**
+     * 退款业务逻辑
+     * @param request
+     * @return
+     */
+    @Override
+    public PayResponse payBack(PayBackRequest request) {
+        PayResponse response = new PayResponse();
+        try {
+            // 1. 退回金额
+            // 读用户金额
+            UserRequest userRequest = new UserRequest();
+            userRequest.setId(request.getUserId());
+            UserResponse userResponse = userService.getUserById(userRequest);
+            UserDto userDto = userResponse.getUserDto();
+            // 计算金额
+            BigDecimal add = NumberUtil.add(userDto.getMoney() + request.getTotalMoney());
+            BigDecimal round = NumberUtil.round(add, 2);
+            // 写回
+            UserUpdateInfoRequest userUpdateInfoRequest = new UserUpdateInfoRequest();
+            userUpdateInfoRequest.setId(request.getUserId());
+            userUpdateInfoRequest.setMoney(round.doubleValue());
+            userService.updateUserInfo(userUpdateInfoRequest);
+            // 2. 退回座位
+            busService.filterRepeatSeats(request.getSeatsIds(), request.getCoundId());
+            // 3. 更改订单状态：关闭
+            OrderRequest orderRequest = new OrderRequest();
+            orderRequest.setUuid(request.getOrderId());
+            orderRequest.setOrderStatus("0");
+            orderService.updateOrderStatus(orderRequest);
+            response.setCode(SbCode.SUCCESS.getCode());
+            response.setMsg(SbCode.SUCCESS.getMessage());
+            return  response;
+        } catch (Exception e) {
+//            e.printStackTrace();
+            log.error("退款业务异常");
+            // 这里可以发消息， 此处先省略
+            response.setCode(SbCode.SYSTEM_ERROR.getCode());
+            response.setMsg(SbCode.SYSTEM_ERROR.getMessage());
+            return response;
+        }
     }
 
     /**

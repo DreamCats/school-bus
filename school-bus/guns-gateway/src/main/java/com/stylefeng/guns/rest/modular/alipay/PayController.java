@@ -10,6 +10,7 @@ package com.stylefeng.guns.rest.modular.alipay;
 import cn.hutool.core.convert.Convert;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.stylefeng.guns.rest.alipay.IPayService;
+import com.stylefeng.guns.rest.alipay.dto.PayBackRequest;
 import com.stylefeng.guns.rest.alipay.dto.PayRequset;
 import com.stylefeng.guns.rest.alipay.dto.PayResponse;
 import com.stylefeng.guns.rest.common.CurrentUser;
@@ -17,6 +18,7 @@ import com.stylefeng.guns.rest.common.RedisUtils;
 import com.stylefeng.guns.rest.common.ResponseData;
 import com.stylefeng.guns.rest.common.ResponseUtil;
 import com.stylefeng.guns.core.constants.RedisConstants;
+import com.stylefeng.guns.rest.modular.form.PayBackForm;
 import com.stylefeng.guns.rest.modular.form.PayForm;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -59,6 +61,26 @@ public class PayController {
         log.warn("pay:" + response.toString());
         // ok的话， 删缓存
         redisUtils.del(RedisConstants.USER_INFO_EXPIRE.getKey() + userId);
+        return new ResponseUtil().setData(response);
+    }
+
+    @ApiOperation(value = "退款接口", notes = "前提Auth，获取退款服务", response = PayResponse.class)
+    @PostMapping("back")
+    public ResponseData payBack(PayBackForm payBackFrom, HttpServletRequest req) {
+        String token = CurrentUser.getToken(req);
+        String userId = Convert.toStr(redisUtils.get(token));
+        PayBackRequest request = new PayBackRequest();
+        request.setUserId(Integer.parseInt(userId));
+        request.setOrderId(payBackFrom.getOrderId());
+        request.setCoundId(payBackFrom.getCoundId());
+        request.setSeatsIds(payBackFrom.getSeatsIds());
+        request.setTotalMoney(payBackFrom.getTotalMoney());
+        PayResponse response = payService.payBack(request);
+        log.warn("payBack:" + response.toString());
+        // 清理缓存
+        redisUtils.del(RedisConstants.USER_INFO_EXPIRE.getKey() + userId);
+        redisUtils.del(RedisConstants.NO_TAKE_OREDERS_EXPIRE.getKey() + userId);
+        redisUtils.del(RedisConstants.SELECT_ORDER_EXPIRE.getKey() + payBackFrom.getOrderId());
         return new ResponseUtil().setData(response);
     }
 }
