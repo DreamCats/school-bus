@@ -14,4 +14,6 @@ import lombok.Data;
 public class AddOrderResponse extends AbstractResponse {
 
     private OrderDto orderDto;
+
+    private String orderId;
 }

@@ -81,6 +81,7 @@ public class PayController {
         redisUtils.del(RedisConstants.USER_INFO_EXPIRE.getKey() + userId);
         redisUtils.del(RedisConstants.NO_TAKE_OREDERS_EXPIRE.getKey() + userId);
         redisUtils.del(RedisConstants.SELECT_ORDER_EXPIRE.getKey() + payBackFrom.getOrderId());
+        redisUtils.del(RedisConstants.COUNT_DETAIL_EXPIRE.getKey() + payBackFrom.getCoundId());
         return new ResponseUtil().setData(response);
     }
 }

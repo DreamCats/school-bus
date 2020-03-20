@@ -14,6 +14,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.stylefeng.guns.core.constants.MqTags;
+import com.stylefeng.guns.core.constants.RedisConstants;
 import com.stylefeng.guns.core.exception.CastException;
 import com.stylefeng.guns.core.util.DateUtil;
 import com.stylefeng.guns.rest.bus.IBusService;
@@ -60,6 +61,9 @@ public class OrderServiceImpl implements IOrderService {
 
     @Autowired
     private RocketMQTemplate rocketMQTemplate;
+
+    @Autowired
+    private RedisUtils redisUtils;
 
 
     /**
@@ -248,7 +252,10 @@ public class OrderServiceImpl implements IOrderService {
 //            OrderDto orderDto = orderMapper.selectOrderById(wrapper);
             response.setCode(SbCode.SUCCESS.getCode());
             response.setMsg(SbCode.SUCCESS.getMessage());
+            response.setOrderId(orderId);
 //            response.setOrderDto(orderDto);
+            // 这里放redis 未支付缓存，时间前端给定
+            redisUtils.set(RedisConstants.ORDER_CANCLE_EXPIRE.getKey() + orderId, orderId, request.getExpireTime());
             return response;
         } catch (Exception e) {
             // 以上操作如果程序都不发生异常的话， 是不会执行这里的代码的
@@ -307,16 +314,27 @@ public class OrderServiceImpl implements IOrderService {
     public OrderResponse updateOrderStatus(OrderRequest request) {
         OrderResponse response = new OrderResponse();
         try {
-            Order order = orderConvertver.res2Order(request);
-            orderMapper.updateById(order);
+            // 获取orderDto
             QueryWrapper<OrderDto> wrapper = new QueryWrapper<>();
             wrapper.eq("so.uuid", request.getUuid());
             OrderDto orderDto = orderMapper.selectOrderById(wrapper);
-            response.setOrderDto(orderDto);
+            // 1， 检查状态是否为2
+            if (request.getOrderStatus().equals("2")) {
+                // 说明关闭订单，回退座位
+                busService.filterRepeatSeats(orderDto.getSeatsIds(), orderDto.getCountId());
+                redisUtils.del(RedisConstants.COUNT_DETAIL_EXPIRE.getKey()
+                        + orderDto.getCountId());
+                // 清除场次详情的缓存
+            }
+            Order order = orderConvertver.res2Order(request);
+            // 更新状态
+            orderMapper.updateById(order);
+            // 暂时就不获取了
             response.setCode(SbCode.SUCCESS.getCode());
             response.setMsg(SbCode.SUCCESS.getMessage());
+            redisUtils.del(RedisConstants.NO_PAY_ORDERS_EXPIRE.getKey()+order.getUserId());
+            redisUtils.del(RedisConstants.SELECT_ORDER_EXPIRE.getKey() + request.getUuid());
         } catch (Exception e) {
-            e.printStackTrace();
             log.error("updateOrderStatus", e);
             response.setCode(SbCode.DB_EXCEPTION.getCode());
             response.setMsg(SbCode.DB_EXCEPTION.getMessage());

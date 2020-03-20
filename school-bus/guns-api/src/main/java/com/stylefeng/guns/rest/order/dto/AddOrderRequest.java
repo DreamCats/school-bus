@@ -20,4 +20,5 @@ public class AddOrderRequest extends AbstractRequest {
     private String busStatus;
     private String seatsIds;
     private Double countPrice;
+    private Integer expireTime;
 }

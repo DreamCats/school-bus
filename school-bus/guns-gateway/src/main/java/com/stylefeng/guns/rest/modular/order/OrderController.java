@@ -163,6 +163,7 @@ public class OrderController {
         request.setSeatsIds(form.getSeatsIds());
         request.setCountPrice(form.getCountPrice());
         request.setBusStatus(form.getBusStatus());
+        request.setExpireTime(form.getExpireTime());
         // 判断座位是否重复
 //        boolean selectedSeats = busService.repeatSeats(request.getSeatsIds(), request.getCountId());
 //        if (selectedSeats) {
@@ -253,19 +254,6 @@ public class OrderController {
         request.setUuid(orderId);
         request.setOrderStatus(orderStatus);
         OrderResponse response = orderService.updateOrderStatus(request);
-        if (response.getOrderDto().getOrderStatus().equals("2")) {
-            // 还原座位/更新座位
-            boolean b = busService.filterRepeatSeats(response.getOrderDto().getSeatsIds(), response.getOrderDto().getCountId());
-            if (!b) {
-                // 更新座位失败
-                response.setCode(SbCode.DB_EXCEPTION.getCode());
-                response.setMsg(SbCode.DB_EXCEPTION.getMessage());
-                return new ResponseUtil().setData(response);
-            }
-            // 删除座位缓存
-            redisUtils.del(RedisConstants.COUNT_DETAIL_EXPIRE.getKey()
-                    + response.getOrderDto().getCountId());
-        }
         log.warn("updateOrderStatus:" + response.toString());
         return new ResponseUtil().setData(response);
     }

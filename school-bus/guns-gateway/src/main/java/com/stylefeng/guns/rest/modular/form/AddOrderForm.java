@@ -24,4 +24,6 @@ public class AddOrderForm {
     private String seatsIds;
     @ApiModelProperty(value = "场次价格", required = true)
     private Double countPrice;
+    @ApiModelProperty(value = "订单过期时间", required = true)
+    private Integer expireTime;
 }
