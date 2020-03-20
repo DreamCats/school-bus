@@ -86,7 +86,8 @@ public class BusServiceImpl implements IBusService {
             queryWrapper
                     .eq("begin_date", day)
                     .ge("begin_time", currHours)
-                    .eq("bus_status", request.getBusStatus());// 时间
+                    .eq("bus_status", request.getBusStatus())
+                    .orderByAsc("begin_time");// 时间
 
             countIPage = countMapper.selectCounts(countIPage, queryWrapper);
             response.setCurrentPage(countIPage.getCurrent());
