@@ -9,7 +9,7 @@
 >   - MyBatisPlus（可自定义sql语句）
 >   - Dubbo（负载均衡，异步调用，结果缓存，分组聚合）
 >   - Mysql
->   - Redis
+>   - Redis(监听key过期->发布订阅模式)
 >   - RocketMQ
 >   - Swagger2
 >   - Validated
