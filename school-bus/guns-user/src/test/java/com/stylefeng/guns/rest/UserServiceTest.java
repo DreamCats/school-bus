@@ -33,7 +33,7 @@ public class UserServiceTest {
     @Test
     public void registerTest() {
         UserRegisterRequest request = new UserRegisterRequest();
-        request.setUsername("mai");
+        request.setUsername("haha");
         request.setPassword("123");
         request.setEmail("123@qq.com");
         request.setPhone("123");

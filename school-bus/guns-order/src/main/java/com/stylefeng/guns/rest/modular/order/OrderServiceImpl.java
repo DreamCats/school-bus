@@ -326,6 +326,10 @@ public class OrderServiceImpl implements IOrderService {
                         + orderDto.getCountId());
                 // 清除场次详情的缓存
             }
+            if (request.getOrderStatus().equals("1")) {
+                // 说明已经支付，删掉5分钟的订单缓存
+                redisUtils.del(RedisConstants.ORDER_CANCLE_EXPIRE.getKey() + request.getUuid());
+            }
             Order order = orderConvertver.res2Order(request);
             // 更新状态
             orderMapper.updateById(order);

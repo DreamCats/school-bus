@@ -9,6 +9,7 @@ package com.stylefeng.guns.rest.modular.user;
 
 import com.alibaba.dubbo.config.annotation.Service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.stylefeng.guns.core.util.DateUtil;
 import com.stylefeng.guns.core.util.MD5Util;
 import com.stylefeng.guns.core.constants.SbCode;
 import com.stylefeng.guns.rest.common.persistence.dao.UserMapper;
@@ -19,6 +20,9 @@ import com.stylefeng.guns.rest.user.dto.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.time.*;
+import java.util.Date;
 
 @Slf4j
 @Component
@@ -68,7 +72,13 @@ public class UserServiceImpl implements IUserService {
     public UserRegisterResponse regsiter(UserRegisterRequest request) {
         UserRegisterResponse res = new UserRegisterResponse();
         User user = userConverter.res2User(request);
-        System.out.println(user);
+        Date date = new Date();
+        Instant instant = date.toInstant();
+        //系统默认的时区
+        ZoneId zoneId = ZoneId.systemDefault();
+        user.setBeginTime(LocalDateTime.ofInstant(instant, zoneId));
+        user.setMoney(0.0);
+        user.setPayPassword("");
         // 加密
         String md5Password = MD5Util.encrypt(user.getUserPwd());
         user.setUserPwd(md5Password);
