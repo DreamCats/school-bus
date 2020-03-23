@@ -25,6 +25,10 @@
 >   - vant-ui
 >   - 持续补充...
 
+##访问入口
+
+- [前端源码]()
+- [网站测试访问](http://ot.dreamcat.ink:8080/) 只供测试学习使用哈，别搞崩了哇...**提醒：面向移动端**
 
 ## 架构图
 
@@ -129,3 +133,6 @@
 - **guns-order**: **存放订单相关的model，mapper，service等文件。**
 - **guns-pay**: **存放支付相关的model，mapper，service等文件。**
 - **guns-user**: **存放用户相关的model，mapper，service等文件。**
+
+### 前端页面
+
