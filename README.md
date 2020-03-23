@@ -71,7 +71,7 @@
 ## 一些文档
 
 - [sql文档](./doc/sql.md)
-- [api文档](./doc/api.md)
+- [api文档](./doc/api.md)：**最后采用swagger**
 - [会议文档](./doc/meeting.md)
 
 ## 模块
@@ -104,3 +104,28 @@
 | 班车服务 | 20882 |
 | 订单服务 | 20883 |
 | 支付服务 | 20884 |
+
+### 文档树
+
+```shell
+.
+├── doc
+├── imgs
+└── school-bus
+    ├── guns-api
+    ├── guns-bus
+    ├── guns-core
+    ├── guns-gateway
+    ├── guns-order
+    ├── guns-pay
+    └── guns-user
+```
+
+- **doc**:**记录一些文档，如会议文档等**
+- **imgs**:**存放写文档的图片，方便渲染**
+- **guns-api**: **存放业务逻辑服务的相关接口，以及各种Dto实体等。**
+- **guns-core**: **存放一些工具类，一些公共配置文件以及常量文件等。**
+- **guns-bus**: **存放班车和场次相关的model，mapper，service等文件。**
+- **guns-order**: **存放订单相关的model，mapper，service等文件。**
+- **guns-pay**: **存放支付相关的model，mapper，service等文件。**
+- **guns-user**: **存放用户相关的model，mapper，service等文件。**
