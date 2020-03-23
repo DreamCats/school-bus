@@ -150,55 +150,7 @@
 
 ### 前端页面
 
-#### 用户注册
+#### 用户服务页面
 
-<img src="./imgs/用户注册.png" alt="用户注册" style="zoom:50%;" />
-
-#### 用户登录
-
-<img src="./imgs/用户登录.png" alt="用户登录" style="zoom:50%;" />
-
-#### 个人中心
-
-<img src="./imgs/个人中心.png" alt="个人中心" style="zoom:50%;" />
-
-#### 车次列表
-
-<img src="./imgs/车次列表.png" alt="车次列表" style="zoom:50%;" />
-
-#### 车次信息
-
-<img src="./imgs/车次信息.png" alt="车次信息" style="zoom:50%;" />
-
-#### 确认订单
-
-<img src="./imgs/确认订单.png" alt="确认订单" style="zoom:50%;" />
-
-#### 订单详情
-
-<img src="./imgs/订单详情.png" alt="订单详情" style="zoom:50%;" />
-
-#### 支付金额
-
-<img src="./imgs/支付金额.png" alt="支付金额" style="zoom:50%;" />
-
-#### 未乘坐订单
-
-<img src="./imgs/未乘坐订单.png" alt="未乘坐订单" style="zoom:50%;" />
-
-#### 待支付订单
-
-<img src="./imgs/待支付订单.png" alt="待支付订单" style="zoom:50%;" />
-
-#### 已评价订单
-
-<img src="./imgs/已评价订单.png" alt="已评价订单" style="zoom:50%;" />
-
-#### 待评价订单
-
-<img src="./imgs/待评价订单.png" alt="待评价订单" style="zoom:50%;" />
-
-#### 申请退款
-
-<img src="./imgs/申请退款.png" alt="申请退款" style="zoom:50%;" />
+![前端用户服务页面](./imgs/前端用户服务页面.svg)
 
