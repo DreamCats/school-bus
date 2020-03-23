@@ -138,52 +138,53 @@
 
 #### 用户注册
 
-![用户注册](./imgs/用户注册.png)
+<img src="./imgs/用户注册.png" alt="用户注册" style="zoom:50%;" />
 
 #### 用户登录
 
-![用户登录](./imgs/用户登录.png)
+<img src="./imgs/用户登录.png" alt="用户登录" style="zoom:50%;" />
 
 #### 个人中心
 
-![个人中心](./imgs/个人中心.png)
+<img src="./imgs/个人中心.png" alt="个人中心" style="zoom:50%;" />
 
 #### 车次列表
 
-![车次列表](./imgs/车次列表.png)
+<img src="./imgs/车次列表.png" alt="车次列表" style="zoom:50%;" />
 
 #### 车次信息
 
-![车次信息](./imgs/车次信息.png)
+<img src="./imgs/车次信息.png" alt="车次信息" style="zoom:50%;" />
 
 #### 确认订单
 
-![确认订单](./imgs/确认订单.png)
+<img src="./imgs/确认订单.png" alt="确认订单" style="zoom:50%;" />
 
 #### 订单详情
 
-![订单详情](./imgs/订单详情.png)
+<img src="./imgs/订单详情.png" alt="订单详情" style="zoom:50%;" />
 
 #### 支付金额
 
-![支付金额](./imgs/支付金额.png)
+<img src="./imgs/支付金额.png" alt="支付金额" style="zoom:50%;" />
 
 #### 未乘坐订单
 
-![未乘坐订单](./imgs/未乘坐订单.png)
+<img src="./imgs/未乘坐订单.png" alt="未乘坐订单" style="zoom:50%;" />
 
 #### 待支付订单
 
-![待支付订单](./imgs/待支付订单.png)
+<img src="./imgs/待支付订单.png" alt="待支付订单" style="zoom:50%;" />
 
 #### 已评价订单
 
-![已评价订单](./imgs/已评价订单.png)
+<img src="./imgs/已评价订单.png" alt="已评价订单" style="zoom:50%;" />
 
 #### 待评价订单
 
-![待评价订单](./imgs/待评价订单.png)
+<img src="./imgs/待评价订单.png" alt="待评价订单" style="zoom:50%;" />
 
 #### 申请退款
 
-![申请退款](./imgs/申请退款.png)
+<img src="./imgs/申请退款.png" alt="申请退款" style="zoom:50%;" />
+
