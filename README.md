@@ -152,5 +152,31 @@
 
 #### 用户服务页面
 
-![前端用户服务页面](./imgs/前端用户服务页面.svg)
+**太模糊了-->[高清](https://www.processon.com/view/link/5e78b8e1e4b027d999c5a1b7)**
+
+![前端用户服务页面](./imgs/前端用户服务页面.png)
+
+#### 班车服务页面
+
+**太模糊了-->[高清](https://www.processon.com/view/link/5e78c51be4b011fcceaacdfa)**
+
+![前端班车服务](./imgs/前端班车服务.png)
+
+#### 下单服务页面
+
+**太模糊了-->[高清](https://www.processon.com/view/link/5e78c611e4b015182036f13c)**
+
+![下单服务页面](./imgs/下单服务页面.png)
+
+#### 支付服务页面
+
+**太模糊了-->[高清](https://www.processon.com/view/link/5e78c6f8e4b06b852ff1959d)**
+
+![前端支付页面](./imgs/前端支付页面.png)
+
+#### 我的订单页面
+
+**太模糊了-->[高清](https://www.processon.com/view/link/5e78c7aee4b011fcceaad3f1)**
+
+![前端我的订单](./imgs/前端我的订单.png)
 
