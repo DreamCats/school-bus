@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.stylefeng.guns.rest.common.persistence.dao.OrderMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.stylefeng.guns.rest.common.persistence.model.Order">
+        <id column="uuid" property="uuid" />
+        <result column="count_id" property="countId" />
+        <result column="bus_status" property="busStatus" />
+        <result column="seats_ids" property="seatsIds" />
+        <result column="count_price" property="countPrice" />
+        <result column="order_price" property="orderPrice" />
+        <result column="order_time" property="orderTime" />
+        <result column="order_user" property="orderUser" />
+        <result column="order_status" property="orderStatus" />
+        <result column="evaluate_status" property="evaluateStatus" />
+        <result column="comment" property="comment" />
+    </resultMap>
+
+    <select id="selectNoTakeOrders"  resultType="com.stylefeng.guns.rest.order.dto.NoTakeDto">
+        SELECT
+            so.uuid ,
+            so.bus_status ,
+            so.seats_ids ,
+            so.order_user ,
+            so.order_status ,
+            so.order_time ,
+            sc.bus_id ,
+            CONCAT(sc.begin_date, ' ', sc.begin_time) begin_time
+        FROM
+            sb_order so
+        LEFT JOIN sb_count sc ON so.count_id = sc.uuid
+        ${ew.customSqlSegment}
+    </select>
+
+    <select id="selectNoPayOrders"  resultType="com.stylefeng.guns.rest.order.dto.NoPayDto">
+        SELECT
+            so.uuid ,
+            so.bus_status ,
+            so.seats_ids ,
+            so.order_user ,
+            so.order_status ,
+            so.order_time ,
+            sc.bus_id ,
+            CONCAT(sc.begin_date, ' ', sc.begin_time) begin_time
+        FROM
+            sb_order so
+        LEFT JOIN sb_count sc ON so.count_id = sc.uuid
+        ${ew.customSqlSegment}
+    </select>
+
+    <select id="selectEvaluateOrders"  resultType="com.stylefeng.guns.rest.order.dto.EvaluateDto">
+        SELECT
+            so.uuid ,
+            so.bus_status ,
+            so.seats_ids ,
+            so.order_user ,
+            so.order_time ,
+            sc.bus_id ,
+            so.evaluate_status,
+            so.comment,
+            CONCAT(sc.begin_date, ' ', sc.begin_time) begin_time
+        FROM
+            sb_order so
+        LEFT JOIN sb_count sc ON so.count_id = sc.uuid
+        ${ew.customSqlSegment}
+    </select>
+
+    <select id="selectOrderById" resultType="com.stylefeng.guns.rest.order.dto.OrderDto">
+        SELECT
+            so.uuid ,
+            so.count_id ,
+            so.user_id ,
+            so.order_user ,
+            so.bus_status ,
+            so.order_status ,
+            so.count_price ,
+            so.order_price ,
+            so.seats_ids ,
+            so.order_time ,
+            sc.begin_date ,
+            sc.begin_time ,
+            sc.bus_id
+        FROM
+            sb_order so
+        LEFT JOIN sb_count sc ON so.count_id = sc.uuid
+        ${ew.customSqlSegment}
+    </select>
+</mapper>
