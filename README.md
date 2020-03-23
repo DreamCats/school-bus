@@ -53,6 +53,14 @@
 
 ## 环境搭建
 
+### 后端环境端口
+
+![端口](./imgs/搭建后端环境.png)
+
+### 环境启动
+
+![环境启动](./imgs/后端环境启动.png)
+
 ### guns
 
 **注意：在guns基础进行快速开发，使用guns的版本是：[4.2](https://gitee.com/stylefeng/guns/tree/v4.2/)**
