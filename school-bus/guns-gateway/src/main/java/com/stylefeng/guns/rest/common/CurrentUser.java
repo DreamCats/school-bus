@@ -24,6 +24,7 @@ public class CurrentUser {
     // 键为userId， 值为token key满了怎么办，有什么方案可以清除到呢？lru
     // google guava cache 内部是类似于concurrentHashMap，并且还有一个缓冲队列，lru的。
     // 不过， 将来要是分布式的话， 本地缓冲就凉凉了...
+    // 那还是用redis的hash
     private static final ConcurrentHashMap<String, String> concurrentHashMap= new ConcurrentHashMap<>();
 
     public static void saveUserIdAndToken(String userId, String token) {

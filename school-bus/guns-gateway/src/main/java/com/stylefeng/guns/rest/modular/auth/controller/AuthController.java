@@ -56,17 +56,22 @@ public class AuthController {
         UserLoginResponse res = userAPI.login(req);
         String userId = "" + res.getUserId();
         if (res.getUserId() != 0) {
-            String tokenByUserId = CurrentUser.getTokenByUserId(userId);
-            if (null != tokenByUserId) {
-                // 删掉该账户在其他设备中登录的token
-                redisUtils.del(tokenByUserId);
+//            String tokenByUserId = CurrentUser.getTokenByUserId(userId);
+            // 从redis看一下userId在不在
+            if (redisUtils.hasKey(userId)) {
+                // 直接删
+                redisUtils.del(userId);
             }
+//            if (null != tokenByUserId) {
+//                // 删掉该账户在其他设备中登录的token
+//                redisUtils.del(tokenByUserId);
+//            }
             res.setRandomKey(jwtTokenUtil.getRandomKey());
             String token = jwtTokenUtil.generateToken(userId, res.getRandomKey());
             res.setToken(token);
             // 写进map
-            CurrentUser.saveUserIdAndToken(userId, token);
-            redisUtils.set(token, userId, RedisConstants.TOKEN_EXPIRE.getTime());
+//            CurrentUser.saveUserIdAndToken(userId, token);
+            redisUtils.set(userId, token, RedisConstants.TOKEN_EXPIRE.getTime());
 
             return new ResponseUtil<>().setData(res);
         } else {

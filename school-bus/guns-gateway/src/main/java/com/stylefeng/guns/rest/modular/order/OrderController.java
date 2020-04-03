@@ -18,6 +18,7 @@ import com.stylefeng.guns.rest.common.ResponseUtil;
 import com.stylefeng.guns.core.constants.RedisConstants;
 import com.stylefeng.guns.core.constants.SbCode;
 import com.stylefeng.guns.rest.exception.CommonResponse;
+import com.stylefeng.guns.rest.modular.auth.util.JwtTokenUtil;
 import com.stylefeng.guns.rest.modular.form.AddOrderForm;
 import com.stylefeng.guns.rest.modular.form.OrderPageInfo;
 import com.stylefeng.guns.rest.order.IOrderService;
@@ -47,6 +48,8 @@ public class OrderController {
     private IBusService busService;
     @Autowired
     private RedisUtils redisUtils;
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
 
     /**
      * 获取未乘坐订单接口
@@ -58,7 +61,7 @@ public class OrderController {
     @GetMapping("getNoTakeOrders")
     public ResponseData getNoTakeOrdersById(OrderPageInfo pageInfo, HttpServletRequest req) {
         String token = CurrentUser.getToken(req);
-        String userId = Convert.toStr(redisUtils.get(token));
+        String userId = jwtTokenUtil.getUsernameFromToken(token);
         Object obj = redisUtils.get(RedisConstants.NO_TAKE_OREDERS_EXPIRE.getKey()+userId);
         NoTakeBusRequest request = new NoTakeBusRequest();
         request.setUserId(Integer.parseInt(userId));
@@ -97,7 +100,7 @@ public class OrderController {
     @GetMapping("getNoPayOrders")
     public ResponseData getNoPayOrdersById(OrderPageInfo pageInfo, HttpServletRequest req) {
         String token = CurrentUser.getToken(req);
-        String userId = Convert.toStr(redisUtils.get(token));
+        String userId = jwtTokenUtil.getUsernameFromToken(token);
         Object obj = redisUtils.get(RedisConstants.NO_PAY_ORDERS_EXPIRE.getKey()+userId);
         if (obj != null) {
             log.warn("getNoPayOrdersById->redis:" + obj.toString());
@@ -127,7 +130,7 @@ public class OrderController {
     @GetMapping("getEvaluateOrders")
     public ResponseData getEvaluateOrdersById(OrderPageInfo pageInfo, String evaluateStauts, HttpServletRequest req) {
         String token = CurrentUser.getToken(req);
-        String userId = Convert.toStr(redisUtils.get(token));
+        String userId = jwtTokenUtil.getUsernameFromToken(token);
         Object obj = redisUtils.get(RedisConstants.EVALUATE_ORDERS_EXPIRE.getKey()+userId);
         if (obj != null) {
             log.warn("getEvaluateOrdersById->redis:" + obj.toString());
@@ -155,7 +158,7 @@ public class OrderController {
     public ResponseData addOrder(AddOrderForm form, HttpServletRequest req) {
         // id 从本队缓存中取
         String token = CurrentUser.getToken(req);
-        String userId = Convert.toStr(redisUtils.get(token));
+        String userId = jwtTokenUtil.getUsernameFromToken(token);
         AddOrderRequest request = new AddOrderRequest();
         request.setCountId(form.getCountId());
         request.setUserId(Integer.parseInt(userId));
@@ -239,7 +242,7 @@ public class OrderController {
     @PostMapping("updateOrderStatus")
     public ResponseData updateOrderStatus(String orderId, String orderStatus, HttpServletRequest req) {
         String token = CurrentUser.getToken(req);
-        String userId = Convert.toStr(redisUtils.get(token));
+        String userId = jwtTokenUtil.getUsernameFromToken(token);
         Object obj = redisUtils.get(RedisConstants.SELECT_ORDER_EXPIRE.getKey()+orderId);
         Object obj1 = redisUtils.get(RedisConstants.NO_TAKE_OREDERS_EXPIRE.getKey()+userId);
         Object obj2 = redisUtils.get(RedisConstants.NO_PAY_ORDERS_EXPIRE.getKey()+userId);

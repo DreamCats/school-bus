@@ -13,6 +13,7 @@ import com.stylefeng.guns.rest.common.*;
 import com.stylefeng.guns.core.constants.RedisConstants;
 import com.stylefeng.guns.core.constants.SbCode;
 import com.stylefeng.guns.rest.exception.CommonResponse;
+import com.stylefeng.guns.rest.modular.auth.util.JwtTokenUtil;
 import com.stylefeng.guns.rest.modular.form.UserRegstierForm;
 import com.stylefeng.guns.rest.modular.form.UserUpdateForm;
 import com.stylefeng.guns.rest.user.IUserService;
@@ -39,6 +40,9 @@ public class UserController {
 
     @Autowired
     private RedisUtils redisUtils;
+
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
 
     /**
      * 检查用户名接口
@@ -95,7 +99,7 @@ public class UserController {
     public ResponseData getUserById(HttpServletRequest req) {
         // 从本地缓存中取
         String token = CurrentUser.getToken(req);
-        String userId = Convert.toStr(redisUtils.get(token));
+        String userId = jwtTokenUtil.getUsernameFromToken(token);
         Object obj = redisUtils.get(RedisConstants.USER_INFO_EXPIRE.getKey()+userId);
         if (obj != null) {
             log.warn("getUserById->redis:" + obj.toString());
@@ -120,7 +124,7 @@ public class UserController {
     public ResponseData updateUserInfo(UserUpdateForm form, HttpServletRequest req) {
         // id 从本队缓存中取
         String token = CurrentUser.getToken(req);
-        String userId = Convert.toStr(redisUtils.get(token));
+        String userId = jwtTokenUtil.getUsernameFromToken(token);
         Object obj = redisUtils.get(RedisConstants.USER_INFO_EXPIRE.getKey()+userId);
         if (obj != null) {
             redisUtils.del(RedisConstants.USER_INFO_EXPIRE.getKey()+userId);
@@ -158,9 +162,9 @@ public class UserController {
                 1、前端删除掉JWT
          */
         String token = CurrentUser.getToken(req);
-        String userId = Convert.toStr(redisUtils.get(token));
-        CurrentUser.deleteUserId(userId);
-        redisUtils.del(token);
+        String userId = jwtTokenUtil.getUsernameFromToken(token);
+//        CurrentUser.deleteUserId(userId);
+        redisUtils.del(userId);
         CommonResponse response = new CommonResponse();
         response.setCode(SbCode.SUCCESS.getCode());
         response.setMsg(SbCode.SUCCESS.getMessage());

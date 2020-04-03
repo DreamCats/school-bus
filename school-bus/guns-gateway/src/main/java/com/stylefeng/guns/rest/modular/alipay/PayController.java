@@ -18,6 +18,7 @@ import com.stylefeng.guns.rest.common.RedisUtils;
 import com.stylefeng.guns.rest.common.ResponseData;
 import com.stylefeng.guns.rest.common.ResponseUtil;
 import com.stylefeng.guns.core.constants.RedisConstants;
+import com.stylefeng.guns.rest.modular.auth.util.JwtTokenUtil;
 import com.stylefeng.guns.rest.modular.form.PayBackForm;
 import com.stylefeng.guns.rest.modular.form.PayForm;
 import io.swagger.annotations.Api;
@@ -42,6 +43,9 @@ public class PayController {
     @Reference
     private IPayService payService;
 
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
+
     /**
      * 支付接口
      * @param payForm：去相关类查看参数
@@ -52,7 +56,7 @@ public class PayController {
     @PostMapping("")
     public ResponseData pay(PayForm payForm , HttpServletRequest req) {
         String token = CurrentUser.getToken(req);
-        String userId = Convert.toStr(redisUtils.get(token));
+        String userId = jwtTokenUtil.getUsernameFromToken(token);
         PayRequset requset = new PayRequset();
         requset.setUserId(Integer.parseInt(userId));
         requset.setPayPassword(payForm.getPayPassword());
@@ -68,7 +72,7 @@ public class PayController {
     @PostMapping("back")
     public ResponseData payBack(PayBackForm payBackFrom, HttpServletRequest req) {
         String token = CurrentUser.getToken(req);
-        String userId = Convert.toStr(redisUtils.get(token));
+        String userId = jwtTokenUtil.getUsernameFromToken(token);
         PayBackRequest request = new PayBackRequest();
         request.setUserId(Integer.parseInt(userId));
         request.setOrderId(payBackFrom.getOrderId());
