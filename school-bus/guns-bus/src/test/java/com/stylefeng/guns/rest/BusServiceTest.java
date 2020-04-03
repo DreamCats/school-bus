@@ -12,6 +12,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.stylefeng.guns.core.util.DateUtil;
 import com.stylefeng.guns.rest.bus.IBusService;
 import com.stylefeng.guns.rest.bus.dto.*;
+import com.stylefeng.guns.rest.common.RedisUtils;
 import com.stylefeng.guns.rest.common.persistence.dao.CountMapper;
 import com.stylefeng.guns.rest.common.persistence.model.Count;
 import org.junit.Test;
@@ -33,6 +34,8 @@ public class BusServiceTest {
     private IBusService busService;
     @Autowired
     private CountMapper countMapper;
+    @Autowired
+    private RedisUtils redisUtils;
 
     @Test
     public void getBus() {
@@ -46,9 +49,13 @@ public class BusServiceTest {
     @Test
     public void getCount() {
         PageCountRequest request = new PageCountRequest();
-        request.setCurrentPage(1);
-        request.setPageSize(4);
+        request.setCurrentPage(2);
+        request.setPageSize(1);
+        request.setBusStatus("0");
         PageCountResponse response = busService.getCount(request);
+        List<CountSimpleDto> countSimpleDtos = response.getCountSimpleDtos();
+//        redisUtils.lSet("list", countSimpleDtos, 500);
+//        redisUtils.lRemove("list", 3, countSimpleDtos);
         System.out.println(response);
     }
 
@@ -120,5 +127,26 @@ public class BusServiceTest {
         }
         System.out.println(cacheSimpleDtos);
 
+    }
+
+    @Test
+    public void countRedisListTest() {
+        ArrayList<String> list = new ArrayList<>();
+        list.add("3");
+        list.add("4");
+//        redisUtils.lSet("list", list);
+        list.add("5");
+//        redisUtils.lSet("list", list);
+//        redisUtils.lSet("list", "6");
+//        redisUtils.lSet("list", "7");
+//        redisUtils.lSet("list", "8");
+//        redisUtils.lSet("list", "9");
+//        redisUtils.lSet("list", "10");
+        List<Object> list1 = redisUtils.lGet("list", 0, 1);
+        // 不设置时间， 不管是谁， 只要触发请求，就请求所有的
+        // 两种方案来实现这个吧...
+        System.out.println(list1);
+        System.out.println(redisUtils.lGetIndex("list", 5));
+        System.out.println(redisUtils.hasKey("list2"));
     }
 }

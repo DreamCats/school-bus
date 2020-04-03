@@ -8,10 +8,12 @@
 package com.stylefeng.guns.rest;
 
 import com.alibaba.dubbo.config.annotation.Reference;
+import com.stylefeng.guns.rest.modular.user.RedisUtils;
 import com.stylefeng.guns.rest.user.IUserService;
 import com.stylefeng.guns.rest.user.dto.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 

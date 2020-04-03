@@ -214,11 +214,6 @@ public class BusServiceImpl implements IBusService {
      */
 //    @Scheduled(cron = "0 0/30 7-21 * * ?") // 每天上午7点到晚上21点，每隔30分钟执行一次
     public void schedulChangeBusStatus() {
-        // 删缓存
-        Object obj = redisUtils.get(RedisConstants.COUNTS_EXPIRE.getKey());
-        if (obj != null) {
-            redisUtils.del(RedisConstants.COUNTS_EXPIRE.getKey());
-        }
         // 获取
         String currTime = DateUtil.getHours();
         log.warn("schedulChangeBusStatus->目前时间：" + currTime);
@@ -258,6 +253,15 @@ public class BusServiceImpl implements IBusService {
             log.warn("schedulChangeBusStatus->修改的：" + count);
             // 写入数据库
             countMapper.updateById(count);
+        }
+        // 删缓存
+        String key1 = RedisConstants.COUNTS_EXPIRE + "0";
+        String key2 = RedisConstants.COUNTS_EXPIRE + "1";
+        if (redisUtils.hasKey(key1)) {
+            redisUtils.del(key1);
+        }
+        if (redisUtils.hasKey(key2)) {
+            redisUtils.del(key2);
         }
     }
 

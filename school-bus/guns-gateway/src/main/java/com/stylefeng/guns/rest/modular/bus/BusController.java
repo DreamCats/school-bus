@@ -39,18 +39,24 @@ public class BusController {
     @ApiOperation(value = "获取车次列表", notes = "获取车次列表", response = PageCountResponse.class)
     @GetMapping("getCount")
     public ResponseData getCount(CountPageInfo pageInfo) {
-        // 本来想用本地缓存的，试试redis吧
-        Object obj = redisUtils.get(RedisConstants.COUNTS_EXPIRE.getKey());
-        if (obj != null) {
-            log.warn("getCount->redis:" + obj.toString());
-            return new ResponseUtil().setData(obj);
+        // 本来想用本地缓存的，试试redis吧  第一种方案
+        String busStatus = pageInfo.getBusStatus();
+        Integer currentPage = pageInfo.getCurrentPage();
+        String key = RedisConstants.COUNTS_EXPIRE.getKey() + busStatus;
+        if (redisUtils.hasKey(key)) {
+            Object obj = redisUtils.lGetIndex(key, currentPage - 1);
+            if (null != obj) {
+                log.warn("getCount->redis:" + obj.toString());
+                return new ResponseUtil().setData(obj);
+            }
         }
         PageCountRequest request = new PageCountRequest();
         request.setCurrentPage(pageInfo.getCurrentPage());
         request.setPageSize(pageInfo.getPageSize());
         request.setBusStatus(pageInfo.getBusStatus());
         PageCountResponse response = busService.getCount(request);
-        redisUtils.set(RedisConstants.COUNTS_EXPIRE.getKey(), response, RedisConstants.COUNTS_EXPIRE.getTime());
+        // 写缓存
+        redisUtils.lSet(key, response, RedisConstants.COUNTS_EXPIRE.getTime());
         log.warn("getCount:" + response.toString());
         return new ResponseUtil().setData(response);
     }
