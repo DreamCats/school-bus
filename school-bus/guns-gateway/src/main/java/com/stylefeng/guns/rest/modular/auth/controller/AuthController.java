@@ -1,10 +1,7 @@
 package com.stylefeng.guns.rest.modular.auth.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
-import com.stylefeng.guns.rest.common.CommonBindingResult;
-import com.stylefeng.guns.rest.common.RedisUtils;
-import com.stylefeng.guns.rest.common.ResponseData;
-import com.stylefeng.guns.rest.common.ResponseUtil;
+import com.stylefeng.guns.rest.common.*;
 import com.stylefeng.guns.core.constants.RedisConstants;
 import com.stylefeng.guns.rest.modular.auth.controller.dto.AuthRequest;
 import com.stylefeng.guns.rest.modular.auth.util.JwtTokenUtil;
@@ -21,6 +18,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Currency;
 
 
 /**
@@ -56,10 +54,20 @@ public class AuthController {
         req.setUsername(authRequest.getUserName());
         req.setPassword(authRequest.getPassword());
         UserLoginResponse res = userAPI.login(req);
+        String userId = "" + res.getUserId();
         if (res.getUserId() != 0) {
+            String tokenByUserId = CurrentUser.getTokenByUserId(userId);
+            if (null != tokenByUserId) {
+                // 删掉该账户在其他设备中登录的token
+                redisUtils.del(tokenByUserId);
+            }
             res.setRandomKey(jwtTokenUtil.getRandomKey());
-            res.setToken(jwtTokenUtil.generateToken(""+res.getUserId(), res.getRandomKey()));
-            redisUtils.set(res.getToken(), res.getUserId(), RedisConstants.TOKEN_EXPIRE.getTime());
+            String token = jwtTokenUtil.generateToken(userId, res.getRandomKey());
+            res.setToken(token);
+            // 写进map
+            CurrentUser.saveUserIdAndToken(userId, token);
+            redisUtils.set(token, userId, RedisConstants.TOKEN_EXPIRE.getTime());
+
             return new ResponseUtil<>().setData(res);
         } else {
             return new ResponseUtil<>().setErrorMsg("账号密码错误");

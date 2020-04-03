@@ -158,6 +158,8 @@ public class UserController {
                 1、前端删除掉JWT
          */
         String token = CurrentUser.getToken(req);
+        String userId = Convert.toStr(redisUtils.get(token));
+        CurrentUser.deleteUserId(userId);
         redisUtils.del(token);
         CommonResponse response = new CommonResponse();
         response.setCode(SbCode.SUCCESS.getCode());
