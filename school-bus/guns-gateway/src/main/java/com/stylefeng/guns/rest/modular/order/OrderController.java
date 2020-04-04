@@ -243,10 +243,9 @@ public class OrderController {
      *
      * @param form
      * @param req
-     * @param exception
      * @return
      */
-    public ResponseData addOrderFallbackHandler(AddOrderForm form, HttpServletRequest req, BlockException exception) {
+    public ResponseData addOrderFallbackHandler(AddOrderForm form, HttpServletRequest req) {
         CommonResponse response = new CommonResponse();
         response.setCode(SbCode.FLOW_ERROR.getCode());
         response.setMsg(SbCode.FLOW_ERROR.getMessage());

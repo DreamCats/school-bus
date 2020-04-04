@@ -42,7 +42,7 @@ public class BusController {
 
     @ApiOperation(value = "获取车次列表", notes = "获取车次列表", response = PageCountResponse.class)
     @GetMapping("getCount")
-    @SentinelResource(value = "getCount", blockHandler = "countBlockHandler", fallback = "countFallbackHandler")
+    @SentinelResource(value = "getCount", blockHandler = "countBlockHandler",fallback = "countFallbackHandler")
     public ResponseData getCount(CountPageInfo pageInfo) {
         // 本来想用本地缓存的，试试redis吧  第一种方案
         try {
@@ -106,12 +106,11 @@ public class BusController {
     }
 
     /**
-     * 降级异常
+     * 降级异常， 若同时设置了限流和降级， 则降级异常会进入限流自定义异常去...
      * @param pageInfo
-     * @param exception
      * @return
      */
-    public ResponseData countFallbackHandler(CountPageInfo pageInfo, BlockException exception) {
+    public ResponseData countFallbackHandler(CountPageInfo pageInfo) {
         CommonResponse response = new CommonResponse();
         response.setCode(SbCode.DEGRADE_ERROR.getCode());
         response.setMsg(SbCode.DEGRADE_ERROR.getMessage());
@@ -162,10 +161,9 @@ public class BusController {
     /**
      *
      * @param countId
-     * @param exception
      * @return
      */
-    public ResponseData countDetailFallbackHandler(String countId, BlockException exception) {
+    public ResponseData countDetailFallbackHandler(String countId) {
         CommonResponse response = new CommonResponse();
         response.setCode(SbCode.DEGRADE_ERROR.getCode());
         response.setMsg(SbCode.DEGRADE_ERROR.getMessage());
