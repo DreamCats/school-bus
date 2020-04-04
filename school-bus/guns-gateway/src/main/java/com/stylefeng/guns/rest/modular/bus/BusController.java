@@ -46,6 +46,8 @@ public class BusController {
         Integer currentPage = pageInfo.getCurrentPage();
         String key = RedisConstants.COUNTS_EXPIRE.getKey() + busStatus;
         try {
+            // 在这加一个锁 , 效率极其的慢
+
             if (redisUtils.hasKey(key)) {
                 Object obj = redisUtils.lGetIndex(key, currentPage - 1);
                 if (null != obj) {
@@ -53,13 +55,22 @@ public class BusController {
                     return new ResponseUtil().setData(obj);
                 }
             }
+
             PageCountRequest request = new PageCountRequest();
             request.setCurrentPage(pageInfo.getCurrentPage());
             request.setPageSize(pageInfo.getPageSize());
             request.setBusStatus(pageInfo.getBusStatus());
             PageCountResponse response = busService.getCount(request);
             // 写缓存
-            redisUtils.lSet(key, response, RedisConstants.COUNTS_EXPIRE.getTime());
+            // 这里高并发模拟有问题， 虽然上面判断了， 但是并发情况，依然来这里了，
+            if (!redisUtils.hasKey(key)) {
+                synchronized (this) {
+                    Object obj = redisUtils.lGetIndex(key, currentPage - 1);
+                    if (null == obj) {
+                        redisUtils.lSet(key, response, RedisConstants.COUNTS_EXPIRE.getTime());
+                    }
+                }
+            }
             log.warn("getCount\n");
             return new ResponseUtil().setData(response);
         } catch (Exception e) {
