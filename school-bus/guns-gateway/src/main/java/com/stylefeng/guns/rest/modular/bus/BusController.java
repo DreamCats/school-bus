@@ -8,6 +8,7 @@
 package com.stylefeng.guns.rest.modular.bus;
 
 import com.alibaba.csp.sentinel.annotation.SentinelResource;
+import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.stylefeng.guns.core.constants.SbCode;
 import com.stylefeng.guns.rest.bus.IBusService;
@@ -41,7 +42,7 @@ public class BusController {
 
     @ApiOperation(value = "获取车次列表", notes = "获取车次列表", response = PageCountResponse.class)
     @GetMapping("getCount")
-    @SentinelResource("getCount")
+    @SentinelResource(value = "getCount", blockHandler = "countBlockHandler", fallback = "countFallbackHandler")
     public ResponseData getCount(CountPageInfo pageInfo) {
         // 本来想用本地缓存的，试试redis吧  第一种方案
         try {
@@ -89,13 +90,38 @@ public class BusController {
             response.setMsg(SbCode.SYSTEM_ERROR.getMessage());
             return new ResponseUtil().setData(response);
         }
+    }
 
+    /**
+     * 限流异常
+     * @param pageInfo
+     * @param exception
+     * @return
+     */
+    public ResponseData countBlockHandler(CountPageInfo pageInfo, BlockException exception) {
+        CommonResponse response = new CommonResponse();
+        response.setCode(SbCode.FLOW_ERROR.getCode());
+        response.setMsg(SbCode.FLOW_ERROR.getMessage());
+        return new ResponseUtil().setData(response);
+    }
+
+    /**
+     * 降级异常
+     * @param pageInfo
+     * @param exception
+     * @return
+     */
+    public ResponseData countFallbackHandler(CountPageInfo pageInfo, BlockException exception) {
+        CommonResponse response = new CommonResponse();
+        response.setCode(SbCode.DEGRADE_ERROR.getCode());
+        response.setMsg(SbCode.DEGRADE_ERROR.getMessage());
+        return new ResponseUtil().setData(response);
     }
 
     @ApiOperation(value = "获取车次详情", notes = "获取车次详情", response = CountDetailResponse.class)
     @ApiImplicitParam(name = "countId", value = "场次id,CountSimpleDto中的uuid",required = true, dataType = "String", paramType = "query")
     @GetMapping("getCountDetail")
-    @SentinelResource("getCountDetail")
+    @SentinelResource(value = "getCountDetail", blockHandler = "countDetailBlockHandler", fallback = "countDetailFallbackHandler")
     public ResponseData getCountDetailById(String countId) {
         // id 从本队缓存中取
         try {
@@ -118,6 +144,31 @@ public class BusController {
             response.setMsg(SbCode.SYSTEM_ERROR.getMessage());
             return new ResponseUtil().setData(response);
         }
+    }
 
+    /**
+     *
+     * @param countId
+     * @param exception
+     * @return
+     */
+    public ResponseData countDetailBlockHandler(String countId, BlockException exception) {
+        CommonResponse response = new CommonResponse();
+        response.setCode(SbCode.FLOW_ERROR.getCode());
+        response.setMsg(SbCode.FLOW_ERROR.getMessage());
+        return new ResponseUtil().setData(response);
+    }
+
+    /**
+     *
+     * @param countId
+     * @param exception
+     * @return
+     */
+    public ResponseData countDetailFallbackHandler(String countId, BlockException exception) {
+        CommonResponse response = new CommonResponse();
+        response.setCode(SbCode.DEGRADE_ERROR.getCode());
+        response.setMsg(SbCode.DEGRADE_ERROR.getMessage());
+        return new ResponseUtil().setData(response);
     }
 }

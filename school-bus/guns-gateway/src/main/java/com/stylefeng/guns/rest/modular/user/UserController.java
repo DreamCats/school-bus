@@ -9,6 +9,7 @@ package com.stylefeng.guns.rest.modular.user;
 
 import cn.hutool.core.convert.Convert;
 import com.alibaba.csp.sentinel.annotation.SentinelResource;
+import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.stylefeng.guns.rest.common.*;
 import com.stylefeng.guns.core.constants.RedisConstants;
@@ -53,7 +54,7 @@ public class UserController {
     @ApiOperation(value = "检查用户名接口", notes = "给定用户名，查询是否存在", response = UserCheckResponse.class)
     @ApiImplicitParam(name = "username", value = "用户名", required = true, dataType = "String", paramType = "query")
     @GetMapping("check")
-    @SentinelResource("check")
+    @SentinelResource(value = "check", blockHandler = "checkBlockHandler")
     public ResponseData checkUsername(String username) {
         try {
             if (username.equals("")) {
@@ -74,6 +75,31 @@ public class UserController {
 
     }
 
+    /**
+     * 限流异常
+     * @param username
+     * @param exception
+     * @return
+     */
+    public ResponseData checkBlockHandler(String username, BlockException exception) {
+        CommonResponse response = new CommonResponse();
+        response.setCode(SbCode.FLOW_ERROR.getCode());
+        response.setMsg(SbCode.FLOW_ERROR.getMessage());
+        return new ResponseUtil().setData(response);
+    }
+
+    /**
+     * 降级异常
+     * @param username
+     * @param exception
+     * @return
+     */
+    public ResponseData checkFallbackHandler(String username, BlockException exception) {
+        CommonResponse response = new CommonResponse();
+        response.setCode(SbCode.DEGRADE_ERROR.getCode());
+        response.setMsg(SbCode.DEGRADE_ERROR.getMessage());
+        return new ResponseUtil().setData(response);
+    }
     /**
      * 注册接口
      * @param form

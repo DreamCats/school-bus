@@ -9,6 +9,7 @@ package com.stylefeng.guns.rest.modular.order;
 
 import cn.hutool.core.convert.Convert;
 import com.alibaba.csp.sentinel.annotation.SentinelResource;
+import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.stylefeng.guns.core.util.DateUtil;
 import com.stylefeng.guns.rest.bus.IBusService;
@@ -189,7 +190,7 @@ public class OrderController {
      */
     @ApiOperation(value = "添加订单接口", notes = "添加订单接口信息", response = AddOrderResponse.class)
     @PostMapping("addOrder")
-    @SentinelResource("addOrder")
+    @SentinelResource(value = "addOrder", blockHandler = "addOrderBlockHandler", fallback = "addOrderFallbackHandler")
     public ResponseData addOrder(AddOrderForm form, HttpServletRequest req) {
         try {
             // id 从本队缓存中取
@@ -222,7 +223,34 @@ public class OrderController {
             response.setMsg(SbCode.SYSTEM_ERROR.getMessage());
             return new ResponseUtil().setData(response);
         }
+    }
 
+    /**
+     *
+     * @param form
+     * @param req
+     * @param exception
+     * @return
+     */
+    public ResponseData addOrderBlockHandler(AddOrderForm form, HttpServletRequest req, BlockException exception) {
+        CommonResponse response = new CommonResponse();
+        response.setCode(SbCode.FLOW_ERROR.getCode());
+        response.setMsg(SbCode.FLOW_ERROR.getMessage());
+        return new ResponseUtil().setData(response);
+    }
+
+    /**
+     *
+     * @param form
+     * @param req
+     * @param exception
+     * @return
+     */
+    public ResponseData addOrderFallbackHandler(AddOrderForm form, HttpServletRequest req, BlockException exception) {
+        CommonResponse response = new CommonResponse();
+        response.setCode(SbCode.FLOW_ERROR.getCode());
+        response.setMsg(SbCode.FLOW_ERROR.getMessage());
+        return new ResponseUtil().setData(response);
     }
 
     /**
