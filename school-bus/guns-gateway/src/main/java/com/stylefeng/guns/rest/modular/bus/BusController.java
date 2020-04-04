@@ -44,16 +44,18 @@ public class BusController {
         // 本来想用本地缓存的，试试redis吧  第一种方案
         String busStatus = pageInfo.getBusStatus();
         Integer currentPage = pageInfo.getCurrentPage();
-        String key = RedisConstants.COUNTS_EXPIRE.getKey() + busStatus;
+        String key = RedisConstants.COUNTS_EXPIRE.getKey() + busStatus + currentPage;
         try {
             // 在这加一个锁 , 效率极其的慢
-
             if (redisUtils.hasKey(key)) {
-                Object obj = redisUtils.lGetIndex(key, currentPage - 1);
-                if (null != obj) {
-                    log.warn("getCount->redis\n");
-                    return new ResponseUtil().setData(obj);
-                }
+//                Object obj = redisUtils.lGetIndex(key, currentPage - 1);
+//                if (null != obj) {
+//                    log.warn("getCount->redis\n");
+//                    return new ResponseUtil().setData(obj);
+//                }
+                Object obj = redisUtils.get(key);
+                log.warn("getCount->redis\n");
+                return new ResponseUtil().setData(obj);
             }
 
             PageCountRequest request = new PageCountRequest();
@@ -63,13 +65,18 @@ public class BusController {
             PageCountResponse response = busService.getCount(request);
             // 写缓存
             // 这里高并发模拟有问题， 虽然上面判断了， 但是并发情况，依然来这里了，
+            // 假如我不用 redis的list呢？ 本身一天的场次列表也不多
+//            if (!redisUtils.hasKey(key)) {
+//                synchronized (this) {
+//                    Object obj = redisUtils.lGetIndex(key, currentPage - 1);
+//                    if (null == obj) {
+//                        redisUtils.lSet(key, response, RedisConstants.COUNTS_EXPIRE.getTime());
+//                    }
+//                }
+//            }
+            // 你随便写，不过在此判断一下
             if (!redisUtils.hasKey(key)) {
-                synchronized (this) {
-                    Object obj = redisUtils.lGetIndex(key, currentPage - 1);
-                    if (null == obj) {
-                        redisUtils.lSet(key, response, RedisConstants.COUNTS_EXPIRE.getTime());
-                    }
-                }
+                redisUtils.set(key, response, RedisConstants.COUNTS_EXPIRE.getTime());
             }
             log.warn("getCount\n");
             return new ResponseUtil().setData(response);
