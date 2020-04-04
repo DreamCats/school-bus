@@ -49,12 +49,12 @@ public class UserServiceImpl implements IUserService {
             User user = userMapper.selectOne(queryWrapper);
             if (user != null) {
                 res.setCheckUsername(0);
-                res.setCode(SbCode.SUCCESS.getCode());
-                res.setMsg(SbCode.SUCCESS.getMessage());
-            } else {
-                res.setCheckUsername(1);
                 res.setCode(SbCode.USERNAME_ALREADY_EXISTS.getCode());
                 res.setMsg(SbCode.USERNAME_ALREADY_EXISTS.getMessage());
+            } else {
+                res.setCheckUsername(1);
+                res.setCode(SbCode.USERNAME_ALREADY_NO_EXISTS.getCode());
+                res.setMsg(SbCode.USERNAME_ALREADY_NO_EXISTS.getMessage());
             }
         } catch (Exception e) {
             e.printStackTrace();
