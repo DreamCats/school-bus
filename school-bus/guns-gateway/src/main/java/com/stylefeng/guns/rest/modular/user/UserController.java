@@ -8,6 +8,7 @@
 package com.stylefeng.guns.rest.modular.user;
 
 import cn.hutool.core.convert.Convert;
+import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.stylefeng.guns.rest.common.*;
 import com.stylefeng.guns.core.constants.RedisConstants;
@@ -52,15 +53,25 @@ public class UserController {
     @ApiOperation(value = "检查用户名接口", notes = "给定用户名，查询是否存在", response = UserCheckResponse.class)
     @ApiImplicitParam(name = "username", value = "用户名", required = true, dataType = "String", paramType = "query")
     @GetMapping("check")
+    @SentinelResource("check")
     public ResponseData checkUsername(String username) {
-        if (username.equals("")) {
-            return new ResponseUtil<>().setErrorMsg("用户名不能为空");
+        try {
+            if (username.equals("")) {
+                return new ResponseUtil<>().setErrorMsg("用户名不能为空");
+            }
+            UserCheckRequest req = new UserCheckRequest();
+            req.setUsername(username);
+            UserCheckResponse res = userAPI.checkUsername(req);
+            log.warn("checkUsername", res.toString());
+            return new ResponseUtil().setData(res);
+        } catch (Exception e) {
+            log.error("checkUsername\n", e);
+            CommonResponse response = new CommonResponse();
+            response.setCode(SbCode.SYSTEM_ERROR.getCode());
+            response.setMsg(SbCode.SYSTEM_ERROR.getMessage());
+            return new ResponseUtil().setData(response);
         }
-        UserCheckRequest req = new UserCheckRequest();
-        req.setUsername(username);
-        UserCheckResponse res = userAPI.checkUsername(req);
-        log.info("checkUsername", res.toString());
-        return new ResponseUtil().setData(res);
+
     }
 
     /**
@@ -71,22 +82,32 @@ public class UserController {
      */
     @ApiOperation(value = "注册接口", notes = "用户注册相关信息", response = UserRegisterResponse.class)
     @PostMapping("register")
+    @SentinelResource("register")
     public ResponseData register(@Validated UserRegstierForm form, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
+        try {
+            if (bindingResult.hasErrors()) {
+                CommonResponse response = new CommonResponse();
+                response.setCode(SbCode.REQUISITE_PARAMETER_NOT_EXIST.getCode());
+                response.setCode(SbCode.REQUISITE_PARAMETER_NOT_EXIST.getMessage());
+                return new ResponseUtil<>().setData(response);
+            }
+            UserRegisterRequest request = new UserRegisterRequest();
+            request.setUsername(form.getUsername());
+            request.setPassword(form.getPassword());
+            request.setPhone(form.getPhone());
+            request.setEmail(form.getEmail());
+            // 不想写那么多了
+            UserRegisterResponse res = userAPI.regsiter(request);
+            log.warn("register\n");
+            return new ResponseUtil<>().setData(res);
+        } catch (Exception e) {
+            log.error("register\n", e);
             CommonResponse response = new CommonResponse();
-            response.setCode(SbCode.REQUISITE_PARAMETER_NOT_EXIST.getCode());
-            response.setCode(SbCode.REQUISITE_PARAMETER_NOT_EXIST.getMessage());
-            return new ResponseUtil<>().setData(response);
+            response.setCode(SbCode.SYSTEM_ERROR.getCode());
+            response.setMsg(SbCode.SYSTEM_ERROR.getMessage());
+            return new ResponseUtil().setData(response);
         }
-        UserRegisterRequest request = new UserRegisterRequest();
-        request.setUsername(form.getUsername());
-        request.setPassword(form.getPassword());
-        request.setPhone(form.getPhone());
-        request.setEmail(form.getEmail());
-        // 不想写那么多了
-        UserRegisterResponse res = userAPI.regsiter(request);
-        log.info("register", res.toString());
-        return new ResponseUtil<>().setData(res);
+
     }
 
     /**
@@ -96,21 +117,32 @@ public class UserController {
      */
     @ApiOperation(value = "获取用户信息接口", notes = "获取用户相关信息，前提请获取用户token放在headers中", response = UserResponse.class)
     @GetMapping("getUserInfo")
+    @SentinelResource("getUserInfo")
     public ResponseData getUserById(HttpServletRequest req) {
         // 从本地缓存中取
-        String token = CurrentUser.getToken(req);
-        String userId = jwtTokenUtil.getUsernameFromToken(token);
-        Object obj = redisUtils.get(RedisConstants.USER_INFO_EXPIRE.getKey()+userId);
-        if (obj != null) {
-            log.warn("getUserById->redis:" + obj.toString());
-            return new ResponseUtil<>().setData(obj);
+        try {
+            String token = CurrentUser.getToken(req);
+            String userId = jwtTokenUtil.getUsernameFromToken(token);
+            String key = RedisConstants.USER_INFO_EXPIRE.getKey()+userId;
+            if (redisUtils.hasKey(key)) {
+                Object obj = redisUtils.get(key);
+                log.warn("getUserById->redis\n");
+                return new ResponseUtil<>().setData(obj);
+            }
+            UserRequest request = new UserRequest();
+            request.setId(Integer.parseInt(userId));
+            UserResponse response = userAPI.getUserById(request);
+            redisUtils.set(key, response, RedisConstants.USER_INFO_EXPIRE.getTime());
+            log.info("getUserById\n");
+            return new ResponseUtil<>().setData(response);
+        } catch (Exception e) {
+            log.error("getUserById\n", e);
+            CommonResponse response = new CommonResponse();
+            response.setCode(SbCode.SYSTEM_ERROR.getCode());
+            response.setMsg(SbCode.SYSTEM_ERROR.getMessage());
+            return new ResponseUtil().setData(response);
         }
-        UserRequest request = new UserRequest();
-        request.setId(Integer.parseInt(userId));
-        UserResponse response = userAPI.getUserById(request);
-        redisUtils.set(RedisConstants.USER_INFO_EXPIRE.getKey()+userId, response, RedisConstants.USER_INFO_EXPIRE.getTime());
-        log.info("getUserById", response.toString());
-        return new ResponseUtil<>().setData(response);
+
     }
 
     /**
@@ -121,25 +153,35 @@ public class UserController {
      */
     @ApiOperation(value = "更新接口", notes = "更新用户相关信息", response = UserResponse.class)
     @PostMapping("updateInfo")
+    @SentinelResource("updateInfo")
     public ResponseData updateUserInfo(UserUpdateForm form, HttpServletRequest req) {
         // id 从本队缓存中取
-        String token = CurrentUser.getToken(req);
-        String userId = jwtTokenUtil.getUsernameFromToken(token);
-        Object obj = redisUtils.get(RedisConstants.USER_INFO_EXPIRE.getKey()+userId);
-        if (obj != null) {
-            redisUtils.del(RedisConstants.USER_INFO_EXPIRE.getKey()+userId);
+        try {
+            String token = CurrentUser.getToken(req);
+            String userId = jwtTokenUtil.getUsernameFromToken(token);
+            String key = RedisConstants.USER_INFO_EXPIRE.getKey()+userId;
+            if (redisUtils.hasKey(key)) {
+                redisUtils.del(key);
+            }
+            UserUpdateInfoRequest request = new UserUpdateInfoRequest();
+            request.setUserSex(form.getUserSex());
+            request.setNickName(form.getNickName());
+            request.setEmail(form.getEmail());
+            request.setUserPhone(form.getUserPhone());
+            request.setMoney(form.getMoney());
+            request.setPayPassword(form.getPayPassword());
+            request.setId(Integer.parseInt(userId));
+            UserResponse response = userAPI.updateUserInfo(request);
+            log.info("updateUserInfo\n");
+            return new ResponseUtil<>().setData(response);
+        } catch (Exception e) {
+            log.error("updateUserInfo\n", e);
+            CommonResponse response = new CommonResponse();
+            response.setCode(SbCode.SYSTEM_ERROR.getCode());
+            response.setMsg(SbCode.SYSTEM_ERROR.getMessage());
+            return new ResponseUtil().setData(response);
         }
-        UserUpdateInfoRequest request = new UserUpdateInfoRequest();
-        request.setUserSex(form.getUserSex());
-        request.setNickName(form.getNickName());
-        request.setEmail(form.getEmail());
-        request.setUserPhone(form.getUserPhone());
-        request.setMoney(form.getMoney());
-        request.setPayPassword(form.getPayPassword());
-        request.setId(Integer.parseInt(userId));
-        UserResponse response = userAPI.updateUserInfo(request);
-        log.info("updateUserInfo", response.toString());
-        return new ResponseUtil<>().setData(response);
+
     }
 
     /**

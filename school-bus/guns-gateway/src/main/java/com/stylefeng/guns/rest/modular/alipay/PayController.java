@@ -8,7 +8,9 @@
 package com.stylefeng.guns.rest.modular.alipay;
 
 import cn.hutool.core.convert.Convert;
+import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import com.alibaba.dubbo.config.annotation.Reference;
+import com.stylefeng.guns.core.constants.SbCode;
 import com.stylefeng.guns.rest.alipay.IPayService;
 import com.stylefeng.guns.rest.alipay.dto.PayBackRequest;
 import com.stylefeng.guns.rest.alipay.dto.PayRequset;
@@ -18,6 +20,7 @@ import com.stylefeng.guns.rest.common.RedisUtils;
 import com.stylefeng.guns.rest.common.ResponseData;
 import com.stylefeng.guns.rest.common.ResponseUtil;
 import com.stylefeng.guns.core.constants.RedisConstants;
+import com.stylefeng.guns.rest.exception.CommonResponse;
 import com.stylefeng.guns.rest.modular.auth.util.JwtTokenUtil;
 import com.stylefeng.guns.rest.modular.form.PayBackForm;
 import com.stylefeng.guns.rest.modular.form.PayForm;
@@ -54,38 +57,71 @@ public class PayController {
      */
     @ApiOperation(value = "支付接口", notes = "前提Auth，获取支付服务", response = PayResponse.class)
     @PostMapping("")
+    @SentinelResource("pay")
     public ResponseData pay(PayForm payForm , HttpServletRequest req) {
-        String token = CurrentUser.getToken(req);
-        String userId = jwtTokenUtil.getUsernameFromToken(token);
-        PayRequset requset = new PayRequset();
-        requset.setUserId(Integer.parseInt(userId));
-        requset.setPayPassword(payForm.getPayPassword());
-        requset.setTotalMoney(payForm.getTotalMoney());
-        PayResponse response = payService.pay(requset);
-        log.warn("pay:" + response.toString());
-        // ok的话， 删缓存
-        redisUtils.del(RedisConstants.USER_INFO_EXPIRE.getKey() + userId);
-        return new ResponseUtil().setData(response);
+        try {
+            String token = CurrentUser.getToken(req);
+            String userId = jwtTokenUtil.getUsernameFromToken(token);
+            String key = RedisConstants.USER_INFO_EXPIRE.getKey() + userId;
+            PayRequset requset = new PayRequset();
+            requset.setUserId(Integer.parseInt(userId));
+            requset.setPayPassword(payForm.getPayPassword());
+            requset.setTotalMoney(payForm.getTotalMoney());
+            PayResponse response = payService.pay(requset);
+            log.warn("pay\n");
+            // ok的话， 删缓存
+            if (redisUtils.hasKey(key)) {
+                redisUtils.del(key);
+            }
+            return new ResponseUtil().setData(response);
+        } catch (Exception e) {
+            log.error("pay\n", e);
+            CommonResponse response = new CommonResponse();
+            response.setCode(SbCode.SYSTEM_ERROR.getCode());
+            response.setMsg(SbCode.SYSTEM_ERROR.getMessage());
+            return new ResponseUtil().setData(response);
+        }
     }
 
     @ApiOperation(value = "退款接口", notes = "前提Auth，获取退款服务", response = PayResponse.class)
     @PostMapping("back")
+    @SentinelResource("back")
     public ResponseData payBack(PayBackForm payBackFrom, HttpServletRequest req) {
-        String token = CurrentUser.getToken(req);
-        String userId = jwtTokenUtil.getUsernameFromToken(token);
-        PayBackRequest request = new PayBackRequest();
-        request.setUserId(Integer.parseInt(userId));
-        request.setOrderId(payBackFrom.getOrderId());
-        request.setCoundId(payBackFrom.getCoundId());
-        request.setSeatsIds(payBackFrom.getSeatsIds());
-        request.setTotalMoney(payBackFrom.getTotalMoney());
-        PayResponse response = payService.payBack(request);
-        log.warn("payBack:" + response.toString());
-        // 清理缓存
-        redisUtils.del(RedisConstants.USER_INFO_EXPIRE.getKey() + userId);
-        redisUtils.del(RedisConstants.NO_TAKE_OREDERS_EXPIRE.getKey() + userId);
-        redisUtils.del(RedisConstants.SELECT_ORDER_EXPIRE.getKey() + payBackFrom.getOrderId());
-        redisUtils.del(RedisConstants.COUNT_DETAIL_EXPIRE.getKey() + payBackFrom.getCoundId());
-        return new ResponseUtil().setData(response);
+        try {
+            String token = CurrentUser.getToken(req);
+            String userId = jwtTokenUtil.getUsernameFromToken(token);
+            PayBackRequest request = new PayBackRequest();
+            request.setUserId(Integer.parseInt(userId));
+            request.setOrderId(payBackFrom.getOrderId());
+            request.setCoundId(payBackFrom.getCoundId());
+            request.setSeatsIds(payBackFrom.getSeatsIds());
+            request.setTotalMoney(payBackFrom.getTotalMoney());
+            PayResponse response = payService.payBack(request);
+            log.warn("payBack:" + response.toString());
+            // 清理缓存
+            String userInfoKey = RedisConstants.USER_INFO_EXPIRE.getKey() + userId;
+            String noTakeKey = RedisConstants.NO_TAKE_OREDERS_EXPIRE.getKey() + userId;
+            String selectOrderKey = RedisConstants.SELECT_ORDER_EXPIRE.getKey() + payBackFrom.getOrderId();
+            String countDetailKey = RedisConstants.COUNT_DETAIL_EXPIRE.getKey() + payBackFrom.getCoundId();
+            if (redisUtils.hasKey(userInfoKey)) {
+                redisUtils.del(userInfoKey);
+            }
+            if (redisUtils.hasKey(noTakeKey)) {
+                redisUtils.del(noTakeKey);
+            }
+            if (redisUtils.hasKey(selectOrderKey)) {
+                redisUtils.del(selectOrderKey);
+            }
+            if (redisUtils.hasKey(countDetailKey)) {
+                redisUtils.del(countDetailKey);
+            }
+            return new ResponseUtil().setData(response);
+        } catch (Exception e) {
+            log.error("back\n", e);
+            CommonResponse response = new CommonResponse();
+            response.setCode(SbCode.SYSTEM_ERROR.getCode());
+            response.setMsg(SbCode.SYSTEM_ERROR.getMessage());
+            return new ResponseUtil().setData(response);
+        }
     }
 }

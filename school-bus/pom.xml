@@ -44,6 +44,7 @@
         <swagger-starter.version>1.8.0.RELEASE</swagger-starter.version>
         <spring-redis.version>2.2.2.RELEASE</spring-redis.version>
         <rocketmq-spring.version>2.0.3</rocketmq-spring.version>
+        <sentinel-stater.version>2.0.1.RELEASE</sentinel-stater.version>
     </properties>
 
     <dependencyManagement>
@@ -156,6 +157,11 @@
                 <groupId>org.apache.rocketmq</groupId>
                 <artifactId>rocketmq-spring-boot-starter</artifactId>
                 <version>${rocketmq-spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>
+                <version>${sentinel-stater.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

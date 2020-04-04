@@ -38,7 +38,8 @@ public class OrderSeatsCancleListener implements RocketMQListener<MessageExt> {
         try {
             // 1. 解析消息
             String tags = messageExt.getTags();
-            if (tags.equals(MqTags.ORDER_SEATS_CANCEL.getTag())) {
+            String orderTag = MqTags.ORDER_SEATS_CANCEL.getTag();
+            if (tags.equals(orderTag)) {
                 return;
             }
             String body = new String(messageExt.getBody(), "UTF-8");
@@ -53,8 +54,7 @@ public class OrderSeatsCancleListener implements RocketMQListener<MessageExt> {
                 }
             }
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-            log.error("座位回退程序崩了...好好检查程序吧");
+            log.error("座位回退程序崩了...好好检查程序吧", e);
         }
     }
 }

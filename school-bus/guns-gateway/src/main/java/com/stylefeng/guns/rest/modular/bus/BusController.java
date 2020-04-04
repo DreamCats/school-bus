@@ -7,6 +7,7 @@
 
 package com.stylefeng.guns.rest.modular.bus;
 
+import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.stylefeng.guns.core.constants.SbCode;
 import com.stylefeng.guns.rest.bus.IBusService;
@@ -40,12 +41,13 @@ public class BusController {
 
     @ApiOperation(value = "获取车次列表", notes = "获取车次列表", response = PageCountResponse.class)
     @GetMapping("getCount")
+    @SentinelResource("getCount")
     public ResponseData getCount(CountPageInfo pageInfo) {
         // 本来想用本地缓存的，试试redis吧  第一种方案
-        String busStatus = pageInfo.getBusStatus();
-        Integer currentPage = pageInfo.getCurrentPage();
-        String key = RedisConstants.COUNTS_EXPIRE.getKey() + busStatus + currentPage;
         try {
+            String busStatus = pageInfo.getBusStatus();
+            Integer currentPage = pageInfo.getCurrentPage();
+            String key = RedisConstants.COUNTS_EXPIRE.getKey() + busStatus + currentPage;
             // 在这加一个锁 , 效率极其的慢
             if (redisUtils.hasKey(key)) {
 //                Object obj = redisUtils.lGetIndex(key, currentPage - 1);
@@ -81,8 +83,7 @@ public class BusController {
             log.warn("getCount\n");
             return new ResponseUtil().setData(response);
         } catch (Exception e) {
-            e.printStackTrace();
-            log.error("getCount\n");
+            log.error("getCount\n", e);
             CommonResponse response = new CommonResponse();
             response.setCode(SbCode.SYSTEM_ERROR.getCode());
             response.setMsg(SbCode.SYSTEM_ERROR.getMessage());
@@ -94,18 +95,29 @@ public class BusController {
     @ApiOperation(value = "获取车次详情", notes = "获取车次详情", response = CountDetailResponse.class)
     @ApiImplicitParam(name = "countId", value = "场次id,CountSimpleDto中的uuid",required = true, dataType = "String", paramType = "query")
     @GetMapping("getCountDetail")
+    @SentinelResource("getCountDetail")
     public ResponseData getCountDetailById(String countId) {
         // id 从本队缓存中取
-        Object obj = redisUtils.get(RedisConstants.COUNT_DETAIL_EXPIRE.getKey()+countId);
-        if (obj != null) {
-            log.warn("getCountDetailById->redis:" + obj.toString());
-            return new ResponseUtil().setData(obj);
+        try {
+            String key = RedisConstants.COUNT_DETAIL_EXPIRE.getKey()+countId;
+            if (redisUtils.hasKey(key)) {
+                Object obj = redisUtils.get(key);
+                log.warn("getCountDetailById->redis\n");
+                return new ResponseUtil().setData(obj);
+            }
+            CountDetailRequest request = new CountDetailRequest();
+            request.setCountId(Integer.parseInt(countId));
+            CountDetailResponse response = busService.getCountDetailById(request);
+            redisUtils.set(key, response, RedisConstants.COUNT_DETAIL_EXPIRE.getTime());
+            log.warn("getCountDetailById\n");
+            return new ResponseUtil().setData(response);
+        } catch (Exception e) {
+            log.error("getCountDetailById\n", e);
+            CommonResponse response = new CommonResponse();
+            response.setCode(SbCode.SYSTEM_ERROR.getCode());
+            response.setMsg(SbCode.SYSTEM_ERROR.getMessage());
+            return new ResponseUtil().setData(response);
         }
-        CountDetailRequest request = new CountDetailRequest();
-        request.setCountId(Integer.parseInt(countId));
-        CountDetailResponse response = busService.getCountDetailById(request);
-        redisUtils.set(RedisConstants.COUNT_DETAIL_EXPIRE.getKey()+countId, response, RedisConstants.COUNT_DETAIL_EXPIRE.getTime());
-        log.warn("getCountDetailById:" + response.toString());
-        return new ResponseUtil().setData(response);
+
     }
 }

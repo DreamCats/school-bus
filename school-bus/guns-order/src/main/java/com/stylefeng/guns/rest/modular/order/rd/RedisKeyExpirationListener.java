@@ -39,9 +39,10 @@ public class RedisKeyExpirationListener extends KeyExpirationEventMessageListene
         super.onMessage(message, pattern);
         String expiredKey = message.toString();
         log.info("redis key过期：{}",expiredKey);
-        if (expiredKey.startsWith(RedisConstants.ORDER_CANCLE_EXPIRE.getKey())) {
+        String orderCancleKey = RedisConstants.ORDER_CANCLE_EXPIRE.getKey();
+        if (expiredKey.startsWith(orderCancleKey)) {
             // 获取订单id
-            String[] strings = expiredKey.split(RedisConstants.ORDER_CANCLE_EXPIRE.getKey());
+            String[] strings = expiredKey.split(orderCancleKey);
             String orderId = strings[1];
             log.warn("过期订单ID：" + orderId);
             // 得到过期订单。

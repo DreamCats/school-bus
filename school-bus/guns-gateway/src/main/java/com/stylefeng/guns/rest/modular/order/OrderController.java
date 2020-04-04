@@ -8,6 +8,7 @@
 package com.stylefeng.guns.rest.modular.order;
 
 import cn.hutool.core.convert.Convert;
+import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.stylefeng.guns.core.util.DateUtil;
 import com.stylefeng.guns.rest.bus.IBusService;
@@ -59,35 +60,46 @@ public class OrderController {
      */
     @ApiOperation(value = "获取未乘坐订单接口", notes = "前提Auth，获取用户订单未乘坐服务", response = NoTakeBusResponse.class)
     @GetMapping("getNoTakeOrders")
+    @SentinelResource("getNoTakeOrders")
     public ResponseData getNoTakeOrdersById(OrderPageInfo pageInfo, HttpServletRequest req) {
-        String token = CurrentUser.getToken(req);
-        String userId = jwtTokenUtil.getUsernameFromToken(token);
-        Object obj = redisUtils.get(RedisConstants.NO_TAKE_OREDERS_EXPIRE.getKey()+userId);
-        NoTakeBusRequest request = new NoTakeBusRequest();
-        request.setUserId(Integer.parseInt(userId));
-        request.setCurrentPage(pageInfo.getCurrentPage());
-        request.setPageSize(pageInfo.getPageSize());
-        if (obj != null) {
-            // 判断发车时间
-            NoTakeBusResponse response = (NoTakeBusResponse) obj;
-            for (NoTakeDto noTakeDto : response.getNoTakeDtos()) {
-                String beginTime = noTakeDto.getBeginTime();
-                if (beginTime.compareTo(DateUtil.getHours()) <= -1) {
-                    // 尝试这一种方案
-                    // 删缓存
-                    redisUtils.del(RedisConstants.NO_TAKE_OREDERS_EXPIRE.getKey()+userId);
-                    response = orderService.getNoTakeOrdersById(request);
-                    redisUtils.set(RedisConstants.NO_TAKE_OREDERS_EXPIRE.getKey()+userId, response, RedisConstants.NO_TAKE_OREDERS_EXPIRE.getTime());
-                    return new ResponseUtil().setData(response);
+        try {
+            String token = CurrentUser.getToken(req);
+            String userId = jwtTokenUtil.getUsernameFromToken(token);
+            String key = RedisConstants.NO_TAKE_OREDERS_EXPIRE.getKey()+userId;
+            NoTakeBusRequest request = new NoTakeBusRequest();
+            request.setUserId(Integer.parseInt(userId));
+            request.setCurrentPage(pageInfo.getCurrentPage());
+            request.setPageSize(pageInfo.getPageSize());
+            if (redisUtils.hasKey(key)) {
+                Object obj = redisUtils.get(key);
+                // 判断发车时间
+                NoTakeBusResponse response = (NoTakeBusResponse) obj;
+                for (NoTakeDto noTakeDto : response.getNoTakeDtos()) {
+                    String beginTime = noTakeDto.getBeginTime();
+                    if (beginTime.compareTo(DateUtil.getHours()) <= -1) {
+                        // 尝试这一种方案
+                        // 删缓存
+                        redisUtils.del(key);
+                        response = orderService.getNoTakeOrdersById(request);
+                        redisUtils.set(key, response, RedisConstants.NO_TAKE_OREDERS_EXPIRE.getTime());
+                        return new ResponseUtil().setData(response);
+                    }
                 }
+                log.warn("getNoTakeOrdersById->redis\n");
+                return new ResponseUtil().setData(obj);
             }
-            log.warn("getNoTakeOrdersById->redis:" + obj.toString());
-            return new ResponseUtil().setData(obj);
+            NoTakeBusResponse response = orderService.getNoTakeOrdersById(request);
+            redisUtils.set(key, response, RedisConstants.NO_TAKE_OREDERS_EXPIRE.getTime());
+            log.warn("getNoTakeOrdersById\n");
+            return new ResponseUtil().setData(response);
+        } catch (Exception e) {
+            log.error("getNoTakeOrdersById\n", e);
+            CommonResponse response = new CommonResponse();
+            response.setCode(SbCode.SYSTEM_ERROR.getCode());
+            response.setMsg(SbCode.SYSTEM_ERROR.getMessage());
+            return new ResponseUtil().setData(response);
         }
-        NoTakeBusResponse response = orderService.getNoTakeOrdersById(request);
-        redisUtils.set(RedisConstants.NO_TAKE_OREDERS_EXPIRE.getKey()+userId, response, RedisConstants.NO_TAKE_OREDERS_EXPIRE.getTime());
-        log.warn("getNoTakeOrdersById:" + response.toString());
-        return new ResponseUtil().setData(response);
+
     }
 
     /**
@@ -98,22 +110,33 @@ public class OrderController {
      */
     @ApiOperation(value = "获取未支付订单接口", notes = "前提Auth，获取用户订单未支付服务", response = NoPayResponse.class)
     @GetMapping("getNoPayOrders")
+    @SentinelResource("getNoPayOrders")
     public ResponseData getNoPayOrdersById(OrderPageInfo pageInfo, HttpServletRequest req) {
-        String token = CurrentUser.getToken(req);
-        String userId = jwtTokenUtil.getUsernameFromToken(token);
-        Object obj = redisUtils.get(RedisConstants.NO_PAY_ORDERS_EXPIRE.getKey()+userId);
-        if (obj != null) {
-            log.warn("getNoPayOrdersById->redis:" + obj.toString());
-            return new ResponseUtil().setData(obj);
+        try {
+            String token = CurrentUser.getToken(req);
+            String userId = jwtTokenUtil.getUsernameFromToken(token);
+            String key = RedisConstants.NO_PAY_ORDERS_EXPIRE.getKey()+userId;
+            if (redisUtils.hasKey(key)) {
+                Object obj = redisUtils.get(key);
+                log.warn("getNoPayOrdersById->redis\n");
+                return new ResponseUtil().setData(obj);
+            }
+            NoPayRequest request = new NoPayRequest();
+            request.setUserId(Integer.parseInt(userId));
+            request.setCurrentPage(pageInfo.getCurrentPage());
+            request.setPageSize(pageInfo.getPageSize());
+            NoPayResponse response = orderService.getNoPayOrdersById(request);
+            redisUtils.set(key, response, RedisConstants.NO_PAY_ORDERS_EXPIRE.getTime());
+            log.warn("getNoPayOrdersById\n");
+            return new ResponseUtil().setData(response);
+        } catch (Exception e) {
+            log.error("getNoPayOrdersById\n", e);
+            CommonResponse response = new CommonResponse();
+            response.setCode(SbCode.SYSTEM_ERROR.getCode());
+            response.setMsg(SbCode.SYSTEM_ERROR.getMessage());
+            return new ResponseUtil().setData(response);
         }
-        NoPayRequest request = new NoPayRequest();
-        request.setUserId(Integer.parseInt(userId));
-        request.setCurrentPage(pageInfo.getCurrentPage());
-        request.setPageSize(pageInfo.getPageSize());
-        NoPayResponse response = orderService.getNoPayOrdersById(request);
-//        redisUtils.set(RedisConstants.NO_PAY_ORDERS_EXPIRE.getKey()+userId, response, RedisConstants.NO_PAY_ORDERS_EXPIRE.getTime());
-        log.warn("getNoPayOrdersById:" + response.toString());
-        return new ResponseUtil().setData(response);
+
     }
 
     /**
@@ -128,23 +151,34 @@ public class OrderController {
             @ApiImplicitParam(name = "evaluateStauts", value = "评价状态：0->未评价 1->已评价", example = "0", required = true, dataType = "String")
     })
     @GetMapping("getEvaluateOrders")
+    @SentinelResource("getEvaluateOrders")
     public ResponseData getEvaluateOrdersById(OrderPageInfo pageInfo, String evaluateStauts, HttpServletRequest req) {
-        String token = CurrentUser.getToken(req);
-        String userId = jwtTokenUtil.getUsernameFromToken(token);
-        Object obj = redisUtils.get(RedisConstants.EVALUATE_ORDERS_EXPIRE.getKey()+userId);
-        if (obj != null) {
-            log.warn("getEvaluateOrdersById->redis:" + obj.toString());
-            return new ResponseUtil().setData(obj);
+        try {
+            String token = CurrentUser.getToken(req);
+            String userId = jwtTokenUtil.getUsernameFromToken(token);
+            String key = RedisConstants.EVALUATE_ORDERS_EXPIRE.getKey()+userId;
+            if (redisUtils.hasKey(key)) {
+                Object obj = redisUtils.get(key);
+                log.warn("getEvaluateOrdersById->redis\n");
+                return new ResponseUtil().setData(obj);
+            }
+            EvaluateRequest request = new EvaluateRequest();
+            request.setUserId(Integer.parseInt(userId));
+            request.setCurrentPage(pageInfo.getCurrentPage());
+            request.setPageSize(pageInfo.getPageSize());
+            request.setEvaluateStatus(evaluateStauts);
+            EvaluateResponse response = orderService.getEvaluateOrdersById(request);
+            redisUtils.set(key, response, RedisConstants.EVALUATE_ORDERS_EXPIRE.getTime());
+            log.warn("getEvaluateOrders\n");
+            return new ResponseUtil().setData(response);
+        } catch (Exception e) {
+            log.error("getEvaluateOrdersById\n", e);
+            CommonResponse response = new CommonResponse();
+            response.setCode(SbCode.SYSTEM_ERROR.getCode());
+            response.setMsg(SbCode.SYSTEM_ERROR.getMessage());
+            return new ResponseUtil().setData(response);
         }
-        EvaluateRequest request = new EvaluateRequest();
-        request.setUserId(Integer.parseInt(userId));
-        request.setCurrentPage(pageInfo.getCurrentPage());
-        request.setPageSize(pageInfo.getPageSize());
-        request.setEvaluateStatus(evaluateStauts);
-        EvaluateResponse response = orderService.getEvaluateOrdersById(request);
-        redisUtils.set(RedisConstants.EVALUATE_ORDERS_EXPIRE.getKey()+userId, response, RedisConstants.EVALUATE_ORDERS_EXPIRE.getTime());
-        log.warn("getEvaluateOrders:" + response.toString());
-        return new ResponseUtil().setData(response);
+
     }
 
     /**
@@ -155,50 +189,40 @@ public class OrderController {
      */
     @ApiOperation(value = "添加订单接口", notes = "添加订单接口信息", response = AddOrderResponse.class)
     @PostMapping("addOrder")
+    @SentinelResource("addOrder")
     public ResponseData addOrder(AddOrderForm form, HttpServletRequest req) {
-        // id 从本队缓存中取
-        String token = CurrentUser.getToken(req);
-        String userId = jwtTokenUtil.getUsernameFromToken(token);
-        AddOrderRequest request = new AddOrderRequest();
-        request.setCountId(form.getCountId());
-        request.setUserId(Integer.parseInt(userId));
-        request.setOrderUser(form.getOrderUser());
-        request.setSeatsIds(form.getSeatsIds());
-        request.setCountPrice(form.getCountPrice());
-        request.setBusStatus(form.getBusStatus());
-        request.setExpireTime(form.getExpireTime());
-        // 判断座位是否重复
-//        boolean selectedSeats = busService.repeatSeats(request.getSeatsIds(), request.getCountId());
-//        if (selectedSeats) {
-//            CommonResponse response = new CommonResponse();
-//            response.setCode(SbCode.SELECTED_SEATS.getCode());
-//            response.setMsg(SbCode.SELECTED_SEATS.getMessage());
-//            return new ResponseUtil().setData(response);
-//        }
-        // 更新座位
-        //更新场次的座位信息，并更新场次的座位是否已满
-//        boolean updateSeats = busService.addSeats(request.getSeatsIds(), request.getCountId());
-//        if (!updateSeats) {
-//            // 更新失败
-//            CommonResponse response = new CommonResponse();
-//            response.setCode(SbCode.DB_EXCEPTION.getCode());
-//            response.setMsg(SbCode.DB_EXCEPTION.getMessage());
-//            return new ResponseUtil().setData(response);
-//        }
+        try {
+            // id 从本队缓存中取
+            String token = CurrentUser.getToken(req);
+            String userId = jwtTokenUtil.getUsernameFromToken(token);
+            AddOrderRequest request = new AddOrderRequest();
+            request.setCountId(form.getCountId());
+            request.setUserId(Integer.parseInt(userId));
+            request.setOrderUser(form.getOrderUser());
+            request.setSeatsIds(form.getSeatsIds());
+            request.setCountPrice(form.getCountPrice());
+            request.setBusStatus(form.getBusStatus());
+            request.setExpireTime(form.getExpireTime());
+            AddOrderResponse response = orderService.addOrder(request);
+            // 座位缓存失效
+            String countKey = RedisConstants.COUNT_DETAIL_EXPIRE.getKey() + request.getCountId();
+            if (redisUtils.hasKey(countKey)) {
+                redisUtils.del(countKey);
+            }
+            String noPayKey = RedisConstants.NO_PAY_ORDERS_EXPIRE.getKey() + userId;
+            if (redisUtils.hasKey(noPayKey)) {
+                redisUtils.del(noPayKey);
+            }
+            log.warn("addOrder\n");
+            return new ResponseUtil().setData(response);
+        } catch (Exception e) {
+            log.error("addOrder\n", e);
+            CommonResponse response = new CommonResponse();
+            response.setCode(SbCode.SYSTEM_ERROR.getCode());
+            response.setMsg(SbCode.SYSTEM_ERROR.getMessage());
+            return new ResponseUtil().setData(response);
+        }
 
-        AddOrderResponse response = orderService.addOrder(request);
-        // 座位缓存失效
-        Object obj = redisUtils.get(RedisConstants.COUNT_DETAIL_EXPIRE.getKey() + request.getCountId());
-        if (obj != null) {
-            redisUtils.del(RedisConstants.COUNT_DETAIL_EXPIRE.getKey() + request.getCountId());
-        }
-        // 待支付缓存失效
-        obj = redisUtils.get(RedisConstants.NO_PAY_ORDERS_EXPIRE.getKey() + userId);
-        if (obj != null) {
-            redisUtils.del(RedisConstants.NO_PAY_ORDERS_EXPIRE.getKey() + userId);
-        }
-        log.warn("addOrder:" + response.toString());
-        return new ResponseUtil().setData(response);
     }
 
     /**
@@ -212,19 +236,28 @@ public class OrderController {
             @ApiImplicitParam(name = "orderUuid", value = "订单id", example = "1", required = true, dataType = "String")
     })
     @GetMapping("getOrder")
+    @SentinelResource("getOrder")
     public ResponseData selectOrderById(String orderUuid, HttpServletRequest req) {
-        String token = CurrentUser.getToken(req);
-        Object obj = redisUtils.get(RedisConstants.SELECT_ORDER_EXPIRE.getKey()+orderUuid);
-        if (obj != null) {
-            log.warn("selectOrderById->redis:" + obj.toString());
-            return new ResponseUtil().setData(obj);
+        try {
+            String key = RedisConstants.SELECT_ORDER_EXPIRE.getKey()+orderUuid;
+            if (redisUtils.hasKey(key)) {
+                Object obj = redisUtils.get(key);
+                log.warn("selectOrderById->redis\n");
+                return new ResponseUtil().setData(obj);
+            }
+            OrderRequest request = new OrderRequest();
+            request.setUuid(orderUuid);
+            OrderResponse response = orderService.selectOrderById(request);
+            redisUtils.set(key, response, RedisConstants.SELECT_ORDER_EXPIRE.getTime());
+            log.warn("selectOrderById\n");
+            return new ResponseUtil().setData(response);
+        } catch (Exception e) {
+            log.error("selectOrderById\n", e);
+            CommonResponse response = new CommonResponse();
+            response.setCode(SbCode.SYSTEM_ERROR.getCode());
+            response.setMsg(SbCode.SYSTEM_ERROR.getMessage());
+            return new ResponseUtil().setData(response);
         }
-        OrderRequest request = new OrderRequest();
-        request.setUuid(orderUuid);
-        OrderResponse response = orderService.selectOrderById(request);
-        redisUtils.set(RedisConstants.SELECT_ORDER_EXPIRE.getKey()+orderUuid, response, RedisConstants.SELECT_ORDER_EXPIRE.getTime());
-        log.warn("selectOrderById:" + response.toString());
-        return new ResponseUtil().setData(response);
     }
 
     /**
@@ -240,24 +273,39 @@ public class OrderController {
             @ApiImplicitParam(name = "orderStatus", value = "状态：0-待支付,1-已支付,2-已关闭", example = "1", required = true, dataType = "String")
     })
     @PostMapping("updateOrderStatus")
+    @SentinelResource("updateOrderStatus")
     public ResponseData updateOrderStatus(String orderId, String orderStatus, HttpServletRequest req) {
-        String token = CurrentUser.getToken(req);
-        String userId = jwtTokenUtil.getUsernameFromToken(token);
-        Object obj = redisUtils.get(RedisConstants.SELECT_ORDER_EXPIRE.getKey()+orderId);
-        Object obj1 = redisUtils.get(RedisConstants.NO_TAKE_OREDERS_EXPIRE.getKey()+userId);
-        Object obj2 = redisUtils.get(RedisConstants.NO_PAY_ORDERS_EXPIRE.getKey()+userId);
-        Object obj3 = redisUtils.get(RedisConstants.EVALUATE_ORDERS_EXPIRE.getKey()+userId);
-        if (obj != null || obj1 != null || obj2 != null || obj3 != null) {
-            redisUtils.del(RedisConstants.SELECT_ORDER_EXPIRE.getKey()+orderId);
-            redisUtils.del(RedisConstants.NO_TAKE_OREDERS_EXPIRE.getKey()+userId);
-            redisUtils.del(RedisConstants.NO_PAY_ORDERS_EXPIRE.getKey()+userId);
-            redisUtils.del(RedisConstants.EVALUATE_ORDERS_EXPIRE.getKey()+userId);
+        try {
+            String token = CurrentUser.getToken(req);
+            String userId = jwtTokenUtil.getUsernameFromToken(token);
+            String selectOrderKey = RedisConstants.SELECT_ORDER_EXPIRE.getKey()+orderId;
+            String noTakeKey = RedisConstants.NO_TAKE_OREDERS_EXPIRE.getKey()+userId;
+            String noPayKey = RedisConstants.NO_PAY_ORDERS_EXPIRE.getKey()+userId;
+            String evaluateKey = RedisConstants.EVALUATE_ORDERS_EXPIRE.getKey()+userId;
+            OrderRequest request = new OrderRequest();
+            request.setUuid(orderId);
+            request.setOrderStatus(orderStatus);
+            OrderResponse response = orderService.updateOrderStatus(request);
+            log.warn("updateOrderStatus\n");
+            if (redisUtils.hasKey(selectOrderKey)) {
+                redisUtils.del(selectOrderKey);
+            }
+            if (redisUtils.hasKey(noTakeKey)) {
+                redisUtils.del(noTakeKey);
+            }
+            if (redisUtils.hasKey(noPayKey)) {
+                redisUtils.del(noPayKey);
+            }
+            if (redisUtils.hasKey(evaluateKey)) {
+                redisUtils.del(evaluateKey);
+            }
+            return new ResponseUtil().setData(response);
+        } catch (Exception e) {
+            log.error("updateOrderStatus\n", e);
+            CommonResponse response = new CommonResponse();
+            response.setCode(SbCode.SYSTEM_ERROR.getCode());
+            response.setMsg(SbCode.SYSTEM_ERROR.getMessage());
+            return new ResponseUtil().setData(response);
         }
-        OrderRequest request = new OrderRequest();
-        request.setUuid(orderId);
-        request.setOrderStatus(orderStatus);
-        OrderResponse response = orderService.updateOrderStatus(request);
-        log.warn("updateOrderStatus:" + response.toString());
-        return new ResponseUtil().setData(response);
     }
 }

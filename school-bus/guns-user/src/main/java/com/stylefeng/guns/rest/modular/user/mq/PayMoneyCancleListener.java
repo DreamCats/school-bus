@@ -33,7 +33,8 @@ public class PayMoneyCancleListener implements RocketMQListener<MessageExt> {
         try {
             // 1. 解析消息
             String tags = messageExt.getTags();
-            if (!tags.equals(MqTags.PAY_MONEY_CANCLE.getTag())) {
+            String payCancleTag = MqTags.PAY_MONEY_CANCLE.getTag();
+            if (!tags.equals(payCancleTag)) {
                 return;
             }
             String body = new String(messageExt.getBody(), "UTF-8");
@@ -47,8 +48,7 @@ public class PayMoneyCancleListener implements RocketMQListener<MessageExt> {
                 log.warn("余额已恢复");
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            log.error("支付消费信息程序崩...");
+            log.error("支付消费信息程序崩...\n", e);
         }
     }
 }

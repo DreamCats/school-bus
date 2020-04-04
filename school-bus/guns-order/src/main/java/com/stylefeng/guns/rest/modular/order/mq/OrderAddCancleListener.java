@@ -34,7 +34,8 @@ public class OrderAddCancleListener implements RocketMQListener<MessageExt> {
         try {
             // 1. 解析消息
             String tags = messageExt.getTags();
-            if (!tags.equals(MqTags.ORDER_ADD_CANCLE.getTag())) {
+            String orderAddTag = MqTags.ORDER_ADD_CANCLE.getTag();
+            if (!tags.equals(orderAddTag)) {
                 return;
             }
             String body = new String(messageExt.getBody(), "UTF-8");
@@ -47,8 +48,7 @@ public class OrderAddCancleListener implements RocketMQListener<MessageExt> {
                 log.warn("异常订单已删除");
             }
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-            log.error("订单消费信息程序崩...");
+            log.error("订单消费信息程序崩...", e);
         }
     }
 }
