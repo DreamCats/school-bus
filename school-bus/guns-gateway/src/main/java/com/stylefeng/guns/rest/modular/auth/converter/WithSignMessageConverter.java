@@ -34,31 +34,32 @@ public class WithSignMessageConverter extends FastJsonHttpMessageConverter {
     @Autowired
     DataSecurityAction dataSecurityAction;
 
-    @Override
-    public Object read(Type type, Class<?> contextClass, HttpInputMessage inputMessage) throws IOException, HttpMessageNotReadableException {
-
-        InputStream in = inputMessage.getBody();
-        Object o = JSON.parseObject(in, super.getFastJsonConfig().getCharset(), BaseTransferEntity.class, super.getFastJsonConfig().getFeatures());
-
-        //先转化成原始的对象
-        BaseTransferEntity baseTransferEntity = (BaseTransferEntity) o;
-
-        //校验签名
-        String token = HttpKit.getRequest().getHeader(jwtProperties.getHeader()).substring(7);
-        String md5KeyFromToken = jwtTokenUtil.getMd5KeyFromToken(token);
-
-        String object = baseTransferEntity.getObject();
-        String json = dataSecurityAction.unlock(object);
-        String encrypt = MD5Util.encrypt(object + md5KeyFromToken);
-
-        if (encrypt.equals(baseTransferEntity.getSign())) {
-            System.out.println("签名校验成功!");
-        } else {
-            System.out.println("签名校验失败,数据被改动过!");
-            throw new GunsException(BizExceptionEnum.SIGN_ERROR);
-        }
-
-        //校验签名后再转化成应该的对象
-        return JSON.parseObject(json, type);
-    }
+//    @Override
+//    public Object read(Type type, Class<?> contextClass, HttpInputMessage inputMessage) throws IOException, HttpMessageNotReadableException {
+//
+//        InputStream in = inputMessage.getBody();
+//        Object o = JSON.parseObject(in, super.getFastJsonConfig().getCharset(), BaseTransferEntity.class, super.getFastJsonConfig().getFeatures());
+//
+//        //先转化成原始的对象
+//        BaseTransferEntity baseTransferEntity = (BaseTransferEntity) o;
+//
+//        //校验签名
+////        System.out.println(HttpKit.getRequest().getHeader(jwtProperties.getHeader()));
+////        String token = HttpKit.getRequest().getHeader(jwtProperties.getHeader()).substring(7);
+////        String md5KeyFromToken = jwtTokenUtil.getMd5KeyFromToken(token);
+//
+//        String object = baseTransferEntity.getObject();
+////        String json = dataSecurityAction.unlock(object);
+////        String encrypt = MD5Util.encrypt(object + md5KeyFromToken);
+//
+////        if (encrypt.equals(baseTransferEntity.getSign())) {
+////            System.out.println("签名校验成功!");
+////        } else {
+////            System.out.println("签名校验失败,数据被改动过!");
+////            throw new GunsException(BizExceptionEnum.SIGN_ERROR);
+////        }
+//
+//        //校验签名后再转化成应该的对象
+//        return JSON.parseObject(object, type);
+//    }
 }

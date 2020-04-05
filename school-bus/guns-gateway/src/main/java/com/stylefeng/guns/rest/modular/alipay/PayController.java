@@ -29,6 +29,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -58,7 +59,7 @@ public class PayController {
     @ApiOperation(value = "支付接口", notes = "前提Auth，获取支付服务", response = PayResponse.class)
     @PostMapping("")
     @SentinelResource("pay")
-    public ResponseData pay(PayForm payForm , HttpServletRequest req) {
+    public ResponseData pay(@RequestBody PayForm payForm , HttpServletRequest req) {
         try {
             String token = CurrentUser.getToken(req);
             String userId = jwtTokenUtil.getUsernameFromToken(token);
@@ -86,7 +87,7 @@ public class PayController {
     @ApiOperation(value = "退款接口", notes = "前提Auth，获取退款服务", response = PayResponse.class)
     @PostMapping("back")
     @SentinelResource("back")
-    public ResponseData payBack(PayBackForm payBackFrom, HttpServletRequest req) {
+    public ResponseData payBack(@RequestBody PayBackForm payBackFrom, HttpServletRequest req) {
         try {
             String token = CurrentUser.getToken(req);
             String userId = jwtTokenUtil.getUsernameFromToken(token);

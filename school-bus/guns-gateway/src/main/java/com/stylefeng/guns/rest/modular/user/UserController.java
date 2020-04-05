@@ -109,7 +109,7 @@ public class UserController {
     @ApiOperation(value = "注册接口", notes = "用户注册相关信息", response = UserRegisterResponse.class)
     @PostMapping("register")
     @SentinelResource("register")
-    public ResponseData register(@Validated UserRegstierForm form, BindingResult bindingResult) {
+    public ResponseData register(@Validated @RequestBody UserRegstierForm form, BindingResult bindingResult) {
         try {
             if (bindingResult.hasErrors()) {
                 CommonResponse response = new CommonResponse();
@@ -180,7 +180,7 @@ public class UserController {
     @ApiOperation(value = "更新接口", notes = "更新用户相关信息", response = UserResponse.class)
     @PostMapping("updateInfo")
     @SentinelResource("updateInfo")
-    public ResponseData updateUserInfo(UserUpdateForm form, HttpServletRequest req) {
+    public ResponseData updateUserInfo(@RequestBody UserUpdateForm form, HttpServletRequest req) {
         // id 从本队缓存中取
         try {
             String token = CurrentUser.getToken(req);

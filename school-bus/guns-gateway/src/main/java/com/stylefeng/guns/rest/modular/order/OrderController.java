@@ -31,10 +31,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -191,7 +188,7 @@ public class OrderController {
     @ApiOperation(value = "添加订单接口", notes = "添加订单接口信息", response = AddOrderResponse.class)
     @PostMapping("addOrder")
     @SentinelResource(value = "addOrder", blockHandler = "addOrderBlockHandler", fallback = "addOrderFallbackHandler")
-    public ResponseData addOrder(AddOrderForm form, HttpServletRequest req) {
+    public ResponseData addOrder(@RequestBody AddOrderForm form, HttpServletRequest req) {
         try {
             // id 从本队缓存中取
             String token = CurrentUser.getToken(req);
@@ -301,7 +298,7 @@ public class OrderController {
     })
     @PostMapping("updateOrderStatus")
     @SentinelResource("updateOrderStatus")
-    public ResponseData updateOrderStatus(String orderId, String orderStatus, HttpServletRequest req) {
+    public ResponseData updateOrderStatus(@RequestBody String orderId, String orderStatus, HttpServletRequest req) {
         try {
             String token = CurrentUser.getToken(req);
             String userId = jwtTokenUtil.getUsernameFromToken(token);
