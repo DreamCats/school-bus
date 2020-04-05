@@ -10,6 +10,8 @@ package com.stylefeng.guns.rest;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.lang.Snowflake;
+import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -77,5 +79,13 @@ public class HutoolTest {
         String template = "这只是个占位符:{}";
         String str2 = StrUtil.format(template, "我是占位符");
 
+        // 雪花算法
+        Snowflake snowflake = IdUtil.createSnowflake(1, 1);
+        long id = snowflake.nextId();
+        System.out.println(id);
+        long id1 = snowflake.nextId();
+        System.out.println(id1);
+        Snowflake snowflake1 = IdUtil.createSnowflake(2, 1);
+        System.out.println(snowflake1.nextIdStr());
     }
 }

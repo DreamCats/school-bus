@@ -7,11 +7,17 @@
 
 package com.stylefeng.guns.rest.myutils;
 
+import cn.hutool.core.util.IdUtil;
+
 import java.util.UUID;
 
 public class UUIDUtils {
 
     public static String getUUID() {
-        return UUID.randomUUID().toString().substring(0,7);
+        return IdUtil.randomUUID();
+    }
+
+    public static String flakesUUID() {
+        return "";
     }
 }
