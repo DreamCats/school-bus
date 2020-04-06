@@ -16,7 +16,7 @@ mybatis-plus:
 spring:
   datasource:
       driver-class-name: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://39.108.93.119:3306/school_bus?serverTimeZone=UTC&useSSL=false&characterEncoding=UTF-8
+      url: jdbc:mysql://39.108.93.119:3306/school_bus?serverTimeZone=GMT+8&useSSL=false&characterEncoding=UTF-8
       username: root
       password: mai
       type: com.alibaba.druid.pool.DruidDataSource
