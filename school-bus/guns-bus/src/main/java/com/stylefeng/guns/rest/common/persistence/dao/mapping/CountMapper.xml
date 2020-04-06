@@ -12,6 +12,7 @@
         <result column="price" property="price" />
         <result column="selected_seats" property="selectedSeats" />
         <result column="seat_status" property="seatStatus" />
+        <result column="update_time" property="updateTime" />
     </resultMap>
 
     <select id="selectCounts"  resultType="com.stylefeng.guns.rest.bus.dto.CountSimpleDto">

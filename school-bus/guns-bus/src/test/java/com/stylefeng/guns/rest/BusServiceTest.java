@@ -16,6 +16,7 @@ import com.stylefeng.guns.rest.bus.dto.*;
 import com.stylefeng.guns.rest.common.RedisUtils;
 import com.stylefeng.guns.rest.common.persistence.dao.CountMapper;
 import com.stylefeng.guns.rest.common.persistence.model.Count;
+import com.stylefeng.guns.rest.myutils.UUIDUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,20 +89,23 @@ public class BusServiceTest {
     public void addCounts() {
         // 获取日期
         String day = DateUtil.getDay();
-        // 肯定是先获取所有的场次
-        Integer number = countMapper.selectCount(null);
         // 获取前17个场次
         QueryWrapper<Count> wrapper = new QueryWrapper<>();
-        wrapper.between("uuid", 1, 17);
+        wrapper.last("limit 17");
         List<Count> counts = countMapper.selectList(wrapper);
         // 开始修改 这里可以用java8 的特性， 还不是很熟悉，后期优化一下
         for (Count count : counts) {
             // 更改日期
             count.setBeginDate(day);
             // 更改uuid
-            count.setUuid(count.getUuid() + number);
+            count.setUuid(UUIDUtils.flakesUUID());
+            // 清空座位
+            count.setSelectedSeats("");
+            // 将走位状态清零
+            count.setSeatStatus("0");
             // 插入
-            countMapper.insert(count);
+            System.out.println(count);
+//            countMapper.insert(count);
         }
     }
 

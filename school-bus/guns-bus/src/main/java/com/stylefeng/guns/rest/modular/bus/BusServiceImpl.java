@@ -24,6 +24,7 @@ import com.stylefeng.guns.rest.common.persistence.model.Bus;
 import com.stylefeng.guns.rest.common.persistence.model.Count;
 import com.stylefeng.guns.rest.modular.bus.converter.BusConverter;
 import com.stylefeng.guns.rest.modular.bus.converter.CountConverter;
+import com.stylefeng.guns.rest.myutils.UUIDUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -214,16 +215,21 @@ public class BusServiceImpl implements IBusService {
      */
 //    @Scheduled(cron = "0 0/30 7-21 * * ?") // 每天上午7点到晚上21点，每隔30分钟执行一次
     public void schedulChangeBusStatus() {
-        // 获取
+        // 获取时间
         String currTime = DateUtil.getHours();
+        // 获取日期
+        String day = DateUtil.getDay();
         log.warn("schedulChangeBusStatus->目前时间：" + currTime);
+        log.warn("schedulChangeBusStatus->目前时间：" + day);
         System.out.println("目前时间:"+ currTime);
+        System.out.println("目前时间:"+ day);
         QueryWrapper<Count> queryWrapper = new QueryWrapper<>();
         // 先取出beingtime和now相等的表或者end_time和now相等到表
         queryWrapper
-                .eq("begin_time", currTime)
-                .or()
-                .eq("end_time", currTime);
+                .eq("begin_date", day) // 取出当天
+                .and(o -> o.eq("begin_time", currTime) // 当前时间
+                            .or()
+                            .eq("end_time", currTime));
         List<Count> counts = countMapper.selectList(queryWrapper);
         log.warn("schedulChangeBusStatus->查询到的：" + counts.toString());
 //        System.out.println("查询到的:"+counts.toString());
@@ -271,27 +277,34 @@ public class BusServiceImpl implements IBusService {
      */
 //    @Scheduled(cron = "0 1 0 * * ? ") // 每天凌晨1点执行
     public void addCounts() {
-        // 删缓存
-        Object obj = redisUtils.get(RedisConstants.COUNTS_EXPIRE.getKey());
-        if (obj != null) {
-            redisUtils.del(RedisConstants.COUNTS_EXPIRE.getKey());
-        }
         // 获取日期
         String day = DateUtil.getDay();
-        // 肯定是先获取所有的场次
-        Integer number = countMapper.selectCount(null);
         // 获取前17个场次
         QueryWrapper<Count> wrapper = new QueryWrapper<>();
-        wrapper.between("uuid", 1, 17);
+        wrapper.last("limit 17");
         List<Count> counts = countMapper.selectList(wrapper);
         // 开始修改 这里可以用java8 的特性， 还不是很熟悉，后期优化一下
         for (Count count : counts) {
             // 更改日期
             count.setBeginDate(day);
             // 更改uuid
-            count.setUuid(count.getUuid() + number);
+            count.setUuid(UUIDUtils.flakesUUID());
+            // 清空座位
+            count.setSelectedSeats("");
+            // 将走位状态清零
+            count.setSeatStatus("0");
             // 插入
             countMapper.insert(count);
+        }
+
+        // 删缓存
+        String key1 = RedisConstants.COUNTS_EXPIRE + "0";
+        String key2 = RedisConstants.COUNTS_EXPIRE + "1";
+        if (redisUtils.hasKey(key1)) {
+            redisUtils.del(key1);
+        }
+        if (redisUtils.hasKey(key2)) {
+            redisUtils.del(key2);
         }
     }
 
