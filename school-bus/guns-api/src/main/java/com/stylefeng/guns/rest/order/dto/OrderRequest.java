@@ -13,7 +13,7 @@ import lombok.Data;
 @Data
 public class OrderRequest extends AbstractRequest {
 
-    private String uuid;
+    private Long uuid;
 
     private String orderStatus;
 }

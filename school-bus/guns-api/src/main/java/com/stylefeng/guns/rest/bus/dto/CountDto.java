@@ -15,9 +15,9 @@ import java.io.Serializable;
 @Data
 public class CountDto implements Serializable {
     @ApiModelProperty(notes = "场次id")
-    private Integer uuid;
+    private Long uuid;
     @ApiModelProperty(notes = "班车id")
-    private Integer busId;
+    private Long busId;
     @ApiModelProperty(notes = "班车出发时间")
     private String beginTime;
     @ApiModelProperty(notes = "班车结束时间")
@@ -32,5 +32,7 @@ public class CountDto implements Serializable {
     private String seatStatus;
     @ApiModelProperty(notes = "出发日期")
     private String beginDate;
+    @ApiModelProperty(notes = "更新时间")
+    private String updateTime;
 
 }

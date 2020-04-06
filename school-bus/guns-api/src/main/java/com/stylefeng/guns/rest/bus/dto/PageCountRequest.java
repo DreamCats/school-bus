@@ -14,9 +14,9 @@ import lombok.Data;
 public class PageCountRequest extends AbstractRequest {
 
     // 当前页
-    private Integer currentPage;
+    private Long currentPage;
     // 每页数量
-    private Integer pageSize;
+    private Long pageSize;
     // 地区状态
     private String busStatus;
 }

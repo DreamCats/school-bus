@@ -7,6 +7,7 @@
 
 package com.stylefeng.guns.rest;
 
+import cn.hutool.core.convert.Convert;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.stylefeng.guns.rest.alipay.IPayService;
 import com.stylefeng.guns.rest.alipay.dto.PayRequset;
@@ -33,8 +34,8 @@ public class OrderController {
     public void addOrder() {
         AddOrderRequest request = new AddOrderRequest();
         request.setBusStatus("0");// 沙河->清水河
-        request.setCountId(1); // 场次1
-        request.setUserId(4); // 4下单
+        request.setCountId(Convert.toLong(1)); // 场次1
+        request.setUserId(Convert.toLong(4)); // 4下单
         request.setCountPrice(4.00);
         request.setOrderUser("feng");
         request.setSeatsIds("3,4"); // 座位
@@ -45,7 +46,7 @@ public class OrderController {
     @Test
     public void pay() {
         PayRequset requset = new PayRequset();
-        requset.setUserId(4);
+        requset.setUserId(Convert.toLong(4));
         requset.setPayPassword("123456");
         requset.setTotalMoney(100.00);
         PayResponse response = payService.pay(requset);

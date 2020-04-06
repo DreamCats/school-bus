@@ -17,7 +17,7 @@ import java.io.Serializable;
 @ApiModel(description = "班车表现实体")
 public class BusDto implements Serializable {
     @ApiModelProperty(notes = "班车id")
-    private Integer uuid;
+    private Long uuid;
     @ApiModelProperty(notes = "座位人数")
     private String limitNumber;
     @ApiModelProperty(notes = "司机姓名")

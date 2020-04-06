@@ -7,6 +7,7 @@
 
 package com.stylefeng.guns.rest.modular.bus;
 
+import cn.hutool.core.convert.Convert;
 import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.alibaba.dubbo.config.annotation.Reference;
@@ -47,7 +48,7 @@ public class BusController {
         // 本来想用本地缓存的，试试redis吧  第一种方案
         try {
             String busStatus = pageInfo.getBusStatus();
-            Integer currentPage = pageInfo.getCurrentPage();
+            Long currentPage = pageInfo.getCurrentPage();
             String key = RedisConstants.COUNTS_EXPIRE.getKey() + busStatus + currentPage;
             // 在这加一个锁 , 效率极其的慢
             if (redisUtils.hasKey(key)) {
@@ -118,10 +119,10 @@ public class BusController {
     }
 
     @ApiOperation(value = "获取车次详情", notes = "获取车次详情", response = CountDetailResponse.class)
-    @ApiImplicitParam(name = "countId", value = "场次id,CountSimpleDto中的uuid",required = true, dataType = "String", paramType = "query")
+    @ApiImplicitParam(name = "countId", value = "场次id,CountSimpleDto中的uuid",required = true, dataType = "Long", paramType = "query")
     @GetMapping("getCountDetail")
     @SentinelResource(value = "getCountDetail", blockHandler = "countDetailBlockHandler", fallback = "countDetailFallbackHandler")
-    public ResponseData getCountDetailById(String countId) {
+    public ResponseData getCountDetailById(Long countId) {
         // id 从本队缓存中取
         try {
             String key = RedisConstants.COUNT_DETAIL_EXPIRE.getKey()+countId;
@@ -131,7 +132,7 @@ public class BusController {
                 return new ResponseUtil().setData(obj);
             }
             CountDetailRequest request = new CountDetailRequest();
-            request.setCountId(Integer.parseInt(countId));
+            request.setCountId(countId);
             CountDetailResponse response = busService.getCountDetailById(request);
             redisUtils.set(key, response, RedisConstants.COUNT_DETAIL_EXPIRE.getTime());
             log.warn("getCountDetailById\n");

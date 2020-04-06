@@ -17,9 +17,9 @@ import java.io.Serializable;
 @ApiModel(description = "车次列表的Dto")
 public class CountSimpleDto implements Serializable {
     @ApiModelProperty(notes = "场次id")
-    private Integer uuid;
+    private Long uuid;
     @ApiModelProperty(notes = "班车id")
-    private Integer busId;
+    private Long busId;
     @ApiModelProperty(notes = "班车出发时间")
     private String beginTime;
     @ApiModelProperty(notes = "0：沙河；1：清水河；2：沙河到清水河；3：清水河到沙河")

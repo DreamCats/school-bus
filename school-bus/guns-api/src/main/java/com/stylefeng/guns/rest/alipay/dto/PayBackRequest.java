@@ -12,9 +12,9 @@ import lombok.Data;
 
 @Data
 public class PayBackRequest extends AbstractRequest {
-    private String orderId;
-    private Integer coundId;
-    private Integer userId;
+    private Long orderId;
+    private Long coundId;
+    private Long userId;
     private String seatsIds;
-    private String totalMoney;
+    private Double totalMoney;
 }

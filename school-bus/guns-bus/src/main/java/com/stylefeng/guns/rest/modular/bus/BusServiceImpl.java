@@ -128,7 +128,7 @@ public class BusServiceImpl implements IBusService {
     }
 
     @Override
-    public boolean repeatSeats(String seats, Integer coundId) {
+    public boolean repeatSeats(String seats, Long coundId) {
         // 查查数据库， 找到座位字段
         boolean b = false; // false:不重复，true：重复
         try {
@@ -159,7 +159,7 @@ public class BusServiceImpl implements IBusService {
     }
 
     @Override
-    public boolean addSeats(String seats, Integer coundId) {
+    public boolean addSeats(String seats, Long coundId) {
         // 直接找场次的座位
         try {
             Count count = countMapper.selectById(coundId);
@@ -179,7 +179,7 @@ public class BusServiceImpl implements IBusService {
     }
 
     @Override
-    public boolean filterRepeatSeats(String seats, Integer coundId) {
+    public boolean filterRepeatSeats(String seats, Long coundId) {
         try {
             Count count = countMapper.selectById(coundId);
             String[] ss = seats.split(",");

@@ -18,9 +18,9 @@ import java.io.Serializable;
 public class CountDetailDto implements Serializable {
 
     @ApiModelProperty(notes = "场次id")
-    private Integer uuid;
+    private Long uuid;
     @ApiModelProperty(notes = "班车id")
-    private Integer busId;
+    private Long busId;
     @ApiModelProperty(notes = "司机姓名")
     private String driverName;
     @ApiModelProperty(notes = "0：沙河；1：清水河")

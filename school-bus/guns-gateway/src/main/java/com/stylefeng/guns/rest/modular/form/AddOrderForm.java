@@ -15,7 +15,7 @@ import lombok.Data;
 @Data
 public class AddOrderForm {
     @ApiModelProperty(value = "场次id", required = true)
-    private Integer countId;
+    private Long countId;
     @ApiModelProperty(value = "下单人", required = true)
     private String orderUser;
     @ApiModelProperty(value = "0:沙河->清水河；1:清水河->沙河", required = true)

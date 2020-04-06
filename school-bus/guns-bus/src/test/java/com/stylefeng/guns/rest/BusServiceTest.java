@@ -7,6 +7,7 @@
 
 package com.stylefeng.guns.rest;
 
+import cn.hutool.core.convert.Convert;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.stylefeng.guns.core.util.DateUtil;
@@ -40,8 +41,8 @@ public class BusServiceTest {
     @Test
     public void getBus() {
         PageBusRequest request = new PageBusRequest();
-        request.setCurrentPage(1);
-        request.setPageSize(3);
+        request.setCurrentPage(Convert.toLong(1));
+        request.setPageSize(Convert.toLong(3));
         PageBusResponse response = busService.getBus(request);
         System.out.println(response);
     }
@@ -49,8 +50,8 @@ public class BusServiceTest {
     @Test
     public void getCount() {
         PageCountRequest request = new PageCountRequest();
-        request.setCurrentPage(2);
-        request.setPageSize(1);
+        request.setCurrentPage(Convert.toLong(2));
+        request.setPageSize(Convert.toLong(1));
         request.setBusStatus("0");
         PageCountResponse response = busService.getCount(request);
         List<CountSimpleDto> countSimpleDtos = response.getCountSimpleDtos();
@@ -62,7 +63,7 @@ public class BusServiceTest {
     @Test
     public void getCountDetailById() {
         CountDetailRequest request = new CountDetailRequest();
-        request.setCountId(1);
+        request.setCountId(Convert.toLong(1));
         CountDetailResponse response = busService.getCountDetailById(request);
         System.out.println(response);
     }
@@ -108,8 +109,8 @@ public class BusServiceTest {
     public void getCountsRedis() {
         // 获取对象
         PageCountRequest request = new PageCountRequest();
-        request.setCurrentPage(1);
-        request.setPageSize(4);
+        request.setCurrentPage(Convert.toLong(1));
+        request.setPageSize(Convert.toLong(4));
         request.setBusStatus("0");
         PageCountResponse response = busService.getCount(request);
         List<CountSimpleDto> simpleDtos = response.getCountSimpleDtos();

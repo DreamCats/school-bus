@@ -65,7 +65,7 @@ public class PayController {
             String userId = jwtTokenUtil.getUsernameFromToken(token);
             String key = RedisConstants.USER_INFO_EXPIRE.getKey() + userId;
             PayRequset requset = new PayRequset();
-            requset.setUserId(Integer.parseInt(userId));
+            requset.setUserId(Convert.toLong(userId));
             requset.setPayPassword(payForm.getPayPassword());
             requset.setTotalMoney(payForm.getTotalMoney());
             PayResponse response = payService.pay(requset);
@@ -74,6 +74,7 @@ public class PayController {
             if (redisUtils.hasKey(key)) {
                 redisUtils.del(key);
             }
+            // 按道理讲， 我这边要更改状态
             return new ResponseUtil().setData(response);
         } catch (Exception e) {
             log.error("pay\n", e);
@@ -92,7 +93,7 @@ public class PayController {
             String token = CurrentUser.getToken(req);
             String userId = jwtTokenUtil.getUsernameFromToken(token);
             PayBackRequest request = new PayBackRequest();
-            request.setUserId(Integer.parseInt(userId));
+            request.setUserId(Convert.toLong(userId));
             request.setOrderId(payBackFrom.getOrderId());
             request.setCoundId(payBackFrom.getCoundId());
             request.setSeatsIds(payBackFrom.getSeatsIds());

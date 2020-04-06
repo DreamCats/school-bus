@@ -7,6 +7,7 @@
 
 package com.stylefeng.guns.rest.modular.order.rd;
 
+import cn.hutool.core.convert.Convert;
 import com.stylefeng.guns.core.constants.RedisConstants;
 import com.stylefeng.guns.rest.order.IOrderService;
 import com.stylefeng.guns.rest.order.dto.OrderRequest;
@@ -49,7 +50,7 @@ public class RedisKeyExpirationListener extends KeyExpirationEventMessageListene
             // 1。 更改订单状态就完事了
             OrderRequest request = new OrderRequest();
             request.setOrderStatus("2"); // 关闭订单
-            request.setUuid(orderId);
+            request.setUuid(Convert.toLong(orderId));
             orderService.updateOrderStatus(request);
             log.warn("过期订单已处理：" + orderId);
         }

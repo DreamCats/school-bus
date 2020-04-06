@@ -16,11 +16,11 @@ import lombok.Data;
 public class PayBackForm {
 
     @ApiModelProperty(value = "订单id", required = true)
-    private String orderId;
+    private Long orderId;
     @ApiModelProperty(value = "场次id", required = true)
-    private Integer coundId;
+    private Long coundId;
     @ApiModelProperty(value = "座位id", required = true)
     private String seatsIds;
     @ApiModelProperty(value = "总金额", required = true)
-    private String totalMoney;
+    private Double totalMoney;
 }

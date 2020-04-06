@@ -18,7 +18,7 @@ import java.io.Serializable;
 public class UserDto implements Serializable {
 
     @ApiModelProperty(notes = "用户id，这没啥好说的，暂时按自增")
-    private Integer uuid; // 根据用户id
+    private Long uuid; // 根据用户id
     @ApiModelProperty(notes = "用户名")
     private String userName; //
 

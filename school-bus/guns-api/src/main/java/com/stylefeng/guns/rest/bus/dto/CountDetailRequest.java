@@ -13,6 +13,6 @@ import lombok.Data;
 
 @Data
 public class CountDetailRequest extends AbstractRequest {
-    // 场次idi
-    private Integer countId;
+    // 场次id
+    private Long countId;
 }

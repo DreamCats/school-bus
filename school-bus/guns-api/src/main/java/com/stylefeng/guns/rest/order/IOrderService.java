@@ -57,5 +57,5 @@ public interface IOrderService {
      * @param OrderId
      * @return
      */
-    boolean deleteOrderById(String OrderId);
+    boolean deleteOrderById(Long OrderId);
 }

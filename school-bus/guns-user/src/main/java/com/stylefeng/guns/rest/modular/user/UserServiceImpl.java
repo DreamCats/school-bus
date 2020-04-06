@@ -7,6 +7,7 @@
 
 package com.stylefeng.guns.rest.modular.user;
 
+import cn.hutool.core.convert.Convert;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.stylefeng.guns.core.util.DateUtil;
@@ -105,7 +106,7 @@ public class UserServiceImpl implements IUserService {
     @Override
     public UserLoginResponse login(UserLoginRequst request) {
         UserLoginResponse res = new UserLoginResponse();
-        res.setUserId(0);
+        res.setUserId(Convert.toLong(0));
         res.setCode(SbCode.USERORPASSWORD_ERRROR.getCode());
         res.setMsg(SbCode.USERORPASSWORD_ERRROR.getMessage());
         try {

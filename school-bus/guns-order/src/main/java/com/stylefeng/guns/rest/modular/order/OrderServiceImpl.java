@@ -7,6 +7,7 @@
 
 package com.stylefeng.guns.rest.modular.order;
 
+import cn.hutool.core.convert.Convert;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.alibaba.fastjson.JSON;
@@ -202,7 +203,7 @@ public class OrderServiceImpl implements IOrderService {
         // 判断座位，如果重复，直接退出，否则更新场次的座位信息
         AddOrderResponse response = new AddOrderResponse();
         // 全局orderId
-        String orderId = UUIDUtils.getUUID();
+        Long orderId = UUIDUtils.flakesUUID();
         // 1。 判断座位，如果重复，直接退出，否则下一步
         // 2。 更新座位，如果没有异常，这是写操作
         // 3。 计算总金额，如果没有异常
@@ -269,7 +270,7 @@ public class OrderServiceImpl implements IOrderService {
             mqDto.setCountId(request.getCountId());
             mqDto.setSeatsIds(request.getSeatsIds());
             try {
-                sendCancelOrder(topic,tag,orderId, JSON.toJSONString(mqDto));
+                sendCancelOrder(topic,tag, Convert.toStr(orderId), JSON.toJSONString(mqDto));
                 log.warn("订单回退消息发送成功..." + mqDto);
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -353,7 +354,7 @@ public class OrderServiceImpl implements IOrderService {
      * @return
      */
     @Override
-    public boolean deleteOrderById(String OrderId) {
+    public boolean deleteOrderById(Long OrderId) {
         try {
             QueryWrapper<Order> wrapper = new QueryWrapper<>();
             wrapper.eq("uuid", OrderId);

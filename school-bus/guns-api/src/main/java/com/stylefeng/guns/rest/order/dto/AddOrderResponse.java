@@ -15,5 +15,5 @@ public class AddOrderResponse extends AbstractResponse {
 
     private OrderDto orderDto;
 
-    private String orderId;
+    private Long orderId;
 }

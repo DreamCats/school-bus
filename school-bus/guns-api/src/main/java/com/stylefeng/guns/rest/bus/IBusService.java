@@ -39,7 +39,7 @@ public interface IBusService {
      * @param coundId
      * @return
      */
-    boolean repeatSeats(String seats, Integer coundId);
+    boolean repeatSeats(String seats, Long coundId);
 
     /**
      * 更新座位信息
@@ -47,7 +47,7 @@ public interface IBusService {
      * @param coundId
      * @return
      */
-    boolean addSeats(String seats, Integer coundId);
+    boolean addSeats(String seats, Long coundId);
 
     /**
      * 还原场次座位，去掉coundId中已出现seats的座位
@@ -55,7 +55,7 @@ public interface IBusService {
      * @param coundId
      * @return
      */
-    boolean filterRepeatSeats(String seats, Integer coundId);
+    boolean filterRepeatSeats(String seats, Long coundId);
 
     /**
      * 每天上午7点到晚上21点，每隔30分钟执行一次

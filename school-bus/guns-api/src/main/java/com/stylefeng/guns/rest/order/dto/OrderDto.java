@@ -18,11 +18,11 @@ import java.io.Serializable;
 public class OrderDto implements Serializable {
 
     @ApiModelProperty(notes = "订单id")
-    private String uuid;
+    private Long uuid;
     @ApiModelProperty(notes = "场次id")
-    private Integer countId;
+    private Long countId;
     @ApiModelProperty(notes = "车牌号")
-    private Integer busId;
+    private Long busId;
     @ApiModelProperty(notes = "0：沙河->清水河，1：清水河->沙河")
     private String busStatus;
     @ApiModelProperty(notes = "已选座位")

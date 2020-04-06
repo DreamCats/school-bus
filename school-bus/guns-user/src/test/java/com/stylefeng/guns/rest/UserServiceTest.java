@@ -7,6 +7,7 @@
 
 package com.stylefeng.guns.rest;
 
+import cn.hutool.core.convert.Convert;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.stylefeng.guns.rest.modular.user.RedisUtils;
 import com.stylefeng.guns.rest.user.IUserService;
@@ -47,7 +48,7 @@ public class UserServiceTest {
     public void updateUserInfo() {
         UserUpdateInfoRequest request = new UserUpdateInfoRequest();
         request.setNickName("峰");
-        request.setId(4);
+        request.setId(Convert.toLong(4));
         request.setUserSex(0);
         UserResponse userResponse = userAPI.updateUserInfo(request);
         System.out.println(userResponse);
@@ -56,7 +57,7 @@ public class UserServiceTest {
     @Test
     public void  getUserInfoById() {
         UserRequest request = new UserRequest();
-        request.setId(4);
+        request.setId(Convert.toLong(4));
         UserResponse response = userAPI.getUserById(request);
         System.out.println(response);
     }

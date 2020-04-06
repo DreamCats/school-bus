@@ -12,9 +12,9 @@ import lombok.Data;
 
 @Data
 public class NoTakeBusRequest extends AbstractRequest {
-    private Integer userId;
+    private Long userId;
     // 当前页
-    private Integer currentPage;
+    private Long currentPage;
     // 每页数量
-    private Integer pageSize;
+    private Long pageSize;
 }

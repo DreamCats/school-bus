@@ -13,7 +13,7 @@ import lombok.Data;
 @Data
 public class UserUpdateInfoRequest extends AbstractRequest {
 
-    private Integer id; // 通过id找
+    private Long id; // 通过id找
 
 //    private String userName;
     private String nickName;

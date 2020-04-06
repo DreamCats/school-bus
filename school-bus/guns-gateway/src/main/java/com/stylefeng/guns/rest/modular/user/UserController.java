@@ -156,7 +156,7 @@ public class UserController {
                 return new ResponseUtil<>().setData(obj);
             }
             UserRequest request = new UserRequest();
-            request.setId(Integer.parseInt(userId));
+            request.setId(Convert.toLong(userId));
             UserResponse response = userAPI.getUserById(request);
             redisUtils.set(key, response, RedisConstants.USER_INFO_EXPIRE.getTime());
             log.info("getUserById\n");
@@ -196,7 +196,7 @@ public class UserController {
             request.setUserPhone(form.getUserPhone());
             request.setMoney(form.getMoney());
             request.setPayPassword(form.getPayPassword());
-            request.setId(Integer.parseInt(userId));
+            request.setId(Convert.toLong(userId));
             UserResponse response = userAPI.updateUserInfo(request);
             log.info("updateUserInfo\n");
             return new ResponseUtil<>().setData(response);

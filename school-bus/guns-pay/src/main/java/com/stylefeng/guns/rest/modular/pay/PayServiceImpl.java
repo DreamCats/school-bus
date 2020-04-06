@@ -76,21 +76,22 @@ public class PayServiceImpl implements IPayService {
     @Override
     public PayResponse pay(PayRequset requset) {
         PayResponse payResponse = new PayResponse();
-        Integer userId = requset.getUserId();
+        Long userId = requset.getUserId();
         Double userMoney = null;
         try {
             // 1. 先核对支付密码是否正确
             tag = MqTags.PAY_CHECK_CANCLE.getTag();
-            Object obj = redisUtils.get(RedisConstants.USER_INFO_EXPIRE.getKey() + userId);
+            String key = RedisConstants.USER_INFO_EXPIRE.getKey() + userId;
             UserResponse userResponse = new UserResponse();
-            if (null != obj) {
-                userResponse = (UserResponse) obj;
+            if (redisUtils.hasKey(key)) {
+                userResponse = (UserResponse) redisUtils.get(key);
             } else {
                 UserRequest request = new UserRequest();
                 request.setId(userId);
                 // 获取用户信息
                 userResponse = userService.getUserById(request);
             }
+
             // 支付密码不对
             if (!userResponse.getUserDto().getPayPassword().equals(requset.getPayPassword())) {
                 payResponse.setCode(SbCode.PAY_PASSWORD_ERROR.getCode());
@@ -116,6 +117,7 @@ public class PayServiceImpl implements IPayService {
 //            CastException.cast(SbCode.SYSTEM_ERROR);
             payResponse.setCode(SbCode.SUCCESS.getCode());
             payResponse.setMsg(SbCode.SUCCESS.getMessage());
+            // 4. 按道理讲，这边更改订单状态......
             return payResponse;
         } catch (Exception e) {
             log.error("支付业务发生异常");

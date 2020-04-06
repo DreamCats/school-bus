@@ -14,7 +14,7 @@ import lombok.Data;
 @Data
 public class UserRequest extends AbstractRequest {
 
-    private Integer id; // 通过id找
+    private Long id; // 通过id找
 
     private String userName;
 

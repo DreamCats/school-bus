@@ -17,7 +17,7 @@ import java.io.Serializable;
 @ApiModel("评价订单Dto")
 public class EvaluateDto implements Serializable {
     @ApiModelProperty(notes = "订单id")
-    private String uuid;
+    private Long uuid;
     @ApiModelProperty(notes = "0：沙河->清水河，1：清水河->沙河")
     private String busStatus;
     @ApiModelProperty(notes = "已选座位")
@@ -29,7 +29,7 @@ public class EvaluateDto implements Serializable {
     @ApiModelProperty(notes = "班车出发时间")
     private String beginTime;
     @ApiModelProperty(notes = "班车id")
-    private Integer busId;
+    private Long busId;
     @ApiModelProperty(notes = "0:未评价；1:已评价")
     private String evaluateStatus;
     @ApiModelProperty(notes = "评论内容")

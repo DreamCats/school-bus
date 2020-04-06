@@ -1,0 +1,170 @@
+
+### 校验用户名是否已存在
+GET {{host}}/user/check?username=mai
+Accept: */*
+Cache-Control: no-cache
+
+<> 2020-04-06T044258.200.json
+
+
+### 注册接口
+POST {{host}}/user/register
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/json
+
+{ "email": "test@qq.com",
+  "username": "laxiba3",
+  "password": "123",
+  "phone": "1000"
+}
+
+<> 2020-04-06T044313.200.json
+<> 2020-04-05T112833.200.json
+
+### 获取token
+GET {{host}}/auth?userName=mai&password=123
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/json
+
+<> 2020-04-06T044323.200.json
+
+### 携带token获取个人信息
+GET {{host}}/user/getUserInfo
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/json
+Authorization: {{token}}
+
+<> 2020-04-06T045104.200.json
+<> 2020-04-05T112925.200.json
+
+### 用户更新
+POST {{host}}/user/updateInfo
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "userSex": "0"
+}
+
+<> 2020-04-06T045342.200.json
+
+### 获取场次列表
+GET {{host}}/bus/getCount?currentPage=1&pageSize=4&busStatus=0
+Accept: */*
+Cache-Control: no-cache
+
+<> 2020-04-06T043931.200.json
+
+### 获取场次详情
+GET {{host}}/bus/getCountDetail?countId=1
+Accept: */*
+Cache-Control: no-cache
+
+<> 2020-04-06T044102.200.json
+
+### 获取未乘坐订单
+GET {{host}}/order/getNoTakeOrders?currentPage=1&pageSize=4
+Accept: */*
+Cache-Control: no-cache
+Authorization: {{token}}
+
+<> 2020-04-06T045546.200.json
+
+
+### 获取未支付订单
+GET {{host}}/order/getNoPayOrders?currentPage=1&pageSize=4
+Accept: */*
+Cache-Control: no-cache
+Authorization: {{token}}
+
+<> 2020-04-06T045716.200.json
+
+### 获取评价订单
+GET {{host}}/order/getEvaluateOrders?currentPage=1&pageSize=4&evaluateStauts=0
+Accept: */*
+Cache-Control: no-cache
+Authorization: {{token}}
+
+<> 2020-04-06T045819.200.json
+
+### 添加订单
+POST {{host}}/order/addOrder
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "countId": "391",
+  "orderUser": "mai",
+  "busStatus": "0",
+  "seatsIds": "2",
+  "countPrice": "4.00",
+  "expireTime": "300"
+}
+
+<> 2020-04-06T052336.200.json
+<> 2020-04-06T050504.200.json
+<> 2020-04-06T050217.200.json
+
+### 获取订单详情
+GET {{host}}/order/getOrder?orderId=1247087919454359552
+Accept: */*
+Cache-Control: no-cache
+Authorization: {{token}}
+
+<> 2020-04-06T050709.200.json
+
+### 更改订单状态
+POST {{host}}/order/updateOrderStatus
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "orderId": "1247087919454359552",
+  "orderStatus": "1"
+}
+
+<> 2020-04-06T051857.200.json
+
+### 支付
+POST {{host}}/pay/
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "payPassword": "123456",
+  "totalMoney": "4.00"
+}
+
+<> 2020-04-06T052708.200.json
+<> 2020-04-06T052557.200.json
+<> 2020-04-06T052522.200.json
+
+### 退款
+POST {{host}}/pay/back
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "orderId": "1247087919454359552",
+  "coundId": "391",
+  "seatsIds": "1",
+  "totalMoney": "4.00"
+}
+
+<> 2020-04-06T053204.200.json
+<> 2020-04-06T053014.200.json
+
+###

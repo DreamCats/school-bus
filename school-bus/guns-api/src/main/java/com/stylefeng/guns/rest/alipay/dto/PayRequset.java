@@ -12,7 +12,7 @@ import lombok.Data;
 
 @Data
 public class PayRequset extends AbstractRequest {
-    private Integer userId;
+    private Long userId;
     private String payPassword;
     private Double totalMoney; // 直接传钱， 感觉不安全
 }

@@ -15,7 +15,7 @@ import lombok.Data;
 @Data
 public class UserUpdateForm {
     @ApiModelProperty(hidden = true)
-    private Integer id; // 通过id找
+    private Long id; // 通过id找
 
     //    private String userName;
     @ApiModelProperty(value = "昵称", required = false)

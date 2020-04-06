@@ -13,9 +13,9 @@ import lombok.Data;
 @Data
 public class AddOrderRequest extends AbstractRequest {
     // 场次id
-    private Integer countId;
+    private Long countId;
     // 用户id
-    private Integer userId;
+    private Long userId;
     private String orderUser;
     private String busStatus;
     private String seatsIds;

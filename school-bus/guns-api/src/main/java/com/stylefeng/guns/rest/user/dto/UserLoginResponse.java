@@ -17,5 +17,5 @@ public class UserLoginResponse extends AbstractResponse {
 
     private String token;
 
-    private Integer userId;
+    private Long userId;
 }
