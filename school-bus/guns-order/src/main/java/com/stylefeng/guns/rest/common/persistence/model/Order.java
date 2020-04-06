@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -26,13 +27,13 @@ public class Order extends Model<Order> {
       /**
      * 主键编号
      */
-        @TableId(value = "uuid")
-      private String uuid;
+      @TableId(value = "uuid")
+      private Long uuid;
 
       /**
      * 场次id
      */
-      private Integer countId;
+      private Long countId;
 
       /**
      * 0:沙河->清水河；1:清水河->沙河
@@ -57,6 +58,7 @@ public class Order extends Model<Order> {
       /**
      * 修改时间
      */
+      @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
       private LocalDateTime orderTime;
 
       /**
@@ -82,6 +84,6 @@ public class Order extends Model<Order> {
     /**
      * 用户id
      */
-    private Integer userId;
+    private Long userId;
 
 }

@@ -27,8 +27,8 @@ public class User extends Model<User> {
       /**
      * 主键编号
      */
-        @TableId(value = "uuid", type = IdType.AUTO)
-      private Integer uuid;
+      @TableId(value = "uuid")
+      private Long uuid;
 
       /**
      * 用户账号
