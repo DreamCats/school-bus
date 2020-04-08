@@ -58,7 +58,7 @@ public class OrderServiceTest {
     public void addOrder() {
         AddOrderRequest request = new AddOrderRequest();
         request.setBusStatus("0");// 沙河->清水河
-        request.setCountId(Convert.toLong(1)); // 场次1
+        request.setCountId(Convert.toLong(390)); // 场次1
         request.setUserId(Convert.toLong(4)); // 4下单
         request.setCountPrice(4.00);
         request.setOrderUser("feng");

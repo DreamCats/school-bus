@@ -9,6 +9,7 @@ package com.stylefeng.guns.rest.modular.pay;
 
 
 
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.NumberUtil;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.alibaba.dubbo.config.annotation.Service;
@@ -126,7 +127,8 @@ public class PayServiceImpl implements IPayService {
             mqDto.setUserMoney(userMoney);
             // 发送消息
             try {
-                sendCancelPay(topic,tag,userId.toString(), JSON.toJSONString(mqDto));
+                String key = RedisConstants.PAY_EXCEPTION_CANCLE_EXPIRE.getKey() + Convert.toStr(userId);
+                sendCancelPay(topic,tag,key, JSON.toJSONString(mqDto));
                 log.warn("支付回退消息已发送");
             } catch (Exception ex) {
                 ex.printStackTrace();

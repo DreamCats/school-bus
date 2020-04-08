@@ -9,6 +9,8 @@ package com.stylefeng.guns.rest.modular.user.mq;
 
 import com.alibaba.fastjson.JSON;
 import com.stylefeng.guns.core.constants.MqTags;
+import com.stylefeng.guns.core.constants.RedisConstants;
+import com.stylefeng.guns.rest.modular.user.RedisUtils;
 import com.stylefeng.guns.rest.mq.MQDto;
 import com.stylefeng.guns.rest.user.IUserService;
 import com.stylefeng.guns.rest.user.dto.UserUpdateInfoRequest;
@@ -28,6 +30,9 @@ public class PayMoneyCancleListener implements RocketMQListener<MessageExt> {
     @Autowired
     private IUserService userService;
 
+    @Autowired
+    private RedisUtils redisUtils;
+
     @Override
     public void onMessage(MessageExt messageExt) {
         try {
@@ -37,15 +42,20 @@ public class PayMoneyCancleListener implements RocketMQListener<MessageExt> {
             if (!tags.equals(payCancleTag)) {
                 return;
             }
-            String body = new String(messageExt.getBody(), "UTF-8");
-            log.warn("收到订单服务异常：" + body);
-            MQDto mqDto = JSON.parseObject(body, MQDto.class);
-            if (mqDto.getUserId() != null && mqDto.getUserMoney() != null) {
-                UserUpdateInfoRequest request = new UserUpdateInfoRequest();
-                request.setId(mqDto.getUserId());
-                request.setMoney(mqDto.getUserMoney());
-                userService.updateUserInfo(request);
-                log.warn("余额已恢复");
+            // 2. 拿到key
+            String key = messageExt.getKeys();
+            if (!redisUtils.hasKey(key)) {
+                String body = new String(messageExt.getBody(), "UTF-8");
+                log.warn("收到订单服务异常：" + body);
+                MQDto mqDto = JSON.parseObject(body, MQDto.class);
+                if (mqDto.getUserId() != null && mqDto.getUserMoney() != null) {
+                    UserUpdateInfoRequest request = new UserUpdateInfoRequest();
+                    request.setId(mqDto.getUserId());
+                    request.setMoney(mqDto.getUserMoney());
+                    userService.updateUserInfo(request);
+                    log.warn("余额已恢复");
+                    redisUtils.set(key, mqDto.getUserId(), RedisConstants.PAY_EXCEPTION_CANCLE_EXPIRE.getTime());
+                }
             }
         } catch (Exception e) {
             log.error("支付消费信息程序崩...\n", e);

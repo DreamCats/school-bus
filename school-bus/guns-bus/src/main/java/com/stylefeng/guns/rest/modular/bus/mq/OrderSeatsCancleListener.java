@@ -9,7 +9,9 @@ package com.stylefeng.guns.rest.modular.bus.mq;
 
 import com.alibaba.fastjson.JSON;
 import com.stylefeng.guns.core.constants.MqTags;
+import com.stylefeng.guns.core.constants.RedisConstants;
 import com.stylefeng.guns.rest.bus.IBusService;
+import com.stylefeng.guns.rest.common.RedisUtils;
 import com.stylefeng.guns.rest.mq.MQDto;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.common.message.MessageExt;
@@ -29,6 +31,9 @@ public class OrderSeatsCancleListener implements RocketMQListener<MessageExt> {
     @Autowired
     private IBusService busService;
 
+    @Autowired
+    private RedisUtils redisUtils;
+
     /**
      * 回退座位
      * @param messageExt
@@ -42,15 +47,20 @@ public class OrderSeatsCancleListener implements RocketMQListener<MessageExt> {
             if (tags.equals(orderTag)) {
                 return;
             }
-            String body = new String(messageExt.getBody(), "UTF-8");
-            log.warn("收到订单服务异常：" + body);
-            MQDto mqDto = JSON.parseObject(body, MQDto.class);
-            // 判断需要的值在不在
-            if (mqDto.getCountId() != null && mqDto.getSeatsIds() != null) {
-                // 2. 调用业务，回退座位
-                boolean b = busService.filterRepeatSeats(mqDto.getSeatsIds(), mqDto.getCountId());
-                if (b) {
-                    log.warn("回退座位成功");
+            String key = messageExt.getKeys();
+            System.out.println("取消订单消息：" + key);
+            if (!redisUtils.hasKey(key)) {
+                String body = new String(messageExt.getBody(), "UTF-8");
+                log.warn("收到订单服务异常：" + body);
+                MQDto mqDto = JSON.parseObject(body, MQDto.class);
+                // 判断需要的值在不在
+                if (mqDto.getCountId() != null && mqDto.getSeatsIds() != null) {
+                    // 2. 调用业务，回退座位
+                    boolean b = busService.filterRepeatSeats(mqDto.getSeatsIds(), mqDto.getCountId());
+                    if (b) {
+                        log.warn("回退座位成功");
+                        redisUtils.set(key, mqDto.getOrderId(), RedisConstants.ORDER_EXCEPTION_CANCLE_EXPIRE.getTime());
+                    }
                 }
             }
         } catch (UnsupportedEncodingException e) {

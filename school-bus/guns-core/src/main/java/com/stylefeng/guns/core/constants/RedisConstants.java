@@ -18,7 +18,9 @@ public enum RedisConstants {
     NO_PAY_ORDERS_EXPIRE(600, "未支付订单列表", "getNoPayOrdersById "),// 10分钟
     EVALUATE_ORDERS_EXPIRE(600, "评价订单列表", "getEvaluateOrdersById "),// 10分钟
     SELECT_ORDER_EXPIRE(600, "订单详情", "selectOrderById "),// 10分钟
-    ORDER_CANCLE_EXPIRE(300, "订单详情", "order_cancle_expire ");// 10分钟
+    ORDER_CANCLE_EXPIRE(300, "定时取消订单", "order_cancle_expire "),// 10分钟
+    ORDER_EXCEPTION_CANCLE_EXPIRE(2, "异常取消订单", "order_exception_cancle_expire "),// 2s
+    PAY_EXCEPTION_CANCLE_EXPIRE(2, "异常回退金额", "pay_exception_cancle_expire ");// 2s
 
     private Integer time;
     private String message;

@@ -270,7 +270,8 @@ public class OrderServiceImpl implements IOrderService {
             mqDto.setCountId(request.getCountId());
             mqDto.setSeatsIds(request.getSeatsIds());
             try {
-                sendCancelOrder(topic,tag, Convert.toStr(orderId), JSON.toJSONString(mqDto));
+                String key = RedisConstants.ORDER_EXCEPTION_CANCLE_EXPIRE.getKey() + Convert.toStr(orderId);
+                sendCancelOrder(topic,tag, key, JSON.toJSONString(mqDto));
                 log.warn("订单回退消息发送成功..." + mqDto);
             } catch (Exception ex) {
                 ex.printStackTrace();
