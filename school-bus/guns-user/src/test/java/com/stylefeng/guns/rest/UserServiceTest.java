@@ -8,10 +8,10 @@
 package com.stylefeng.guns.rest;
 
 import cn.hutool.core.convert.Convert;
-import com.alibaba.dubbo.config.annotation.Reference;
 import com.stylefeng.guns.rest.modular.user.RedisUtils;
 import com.stylefeng.guns.rest.user.IUserService;
 import com.stylefeng.guns.rest.user.dto.*;
+import org.apache.dubbo.config.annotation.Reference;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

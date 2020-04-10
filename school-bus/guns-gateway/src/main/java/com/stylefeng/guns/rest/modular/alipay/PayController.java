@@ -9,7 +9,6 @@ package com.stylefeng.guns.rest.modular.alipay;
 
 import cn.hutool.core.convert.Convert;
 import com.alibaba.csp.sentinel.annotation.SentinelResource;
-import com.alibaba.dubbo.config.annotation.Reference;
 import com.stylefeng.guns.core.constants.SbCode;
 import com.stylefeng.guns.rest.alipay.IPayService;
 import com.stylefeng.guns.rest.alipay.dto.PayBackRequest;
@@ -27,6 +26,7 @@ import com.stylefeng.guns.rest.modular.form.PayForm;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.dubbo.config.annotation.Reference;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -44,7 +44,7 @@ public class PayController {
     @Autowired
     private RedisUtils redisUtils;
 
-    @Reference
+    @Reference(check = false)
     private IPayService payService;
 
     @Autowired

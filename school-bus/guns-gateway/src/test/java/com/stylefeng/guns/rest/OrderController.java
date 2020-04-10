@@ -8,13 +8,13 @@
 package com.stylefeng.guns.rest;
 
 import cn.hutool.core.convert.Convert;
-import com.alibaba.dubbo.config.annotation.Reference;
 import com.stylefeng.guns.rest.alipay.IPayService;
 import com.stylefeng.guns.rest.alipay.dto.PayRequset;
 import com.stylefeng.guns.rest.alipay.dto.PayResponse;
 import com.stylefeng.guns.rest.order.IOrderService;
 import com.stylefeng.guns.rest.order.dto.AddOrderRequest;
 import com.stylefeng.guns.rest.order.dto.AddOrderResponse;
+import org.apache.dubbo.config.annotation.Reference;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,10 +24,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest
 public class OrderController {
 
-    @Reference
+    @Reference(check = false)
     private IOrderService orderSerice;
 
-    @Reference
+    @Reference(check = false)
     private IPayService payService;
 
     @Test

@@ -8,9 +8,9 @@
 package com.stylefeng.guns.rest;
 
 import cn.hutool.core.convert.Convert;
-import com.alibaba.dubbo.config.annotation.Reference;
 import com.stylefeng.guns.rest.order.IOrderService;
 import com.stylefeng.guns.rest.order.dto.*;
+import org.apache.dubbo.config.annotation.Reference;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;

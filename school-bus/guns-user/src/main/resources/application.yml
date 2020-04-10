@@ -64,6 +64,8 @@ dubbo:
     address: 39.108.93.119:2181
   protocol:
     port: 20881
+  metadata-report:
+    address: zookeeper://39.108.93.119:2181
 
 
 rocketmq:

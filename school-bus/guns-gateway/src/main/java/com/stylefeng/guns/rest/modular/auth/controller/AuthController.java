@@ -1,6 +1,5 @@
 package com.stylefeng.guns.rest.modular.auth.controller;
 
-import com.alibaba.dubbo.config.annotation.Reference;
 import com.stylefeng.guns.rest.common.*;
 import com.stylefeng.guns.core.constants.RedisConstants;
 import com.stylefeng.guns.rest.modular.auth.controller.dto.AuthRequest;
@@ -11,6 +10,7 @@ import com.stylefeng.guns.rest.user.dto.UserLoginResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.dubbo.config.annotation.Reference;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -18,7 +18,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Currency;
 
 
 /**
@@ -35,7 +34,7 @@ public class AuthController {
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
-    @Reference
+    @Reference(check = false)
     private IUserService userAPI;
 
     @Autowired

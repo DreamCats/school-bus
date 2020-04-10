@@ -8,7 +8,6 @@
 package com.stylefeng.guns.rest.modular.user;
 
 import cn.hutool.core.convert.Convert;
-import com.alibaba.dubbo.config.annotation.Service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.stylefeng.guns.core.util.DateUtil;
 import com.stylefeng.guns.core.util.MD5Util;
@@ -19,6 +18,7 @@ import com.stylefeng.guns.rest.modular.user.converter.UserConverter;
 import com.stylefeng.guns.rest.user.IUserService;
 import com.stylefeng.guns.rest.user.dto.*;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.dubbo.config.annotation.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

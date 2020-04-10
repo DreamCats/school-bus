@@ -8,7 +8,6 @@
 package com.stylefeng.guns.rest.modular.bus;
 
 import cn.hutool.core.util.StrUtil;
-import com.alibaba.dubbo.config.annotation.Service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -26,6 +25,7 @@ import com.stylefeng.guns.rest.modular.bus.converter.BusConverter;
 import com.stylefeng.guns.rest.modular.bus.converter.CountConverter;
 import com.stylefeng.guns.rest.myutils.UUIDUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.dubbo.config.annotation.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

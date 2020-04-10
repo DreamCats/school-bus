@@ -8,7 +8,6 @@
 package com.stylefeng.guns.rest;
 
 import cn.hutool.core.convert.Convert;
-import com.alibaba.dubbo.config.annotation.Reference;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.stylefeng.guns.core.util.DateUtil;
 import com.stylefeng.guns.rest.bus.IBusService;
@@ -17,6 +16,7 @@ import com.stylefeng.guns.rest.common.RedisUtils;
 import com.stylefeng.guns.rest.common.persistence.dao.CountMapper;
 import com.stylefeng.guns.rest.common.persistence.model.Count;
 import com.stylefeng.guns.rest.myutils.UUIDUtils;
+import org.apache.dubbo.config.annotation.Reference;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +32,7 @@ import java.util.List;
 @SpringBootTest
 public class BusServiceTest {
 
-    @Reference
+    @Reference(check = false)
     private IBusService busService;
     @Autowired
     private CountMapper countMapper;

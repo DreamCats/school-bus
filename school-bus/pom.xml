@@ -38,7 +38,10 @@
         <jwt.version>0.9.0</jwt.version>
         <hutool.version>4.6.1</hutool.version>
         <!--my-->
-        <dubbo-spring.version>0.2.0</dubbo-spring.version>
+<!--        <dubbo-spring.version>0.2.0</dubbo-spring.version>-->
+        <dubbo-spring.version>2.7.4.1</dubbo-spring.version>
+        <curator.version>4.3.0</curator.version>
+        <curator-recipes.version>4.3.0</curator-recipes.version>
         <lombok.version>1.18.8</lombok.version>
         <mapstruct.version>1.3.0.Final</mapstruct.version>
         <swagger-starter.version>1.8.0.RELEASE</swagger-starter.version>
@@ -100,11 +103,22 @@
                 <version>${hutool.version}</version>
             </dependency>
             <!--dubbo-spring-->
+<!--            <dependency>-->
+<!--                <groupId>com.alibaba.boot</groupId>-->
+<!--                <artifactId>dubbo-spring-boot-starter</artifactId>-->
+<!--                <version>${dubbo-spring.version}</version>-->
+<!--            </dependency>-->
             <dependency>
-                <groupId>com.alibaba.boot</groupId>
+                <groupId>org.apache.dubbo</groupId>
                 <artifactId>dubbo-spring-boot-starter</artifactId>
                 <version>${dubbo-spring.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.apache.dubbo</groupId>
+                <artifactId>dubbo-registry-zookeeper</artifactId>
+                <version>${dubbo-spring.version}</version>
+            </dependency>
+
 
             <!--lombok-->
             <dependency>
@@ -147,12 +161,7 @@
                 <artifactId>spring-boot-starter-data-redis</artifactId>
                 <version>${spring-redis.version}</version>
             </dependency>
-            <!--rocketMQ-->
-<!--            <dependency>-->
-<!--                <groupId>org.apache.rocketmq</groupId>-->
-<!--                <artifactId>rocketmq-client</artifactId>-->
-<!--                <version>${rocketMQ.version}</version>-->
-<!--            </dependency>-->
+
             <dependency>
                 <groupId>org.apache.rocketmq</groupId>
                 <artifactId>rocketmq-spring-boot-starter</artifactId>
