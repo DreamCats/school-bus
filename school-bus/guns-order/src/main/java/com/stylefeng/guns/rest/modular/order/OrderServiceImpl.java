@@ -57,7 +57,7 @@ public class OrderServiceImpl implements IOrderService {
     @Autowired
     private OrderConvertver orderConvertver;
 
-    @Reference
+    @Reference(check = false)
     private IBusService busService;
 
     @Autowired
