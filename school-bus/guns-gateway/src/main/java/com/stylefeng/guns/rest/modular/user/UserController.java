@@ -179,6 +179,7 @@ public class UserController {
      */
     @ApiOperation(value = "更新接口", notes = "更新用户相关信息", response = UserResponse.class)
     @PostMapping("updateInfo")
+    @ApiImplicitParam(name = "form", value = "用户更新表", required = true)
     @SentinelResource("updateInfo")
     public ResponseData updateUserInfo(@RequestBody UserUpdateForm form, HttpServletRequest req) {
         // id 从本队缓存中取

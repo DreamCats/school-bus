@@ -188,6 +188,9 @@ public class OrderController {
      */
     @ApiOperation(value = "添加订单接口", notes = "添加订单接口信息", response = AddOrderResponse.class)
     @PostMapping("addOrder")
+    @ApiImplicitParams(
+            @ApiImplicitParam(name = "form", value = "添加订单表", required = true)
+    )
     @SentinelResource(value = "addOrder", blockHandler = "addOrderBlockHandler", fallback = "addOrderFallbackHandler")
     public ResponseData addOrder(@RequestBody AddOrderForm form, HttpServletRequest req) {
         try {
@@ -287,13 +290,12 @@ public class OrderController {
 
     /**
      * 更改订单状态
-     * @param orderId
-     * @param orderStatus：状态：0-待支付,1-已支付,2-已关闭
      * @param req：目的是获取token
      * @return
      */
     @ApiOperation(value = "更改订单状态", notes = "前提Auth，更改订单状态", response = OrderResponse.class)
     @PostMapping("updateOrderStatus")
+    @ApiImplicitParam(name = "form", value = "更改订单状态表", required = true)
     @SentinelResource("updateOrderStatus")
     public ResponseData updateOrderStatus(@RequestBody OrderUpdateForm form, HttpServletRequest req) {
         try {
