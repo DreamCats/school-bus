@@ -79,23 +79,32 @@ public class AuthFilter extends OncePerRequestFilter {
 
             // 为了，满足单点登录类似于qq， 继续优化
             // 先获取id
-            String userId = jwtTokenUtil.getUsernameFromToken(authToken);
-            if (!redisUtils.hasKey(userId)) {
-                CommonResponse response1 = new CommonResponse();
-                response1.setCode(SbCode.TOKEN_VALID_FAILED.getCode());
-                response1.setMsg(SbCode.TOKEN_VALID_FAILED.getMessage());
-                RenderUtil.renderJson(response, new ResponseUtil<>().setData(response1));
-                return;
-            } else {
-                // 取出token
-                String token = (String) redisUtils.get(userId);
-                if(!token.equals(authToken)) {
+            try {
+                System.out.println(authToken);
+                String userId = jwtTokenUtil.getUsernameFromToken(authToken);
+                if (!redisUtils.hasKey(userId)) {
                     CommonResponse response1 = new CommonResponse();
                     response1.setCode(SbCode.TOKEN_VALID_FAILED.getCode());
                     response1.setMsg(SbCode.TOKEN_VALID_FAILED.getMessage());
                     RenderUtil.renderJson(response, new ResponseUtil<>().setData(response1));
                     return;
+                } else {
+                    // 取出token
+                    String token = (String) redisUtils.get(userId);
+                    if(!token.equals(authToken)) {
+                        CommonResponse response1 = new CommonResponse();
+                        response1.setCode(SbCode.TOKEN_VALID_FAILED.getCode());
+                        response1.setMsg(SbCode.TOKEN_VALID_FAILED.getMessage());
+                        RenderUtil.renderJson(response, new ResponseUtil<>().setData(response1));
+                        return;
+                    }
                 }
+            } catch (Exception e) {
+                CommonResponse response1 = new CommonResponse();
+                response1.setCode(SbCode.TOKEN_VALID_FAILED.getCode());
+                response1.setMsg(SbCode.TOKEN_VALID_FAILED.getMessage());
+                RenderUtil.renderJson(response, new ResponseUtil<>().setData(response1));
+                return;
             }
             //验证token是否过期,包含了验证jwt是否正确
             try {

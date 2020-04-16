@@ -189,7 +189,7 @@ public class OrderController {
     @ApiOperation(value = "添加订单接口", notes = "添加订单接口信息", response = AddOrderResponse.class)
     @PostMapping("addOrder")
     @ApiImplicitParams(
-            @ApiImplicitParam(name = "form", value = "添加订单表", required = true)
+            @ApiImplicitParam(name = "form", value = "添加订单表", required = true, dataType = "AddOrderForm")
     )
     @SentinelResource(value = "addOrder", blockHandler = "addOrderBlockHandler", fallback = "addOrderFallbackHandler")
     public ResponseData addOrder(@RequestBody AddOrderForm form, HttpServletRequest req) {

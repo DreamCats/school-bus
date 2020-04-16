@@ -100,7 +100,7 @@ Content-Type: application/json
 Authorization: {{token}}
 
 {
-  "countId": "391",
+  "countId": "1247555231852662784",
   "orderUser": "mai",
   "busStatus": "0",
   "seatsIds": "2",
@@ -113,7 +113,7 @@ Authorization: {{token}}
 <> 2020-04-06T050217.200.json
 
 ### 获取订单详情
-GET {{host}}/order/getOrder?orderId=1247087919454359552
+GET {{host}}/order/getOrder?orderId=1250623694162759680
 Accept: */*
 Cache-Control: no-cache
 Authorization: {{token}}
