@@ -50,13 +50,7 @@ public class BusController {
             String busStatus = pageInfo.getBusStatus();
             Long currentPage = pageInfo.getCurrentPage();
             String key = RedisConstants.COUNTS_EXPIRE.getKey() + busStatus + currentPage;
-            // 在这加一个锁 , 效率极其的慢
             if (redisUtils.hasKey(key)) {
-//                Object obj = redisUtils.lGetIndex(key, currentPage - 1);
-//                if (null != obj) {
-//                    log.warn("getCount->redis\n");
-//                    return new ResponseUtil().setData(obj);
-//                }
                 Object obj = redisUtils.get(key);
                 log.warn("getCount->redis\n");
                 return new ResponseUtil().setData(obj);
@@ -67,18 +61,7 @@ public class BusController {
             request.setPageSize(pageInfo.getPageSize());
             request.setBusStatus(pageInfo.getBusStatus());
             PageCountResponse response = busService.getCount(request);
-            // 写缓存
-            // 这里高并发模拟有问题， 虽然上面判断了， 但是并发情况，依然来这里了，
-            // 假如我不用 redis的list呢？ 本身一天的场次列表也不多
-//            if (!redisUtils.hasKey(key)) {
-//                synchronized (this) {
-//                    Object obj = redisUtils.lGetIndex(key, currentPage - 1);
-//                    if (null == obj) {
-//                        redisUtils.lSet(key, response, RedisConstants.COUNTS_EXPIRE.getTime());
-//                    }
-//                }
-//            }
-            // 你随便写，不过在此判断一下
+
             if (!redisUtils.hasKey(key)) {
                 redisUtils.set(key, response, RedisConstants.COUNTS_EXPIRE.getTime());
             }
@@ -122,7 +105,7 @@ public class BusController {
     @ApiImplicitParam(name = "countId", value = "场次id,CountSimpleDto中的uuid",required = true, dataType = "Long", paramType = "query")
     @GetMapping("getCountDetail")
     @SentinelResource(value = "getCountDetail", blockHandler = "countDetailBlockHandler", fallback = "countDetailFallbackHandler")
-    public ResponseData getCountDetailById(Long countId) {
+    public ResponseData d(Long countId) {
         // id 从本队缓存中取
         try {
             String key = RedisConstants.COUNT_DETAIL_EXPIRE.getKey()+countId;
