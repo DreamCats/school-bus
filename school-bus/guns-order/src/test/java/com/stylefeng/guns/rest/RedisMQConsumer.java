@@ -41,7 +41,7 @@ public class RedisMQConsumer {
         Set<Object> set = redisUtils.rangeByScore(RedisMQ.QUEUE_NAME, 0, System.currentTimeMillis());
         if (null != set) {
             // 如果不为空
-            // 当前时间
+            // 获取当前时间
             long current = System.currentTimeMillis();
             for (Object id : set) {
                 long  score = redisUtils.getScore(RedisMQ.QUEUE_NAME, (String) id).longValue();

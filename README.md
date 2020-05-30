@@ -31,7 +31,8 @@
 
 - [x] 环境搭建的文档（Java、MySQL、Redis、Zoookeeper、Dubbo和RocketMQ）
 - [x] Redis绑定用户Token分析文档
-- [ ] 用户服务所有接口分析文档
+- [x] 用户服务所有接口分析文档
+- [ ] 班车服务所有接口分析文档
 
 ## 访问入口
 
@@ -44,6 +45,7 @@
 
 - [环境搭建文档](/doc/环境搭建文档.md)
 - [Redis绑定Token分析文档](/doc/Redis绑定Token.md)
+- [用户服务所有接口分析文档](/doc/用户服务.md)
 
 ## 架构图
 
