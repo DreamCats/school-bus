@@ -83,8 +83,8 @@ public class OrderServiceImpl implements IOrderService {
         System.out.println("当前日期:" + day);
         System.out.println("当前时间:" + hours);
         queryWrapper
-                .eq("user_id", request.getUserId())
-                .eq("order_status", "1")// 1：已经支付
+                .eq("so.user_id", request.getUserId())
+                .eq("so.order_status", "1")// 1：已经支付
                 .ge("sc.begin_date", day) // 比如，
                 .ge("sc.begin_time", hours)
                 .orderByAsc("sc.begin_time")
@@ -126,10 +126,11 @@ public class OrderServiceImpl implements IOrderService {
         System.out.println("当前日期:" + day);
         System.out.println("当前时间:" + hours);
         queryWrapper
-                .eq("user_id", request.getUserId())
-                .eq("order_status", "1")
-                .and(o -> o.eq("sc.begin_date", day).lt("sc.begin_time", hours)
-                                .or().lt("sc.begin_date", day))
+                .eq("so.user_id", request.getUserId())
+                .eq("so.order_status", "1")
+                .and(o -> o.eq("sc.begin_date", day)
+                           .lt("sc.begin_time", hours)
+                           .or().lt("sc.begin_date", day))
                 .eq("evaluate_status", request.getEvaluateStatus())
                 .orderByDesc("sc.begin_time")
                 .orderByDesc("so.order_time");
@@ -168,8 +169,8 @@ public class OrderServiceImpl implements IOrderService {
         System.out.println("当前日期:" + day);
         System.out.println("当前时间:" + hours);
         queryWrapper
-                .eq("user_id", request.getUserId())
-                .eq("order_status", "0")
+                .eq("so.user_id", request.getUserId())
+                .eq("so.order_status", "0")
                 .ge("sc.begin_date", day) // 比如，
                 .ge("sc.begin_time", hours)
                 .orderByDesc("sc.begin_time")
