@@ -31,7 +31,7 @@ public class RedisKeyExpirationListener extends KeyExpirationEventMessageListene
     private IOrderService orderService;
 
     /**
-     * 监听key过期时间
+     * 监听key过期事件
      * @param message
      * @param pattern
      */
