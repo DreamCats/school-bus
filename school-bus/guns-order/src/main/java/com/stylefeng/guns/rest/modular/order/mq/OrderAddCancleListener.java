@@ -34,6 +34,10 @@ public class OrderAddCancleListener implements RocketMQListener<MessageExt> {
     @Autowired
     private RedisUtils redisUtils;
 
+    /**
+     * 取消订单
+     * @param messageExt
+     */
     @Override
     public void onMessage(MessageExt messageExt) {
         try {

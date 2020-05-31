@@ -33,6 +33,10 @@ public class PayMoneyCancleListener implements RocketMQListener<MessageExt> {
     @Autowired
     private RedisUtils redisUtils;
 
+    /**
+     * 支付金额异常
+     * @param messageExt
+     */
     @Override
     public void onMessage(MessageExt messageExt) {
         try {
