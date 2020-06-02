@@ -40,7 +40,7 @@
 
 ## 访问入口
 
-- [前端源码]()
+- [前端源码](https://github.com/Ly649423/online-ticket)
 - [网站测试访问](http://ot.dreamcat.ink:8080/)只供测试学习使用哈，别搞崩了哇...     **友情提醒：面向移动端**
 
 ## 文档
@@ -53,6 +53,7 @@
 - [支付服务所有接口分析文档](/doc/支付服务.md)
 - [添加订单、支付和退款的业务结合消息队列](/doc/RocketMQ最终一致性.md)
 - [Redis的key过期事件结合自动取消订单业务](/doc/Redis的key过期事件.md)
+- [Zookeeper的bug之一](doc/上线遇到的bug.md)
 
 ## 架构图
 
@@ -224,7 +225,3 @@ Java、Springboot、MyBatis、Redis、MySQL、Dubbo、RocketMQ 等。
 4. 下单和支付服务均采用基于阿里巴巴开源的 RocketMQ 消息中间件保持数据的最终一致性，并且 采用 Redis 缓存维持 RocketMQ 消息的幂等性，接着采用 RocketMQ 和 Sentinel 进行接口限流维 护系统的稳定性，最后采用 Redis 的监听 key 键过期事件保证未支付订单超时自动取消业务，达到高 并发、高可用的效果。
 5. 分别采用 Dubbo 和 Nginx 提供的负载均衡机制将班车服务、订单服务、网关分配到不同的服务 器上，达到了高性能的效果。
 6. 接下来的计划是 MySQL 读写分离、Redis 读写分离、以及分布式唯一 ID、集群管理等。
-
-### 项目上线的bug
-
-- [bug之一](doc/上线遇到的bug.md)
