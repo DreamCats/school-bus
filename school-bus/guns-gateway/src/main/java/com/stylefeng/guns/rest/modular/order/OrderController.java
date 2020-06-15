@@ -206,7 +206,7 @@ public class OrderController {
             request.setBusStatus(form.getBusStatus());
             request.setExpireTime(form.getExpireTime());
             AddOrderResponse response = orderService.addOrder(request);
-            // 座位缓存失效
+
             String countKey = RedisConstants.COUNT_DETAIL_EXPIRE.getKey() + request.getCountId();
             if (redisUtils.hasKey(countKey)) {
                 redisUtils.del(countKey);
