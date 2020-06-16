@@ -14,6 +14,7 @@ public enum RedisConstants {
     USER_INFO_EXPIRE(3600, "用户信息过期时间", "getUserById "), //1小时
     COUNT_DETAIL_EXPIRE(600, "场次详情过期时间", "getCountDetailById "),// 10分钟
     COUNTS_EXPIRE(600, "场次列表", "getCount "),// 10分钟
+    COUNTS_PAGES_EXPIRE(-1, "场次列表页数", "getCount "),// 没有时间
     NO_TAKE_OREDERS_EXPIRE(600, "未乘坐订单列表", "getNoTakeOrdersById "),// 10分钟
     NO_PAY_ORDERS_EXPIRE(600, "未支付订单列表", "getNoPayOrdersById "),// 10分钟
     EVALUATE_ORDERS_EXPIRE(600, "评价订单列表", "getEvaluateOrdersById "),// 10分钟

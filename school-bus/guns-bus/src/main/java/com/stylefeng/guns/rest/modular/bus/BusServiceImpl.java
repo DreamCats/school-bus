@@ -7,6 +7,7 @@
 
 package com.stylefeng.guns.rest.modular.bus;
 
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -233,6 +234,7 @@ public class BusServiceImpl implements IBusService {
         List<Count> counts = countMapper.selectList(queryWrapper);
         log.warn("schedulChangeBusStatus->查询到的：" + counts.toString());
 //        System.out.println("查询到的:"+counts.toString());
+        // 这里判断counts是否有值或者为空，不为空才遍历
         for (Count count : counts) {
             String busStatus = count.getBusStatus();
             String beginTime = count.getBeginTime();
@@ -259,23 +261,46 @@ public class BusServiceImpl implements IBusService {
             // 写入数据库
             countMapper.updateById(count);
         }
+        // 优化的地方，可以调用场次列表服务，查询即可获取总页数，依次判断全部删除
+        // 前端默认的请求每页个数是5，因此可以求出......
+        // 还有一种方案
+        // 不经过数据库获取总页数，用redis
         // 删缓存
-        String key1 = RedisConstants.COUNTS_EXPIRE + " 01";
-        String key3 = RedisConstants.COUNTS_EXPIRE + " 02";
-        String key2 = RedisConstants.COUNTS_EXPIRE + " 11";
-        String key4 = RedisConstants.COUNTS_EXPIRE + " 12";
-        if (redisUtils.hasKey(key1)) {
-            redisUtils.del(key1);
+//        String key1 = RedisConstants.COUNTS_EXPIRE + "01";
+//        String key3 = RedisConstants.COUNTS_EXPIRE + "02";
+//        String key2 = RedisConstants.COUNTS_EXPIRE + "11";
+//        String key4 = RedisConstants.COUNTS_EXPIRE + "12";
+//        if (redisUtils.hasKey(key1)) {
+//            redisUtils.del(key1);
+//        }
+//        if (redisUtils.hasKey(key2)) {
+//            redisUtils.del(key2);
+//        }
+//        if (redisUtils.hasKey(key3)) {
+//            redisUtils.del(key2);
+//        }
+//        if (redisUtils.hasKey(key4)) {
+//            redisUtils.del(key2);
+//        }
+        // 同理，counts有值，才去走以下，  这里为就不判断了。。
+        // 由于定时添加的时候， 缓存已经在了。
+        // 1、获取key
+        String countZeroKey = RedisConstants.COUNTS_PAGES_EXPIRE.getKey() + "0";
+        String countOneKey = RedisConstants.COUNTS_PAGES_EXPIRE.getKey() + "1";
+        // 2、不判断了，肯定存在，获取value
+        Long countZeroPages = Convert.toLong(redisUtils.get(countZeroKey));
+        Long countOnePages = Convert.toLong(redisUtils.get(countOneKey));
+        // 3、遍历删除
+        for (int i = 1; i < countZeroPages; i++) {
+            String key = RedisConstants.COUNTS_EXPIRE + "0" + Convert.toStr(i);
+            redisUtils.del(key);
         }
-        if (redisUtils.hasKey(key2)) {
-            redisUtils.del(key2);
+        for (int i = 1; i < countOnePages; i++) {
+            String key = RedisConstants.COUNTS_EXPIRE + "1" + Convert.toStr(i);
+            redisUtils.del(key);
         }
-        if (redisUtils.hasKey(key3)) {
-            redisUtils.del(key2);
-        }
-        if (redisUtils.hasKey(key4)) {
-            redisUtils.del(key2);
-        }
+        // 4. 更新场次列表的页数，但是， 这里不更新， 因为在接口那边会判断
+
     }
 
     /**
@@ -305,22 +330,41 @@ public class BusServiceImpl implements IBusService {
         }
 
         // 删缓存
-        String key1 = RedisConstants.COUNTS_EXPIRE + " 01";
-        String key3 = RedisConstants.COUNTS_EXPIRE + " 02";
-        String key2 = RedisConstants.COUNTS_EXPIRE + " 11";
-        String key4 = RedisConstants.COUNTS_EXPIRE + " 12";
-        if (redisUtils.hasKey(key1)) {
-            redisUtils.del(key1);
-        }
-        if (redisUtils.hasKey(key2)) {
-            redisUtils.del(key2);
-        }
-        if (redisUtils.hasKey(key3)) {
-            redisUtils.del(key2);
-        }
-        if (redisUtils.hasKey(key4)) {
-            redisUtils.del(key2);
-        }
+//        String key1 = RedisConstants.COUNTS_EXPIRE + "01";
+//        String key3 = RedisConstants.COUNTS_EXPIRE + "02";
+//        String key2 = RedisConstants.COUNTS_EXPIRE + "11";
+//        String key4 = RedisConstants.COUNTS_EXPIRE + "12";
+//        if (redisUtils.hasKey(key1)) {
+//            redisUtils.del(key1);
+//        }
+//        if (redisUtils.hasKey(key2)) {
+//            redisUtils.del(key2);
+//        }
+//        if (redisUtils.hasKey(key3)) {
+//            redisUtils.del(key2);
+//        }
+//        if (redisUtils.hasKey(key4)) {
+//            redisUtils.del(key2);
+//        }
+
+        // 另一种方案
+        // 1、添加完之后，调用场次列表查看总页数
+        PageCountRequest request = new PageCountRequest();
+        request.setBusStatus("0"); // 沙河
+        request.setCurrentPage(Convert.toLong(1));
+        request.setPageSize(Convert.toLong(5));
+        PageCountResponse countResponse = this.getCount(request);
+        Long countPagesZero = countResponse.getPages();
+        log.warn("沙河页数：" + countResponse.getPages());
+        request.setBusStatus("1"); // 清水河
+        PageCountResponse countResponse1 = this.getCount(request);
+        Long countPagesOne = countResponse1.getPageSize();
+        // 2、构建key
+        String countPagesZeroKey = RedisConstants.COUNTS_PAGES_EXPIRE.getKey() + "0";
+        String countPagesOneKey = RedisConstants.COUNTS_PAGES_EXPIRE.getKey() + "1";
+        // 3、不用判断， 直接覆盖
+        redisUtils.set(countPagesZeroKey, countPagesZero);
+        redisUtils.set(countPagesOneKey, countPagesOne);
     }
 
 //    @Scheduled(cron = "5 * * * * ? ")

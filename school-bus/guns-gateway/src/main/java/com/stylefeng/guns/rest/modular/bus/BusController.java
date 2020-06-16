@@ -61,9 +61,15 @@ public class BusController {
             request.setPageSize(pageInfo.getPageSize());
             request.setBusStatus(pageInfo.getBusStatus());
             PageCountResponse response = busService.getCount(request);
-
-            if (!redisUtils.hasKey(key)) {
-                redisUtils.set(key, response, RedisConstants.COUNTS_EXPIRE.getTime());
+            redisUtils.set(key, response, RedisConstants.COUNTS_EXPIRE.getTime());
+            // 更新场次列表的页数缓存
+            Long countPages = response.getPages();
+            String countPagesKey = RedisConstants.COUNTS_PAGES_EXPIRE.getKey() + request.getBusStatus();
+            // 肯定存在，就不判断了
+            Long countPagesRedis = Convert.toLong(redisUtils.get(countPagesKey));
+            if (!countPages.equals(countPagesRedis)) {
+                // 如果不相等，更新
+                redisUtils.set(countPagesKey, countPages); // 将response的总页数更新到缓存
             }
             log.warn("getCount\n");
             return new ResponseUtil().setData(response);
