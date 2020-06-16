@@ -233,7 +233,6 @@ public class BusServiceImpl implements IBusService {
         List<Count> counts = countMapper.selectList(queryWrapper);
         log.warn("schedulChangeBusStatus->查询到的：" + counts.toString());
 //        System.out.println("查询到的:"+counts.toString());
-        // 开始作妖
         for (Count count : counts) {
             String busStatus = count.getBusStatus();
             String beginTime = count.getBeginTime();
@@ -261,12 +260,20 @@ public class BusServiceImpl implements IBusService {
             countMapper.updateById(count);
         }
         // 删缓存
-        String key1 = RedisConstants.COUNTS_EXPIRE + "0";
-        String key2 = RedisConstants.COUNTS_EXPIRE + "1";
+        String key1 = RedisConstants.COUNTS_EXPIRE + " 01";
+        String key3 = RedisConstants.COUNTS_EXPIRE + " 02";
+        String key2 = RedisConstants.COUNTS_EXPIRE + " 11";
+        String key4 = RedisConstants.COUNTS_EXPIRE + " 12";
         if (redisUtils.hasKey(key1)) {
             redisUtils.del(key1);
         }
         if (redisUtils.hasKey(key2)) {
+            redisUtils.del(key2);
+        }
+        if (redisUtils.hasKey(key3)) {
+            redisUtils.del(key2);
+        }
+        if (redisUtils.hasKey(key4)) {
             redisUtils.del(key2);
         }
     }
@@ -298,12 +305,20 @@ public class BusServiceImpl implements IBusService {
         }
 
         // 删缓存
-        String key1 = RedisConstants.COUNTS_EXPIRE + "0";
-        String key2 = RedisConstants.COUNTS_EXPIRE + "1";
+        String key1 = RedisConstants.COUNTS_EXPIRE + " 01";
+        String key3 = RedisConstants.COUNTS_EXPIRE + " 02";
+        String key2 = RedisConstants.COUNTS_EXPIRE + " 11";
+        String key4 = RedisConstants.COUNTS_EXPIRE + " 12";
         if (redisUtils.hasKey(key1)) {
             redisUtils.del(key1);
         }
         if (redisUtils.hasKey(key2)) {
+            redisUtils.del(key2);
+        }
+        if (redisUtils.hasKey(key3)) {
+            redisUtils.del(key2);
+        }
+        if (redisUtils.hasKey(key4)) {
             redisUtils.del(key2);
         }
     }
