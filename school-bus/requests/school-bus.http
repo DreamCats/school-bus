@@ -1,6 +1,6 @@
 
 ### 校验用户名是否已存在
-GET {{host}}/user/check?username=mi
+GET {{host}}/user/check?username=peng
 Accept: */*
 Cache-Control: no-cache
 
