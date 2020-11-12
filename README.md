@@ -5,20 +5,23 @@
 > 所涉及的技术包含：
 >
 > - 后端：
->   - Springboot
->   - MyBatisPlus（可自定义sql语句）
->   - Dubbo（RPC、负载均衡）
->   - Mysql
->   - Redis(监听key过期->发布订阅模式)
->   - RocketMQ(最终一致性、幂等性)
->   - Swagger2
->   - Validated
->   - Druid监测
->   - Spring定时器
->   - 单点登录
->   - Sentinel熔断降级限流
->   - 分布式唯一ID(雪花算法)
->   - 持续补充...
+>   - V1
+>     - Springboot
+>     - MyBatisPlus（可自定义sql语句）
+>     - Dubbo（RPC、负载均衡）
+>     - Mysql
+>     - Redis(监听key过期->发布订阅模式)
+>     - RocketMQ(最终一致性、幂等性)
+>     - Swagger2
+>     - Validated
+>     - Druid监测
+>     - Spring定时器
+>     - 单点登录
+>     - Sentinel熔断降级限流
+>     - 分布式唯一ID(雪花算法)
+>     - 持续补充...
+>   - V2
+>     - spring-cloud-alibaba
 > - 前端：
 >   - vue
 >   - vuex
@@ -38,6 +41,7 @@
 - [x] 添加订单、支付和退款的业务结合消息队列
 - [x] Redis的Key键到期策略结合订单自动取消业务
 - [x] SQL语句调优
+- [x] spring-cloud版本更新完毕
 
 ## 访问入口
 

@@ -1,0 +1,121 @@
+### 校验用户名是否已存在
+GET {{host}}/user/check?username=peng
+Accept: */*
+Cache-Control: no-cache
+
+### 注册接口
+POST {{host}}/user/register
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/json
+
+{ "email": "mai@qq.com",
+  "username": "laxiba3",
+  "password": "123",
+  "phone": "1000"
+}
+
+### 获取token
+GET {{host}}/auth?userName=mai&password=123
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/json
+
+
+### 携带token获取个人信息
+GET {{host}}/user/getUserInfo
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/json
+Authorization: {{token}}
+
+### 用户更新
+POST {{host}}/user/updateInfo
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "userSex": "0"
+}
+
+### 获取场次列表
+GET {{host}}/bus/getCount?currentPage=1&pageSize=4&busStatus=0
+Accept: */*
+Cache-Control: no-cache
+
+
+### 获取场次详情
+GET {{host}}/bus/getCountDetail?countId=1
+Accept: */*
+Cache-Control: no-cache
+
+### 获取未支付订单
+GET {{host}}/order/getNoPayOrders?currentPage=1&pageSize=4
+Accept: */*
+Cache-Control: no-cache
+Authorization: {{token}}
+
+### 获取评价订单
+GET {{host}}/order/getEvaluateOrders?currentPage=1&pageSize=4&evaluateStauts=0
+Accept: */*
+Cache-Control: no-cache
+Authorization: {{token}}
+
+
+### 添加订单
+POST {{host}}/order/addOrder
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "countId": "1247555231852662784",
+  "orderUser": "mai",
+  "busStatus": "0",
+  "seatsIds": "2",
+  "countPrice": "4.00",
+  "expireTime": "300"
+}
+
+### 获取订单详情
+GET {{host}}/order/getOrder?orderId=1250623694162759680
+Accept: */*
+Cache-Control: no-cache
+Authorization: {{token}}
+
+### 更改订单状态
+POST {{host}}/order/updateOrderStatus
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/json
+Authorization: {{token}}
+
+
+### 支付
+POST {{host}}/pay/
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "payPassword": "123456",
+  "totalMoney": "4.00"
+}
+
+### 退款
+POST {{host}}/pay/back
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "orderId": "1247087919454359552",
+  "coundId": "391",
+  "seatsIds": "1",
+  "totalMoney": "4.00"
+}

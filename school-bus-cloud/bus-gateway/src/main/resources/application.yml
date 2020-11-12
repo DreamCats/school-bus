@@ -1,0 +1,60 @@
+
+rest:
+  auth-open: true #jwt鉴权机制是否开启(true或者false)
+  sign-open: true #签名机制是否开启(true或false)
+
+jwt:
+  header: Authorization   #http请求头所需要的字段
+  secret: mySecret        #jwt秘钥
+  expiration: 604800      #7天 单位:秒
+  auth-path: auth         #认证请求的路径
+  md5-key: randomKey      #md5加密混淆key
+  ignore-url: /user/register,/user/check,/swagger,/v2,/webjars,/seats,/bus,/file
+
+server:
+  port: 8087
+
+spring:
+  application:
+    name: bus-gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: bus-user
+          uri: http://localhost:8081
+          predicates:
+            - Path=/user/**
+        - id: bus-auth
+          uri: http://localhost:8080
+          predicates:
+            - Path=/auth/**
+        - id: bus-bus
+          uri: http://localhost:8082
+          predicates:
+            - Path=/bus/**
+    nacos:
+      discovery:
+        server-addr: 39.108.93.119:8848
+
+
+  redis:
+    database: 0
+    host: 39.108.93.119
+    port: 6179
+    password: 123
+    timeout: 5000ms
+    jedis:
+      pool:
+        max-active: 8
+        max-wait: -1
+        max-idle: 8
+
+logging:
+  level.root: info
+  level.com.stylefeng: debug
+  file:
+    path: logs/
+    name: bus-gateway.log

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dream.bus.dao.BusMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.dream.bus.model.Bus">
+        <id column="uuid" property="uuid" />
+        <result column="limit_number" property="limitNumber" />
+        <result column="driver_name" property="driverName" />
+        <result column="drive_phone" property="drivePhone" />
+        <result column="seats_number" property="seatsNumber" />
+        <result column="begin_time" property="beginTime" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+
+</mapper>

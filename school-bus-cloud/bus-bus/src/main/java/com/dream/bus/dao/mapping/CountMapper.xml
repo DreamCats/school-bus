@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dream.bus.dao.CountMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.dream.bus.model.Count">
+        <id column="uuid" property="uuid" />
+        <result column="bus_id" property="busId" />
+        <result column="begin_time" property="beginTime" />
+        <result column="end_time" property="endTime" />
+        <result column="bus_status" property="busStatus" />
+        <result column="price" property="price" />
+        <result column="selected_seats" property="selectedSeats" />
+        <result column="seat_status" property="seatStatus" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+
+    <select id="selectCounts"  resultType="com.dream.bus.bus.param.CountSimpleDto">
+        SELECT
+            sc.uuid ,
+            sc.begin_date ,
+            sc.begin_time ,
+            sc.bus_id ,
+            sc.bus_status,
+            sc.seat_status
+        FROM
+            sb_count sc
+        ${ew.customSqlSegment}
+    </select>
+
+    <select id="selectCountDetailById" resultType="com.dream.bus.bus.param.CountDetailDto">
+        SELECT
+            sc.uuid ,
+            sc.bus_id ,
+            sc.bus_status ,
+            sc.begin_time ,
+            sc.begin_date ,
+            sc.selected_seats ,
+            sc.price,
+            sb.driver_name ,
+            sb.seats_number
+        FROM
+            sb_count sc
+        LEFT JOIN sb_bus sb ON
+            sc.bus_id = sb.uuid
+        ${ew.customSqlSegment}
+    </select>
+</mapper>

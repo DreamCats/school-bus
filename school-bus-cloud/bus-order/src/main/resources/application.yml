@@ -1,0 +1,61 @@
+server:
+  port: 8083
+
+spring:
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 39.108.93.119:8848
+
+  application:
+    name: bus-order
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://39.108.93.119:3306/school_bus?serverTimezone=UTC&useSSL=false&characterEncoding=UTF-8
+    username: root
+    password: 123456
+    hikari:
+      maximum-pool-size: 20
+      max-lifetime: 1800000
+      connection-timeout: 30000
+      minimum-idle: 5
+
+  redis:
+    database: 0
+    host: 39.108.93.119
+    port: 6179
+    password: 123
+    timeout: 5000ms
+    jedis:
+      pool:
+        max-active: 8
+        max-wait: -1
+        max-idle: 8
+
+
+mybatis-plus:
+  mapper-locations: classpath*:com/dream/bus/dao/mapping/*.xml
+  typeAliasesPackage: com.dream.bus.model
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+logging:
+  level.root: info
+  level.com.stylefeng: debug
+  file:
+    path: logs/
+    name: bus-order.log
+
+
+rocketmq:
+  name-server: 39.108.93.119:9876
+  producer:
+    group: orderProducerGroup # 订单生产消息的组
+
+
+mq:
+  order:
+    consumer:
+      group:
+        name: orderTopic_cancel_group # 取消订单组
+    topic: orderTopic # 话题：属于订单话题

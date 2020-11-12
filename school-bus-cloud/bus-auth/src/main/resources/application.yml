@@ -1,0 +1,47 @@
+
+rest:
+  auth-open: true #jwt鉴权机制是否开启(true或者false)
+  sign-open: true #签名机制是否开启(true或false)
+
+jwt:
+  header: Authorization   #http请求头所需要的字段
+  secret: mySecret        #jwt秘钥
+  expiration: 604800      #7天 单位:秒
+  auth-path: auth         #认证请求的路径
+  md5-key: randomKey      #md5加密混淆key
+  ignore-url: /user/register,/user/check,/swagger,/v2,/webjars,/seats,/bus,/file
+
+server:
+  port: 8080
+
+spring:
+  application:
+    name: bus-auth
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://39.108.93.119:3306/school_bus?serverTimezone=UTC&useSSL=false&characterEncoding=UTF-8
+    username: root
+    password: 123456
+    hikari:
+      maximum-pool-size: 20
+      max-lifetime: 1800000
+      connection-timeout: 30000
+      minimum-idle: 5
+
+  redis:
+    database: 0
+    host: 39.108.93.119
+    port: 6179
+    password: 123
+    timeout: 5000ms
+    jedis:
+      pool:
+        max-active: 8
+        max-wait: -1
+        max-idle: 8
+
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 39.108.93.119:8848

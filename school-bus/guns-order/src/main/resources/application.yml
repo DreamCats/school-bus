@@ -78,4 +78,3 @@ mq:
       group:
         name: orderTopic_cancel_group
     topic: orderTopic # 话题：订单话题
-

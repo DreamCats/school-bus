@@ -133,7 +133,6 @@ public class UserController {
             response.setMsg(SbCode.SYSTEM_ERROR.getMessage());
             return new ResponseUtil().setData(response);
         }
-
     }
 
     /**
