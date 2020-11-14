@@ -17,7 +17,7 @@ spring:
   application:
     name: gateway
   datasource:
-      driver-class-name: com.mysql.cj.jdbc.Driver
+      driver-class-name: com.mysql.jdbc.Driver
       url: jdbc:mysql://39.108.93.119:3306/school_bus?serverTimezone=UTC&useSSL=false&characterEncoding=UTF-8
       username: root
       password: 123456
