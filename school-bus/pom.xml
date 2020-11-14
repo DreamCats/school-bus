@@ -46,7 +46,7 @@
         <mapstruct.version>1.3.0.Final</mapstruct.version>
         <swagger-starter.version>1.8.0.RELEASE</swagger-starter.version>
         <spring-redis.version>2.2.2.RELEASE</spring-redis.version>
-        <rocketmqrocketmq-spring.version>2.0.3</rocketmqrocketmq-spring.version>
+        <rocketmq-spring.version>2.0.3</rocketmq-spring.version>
         <sentinel-stater.version>2.0.1.RELEASE</sentinel-stater.version>
     </properties>
 
