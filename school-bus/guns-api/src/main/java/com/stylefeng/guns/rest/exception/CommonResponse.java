@@ -10,6 +10,6 @@ package com.stylefeng.guns.rest.exception;
 import com.stylefeng.guns.rest.common.AbstractResponse;
 import lombok.Data;
 
-@Data
+
 public class CommonResponse extends AbstractResponse {
 }

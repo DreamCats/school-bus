@@ -105,7 +105,7 @@ public class BusServiceTest {
             count.setSeatStatus("0");
             // 插入
             System.out.println(count);
-//            countMapper.insert(count);
+            countMapper.insert(count);
         }
     }
 
