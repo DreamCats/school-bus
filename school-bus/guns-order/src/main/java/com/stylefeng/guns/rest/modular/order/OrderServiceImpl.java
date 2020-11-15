@@ -257,7 +257,7 @@ public class OrderServiceImpl implements IOrderService {
             response.setOrderId(orderId);
 //            response.setOrderDto(orderDto);
             // 这里放redis 未支付缓存，时间前端给定
-            redisUtils.set(RedisConstants.ORDER_CANCLE_EXPIRE.getKey() + orderId, orderId, request.getExpireTime());
+            redisUtils.set(RedisConstants.ORDER_CANCLE_EXPIRE.getKey() + Convert.toStr(orderId), orderId, request.getExpireTime());
             return response;
         } catch (Exception e) {
             // 以上操作如果程序都不发生异常的话， 是不会执行这里的代码的
