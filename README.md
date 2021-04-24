@@ -46,7 +46,7 @@
 ## 访问入口
 
 - [前端源码](https://github.com/Ly649423/online-ticket)
-- [网站测试访问](http://ot.dreamcat.ink:8080/)只供测试学习使用哈，别搞崩了哇...     **友情提醒：面向移动端**
+- [网站测试访问](http://dreamcat.ink/ticket)只供测试学习使用哈，别搞崩了哇...     **友情提醒：面向移动端**
 
 ## 文档
 
