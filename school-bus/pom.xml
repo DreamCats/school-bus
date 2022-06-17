@@ -30,7 +30,7 @@
         <java.version>1.8</java.version>
         <guns.version>1.0.0</guns.version>
         <mybatis-plus.version>3.3.0</mybatis-plus.version>
-        <fastjson.version>1.2.47</fastjson.version>
+        <fastjson.version>1.2.83</fastjson.version>
         <velocity.version>1.7</velocity.version>
         <druid.version>1.1.21</druid.version>
         <commons-lang3.version>3.7</commons-lang3.version>
